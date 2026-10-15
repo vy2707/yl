@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .main{
+            /*背景颜色#f2f3f4*/
+            background-color:#f2f3f4;
+            display:flex;
+            flex-wrap:wrap;/*换行*/
+            margin:10px;/*相邻项之间的间距*/
+        
+        }
+        .box{
+            width:150px;
+            height:150px;
+            background-color:#45d5c9;
+            border:1px solid #ccc;
+            margin:45px;
+            font-size:40px;
+            display:flex;
+            /*水平垂直居中  @*/
+            align-items: center;
+            justify-content: center;
+            transition:all 0.6s;/*会有动画*/
+            box-sizing:border-box;/*width=包括padding和border*/
+        }
+        .box:first-child:hover{
+            background-color: #9563da;
+            color: #fff;
+            font-size:80px;
+            border-width:20px;
+        }
+        .box:nth-child(2):hover{/*2n表示偶数项  .box:nth-child(2)*/
+            box-shadow: 10px 10px 20px #c5b6b2;/*x轴的偏移,y轴的偏移*/
+        }
+        .box:nth-child(3):hover{/*3表示第三个盒子  .box:nth-child(3)*/
+            text-shadow: 100px 10px 20px #6c534d;/*x轴的偏移,y轴的偏移*/
+        }
+        .box:nth-child(4):hover{/*4表示第四个盒子*/
+            border-radius:50%;
+        }
+        .box:nth-of-type(5){/*5表示第五个盒子*/
+            /*线性渐变*/
+            background: linear-gradient(45deg, #45d5c9, #a37adc);
+        }
+        .box:nth-of-type(6){/*6表示第六个盒子*/
+            /*径向渐变*/
+            background: radial-gradient(circle, #fff, #000);
+        }
+        /*相邻兄弟选择器*/
+        /*+表示后面第一个盒子   ~表示后面所有盒子的*/
+        /*~兄弟选择器*/
+        .box:nth-of-type(6)+.box:hover{
+            transform:scale(1.2);/*缩放 >1 放大,<1 缩小*/
+        }
+        .box:nth-of-type(8):hover{
+            transform:translateX(-100px);/*沿着x轴平移  -← +→*/
+        }
+        .box:nth-of-type(9):hover{
+            transform:rotateZ(-70deg);/*沿着z轴旋转*/
+        }
+        .box:nth-of-type(10):hover{
+            transform:skewX(-45deg);/*沿着xz轴旋转*/
+        }
+        .box:nth-last-child(2):hover::before{
+            content:"#";
+            color:antiquewhite;
+        }
+        /*最后一个*/
+        .box:nth-last-child(2):hover::after{
+            content:"姚琳";
+            color:white;
+            font-size:20px;
+            display:block;
+            width: 40px;
+            height:40px;
+            margin:10px;
+            /*扩展：黑底白字居中圆角的你的名字，有距离*/
+            border-radius:5px;
+            text-align:center;
+            line-height:40px;
+            padding:0 15px;
+            background-color:#000;
+        }
+        .box:nth-of-type(3n):hover{
+            border:3px solid #000;
+        }
+        /*扩展：鼠标个盒子上时有变化，变化效果自定义*/
+        .box:nth-of-type(2n):hover{
+            /*border:3px solid #000;*/
+            background-color:#6adc9d;
+            color:#fff;
+            font-size:80px;
+            border-width:20px;
+        }
+    </style>    
+</head>
+<body>  
+    <div class="main">
+        <!--div.box*12{$} 12个盒子-->
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+        <div class="box">9</div>
+        <div class="box">10</div>
+        <div class="box">11</div>
+        <div class="box">12</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盒子模型、框模型，box model</title>
+    <style>
+        body,h2,ul,p{
+            padding:0;/*做任何网页都要设置一下padding：0  不设置就会有浏览器的兼容问题*/
+            margin:0;
+        }
+        #a{/*a盒子高度为482px*/
+            width:400px;
+            height:400px;
+            border:1px solid gray;
+            padding:50px 40px 30px 20px;/*上 右 下 左*/   /*字到盒子边框的距离*/
+            margin:40px auto;/*这个是盒子到网页上端距离*/
+        }
+        #b{/*b盒子高度为402px*/
+            width:400px;
+            height:400px;
+            border:1px dashed rgb(97, 175, 123);/*虚线*/
+            /*border-left:1px dotted rgb(97, 175, 123);*/      /*左边虚线*/
+            margin:50px auto 40px ;/*这个是盒子到网页上端距离*/
+        }
+        /*扩展1.完成c和d,边框用dotted,宽度为3px*/
+        #c{
+            width:3px;
+            height:400px;
+            border:3px dotted rgb(97, 175, 123);
+            margin:50px auto 40px ;/*这个是盒子到网页上端距离*/
+        }
+        #d{
+            width:3px;
+            height:400px;
+            border:3px dotted rgba(19, 144, 222, 0.4);
+            margin:50px auto 40px ;/*这个是盒子到网页上端距离*/
+        }
+    </style>
+</head>
+<body>
+    <div id="a">630 姚琳</div>
+    <div id="b">630 姚琳</div>
+    <div id="c">630 姚琳</div>
+    <div id="d">630 姚琳</div>
+</body>
+</html>

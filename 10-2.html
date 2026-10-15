@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-2-630姚琳</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ========== 基础重置 ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #050505;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ========== 背景装饰 ========== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========== 页面标题 ========== */
+        .page-title {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #a3a3a3;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .page-title span {
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        /* ========== 幻灯片容器 ========== */
+        .slideshow-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 640px;
+            z-index: 1;
+        }
+
+        /* ========== 图片区域 ========== */
+        .slides-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .slides-track {
+            display: flex;
+            width: 400%;
+            height: 100%;
+            animation: slidePosition 12s infinite;
+        }
+
+        .slide {
+            position: relative;
+            flex: 0 0 25%;
+            height: 100%;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        @keyframes slidePosition {
+            0%, 30% { transform: translateX(0); }
+            34%, 63% { transform: translateX(-25%); }
+            67%, 96% { transform: translateX(-50%); }
+            100% { transform: translateX(-75%); }
+        }
+
+        /* ========== 图片上的序号标签 ========== */
+        .slide-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            z-index: 2;
+            opacity: 0;
+            animation: badgeFade 12s infinite;
+        }
+
+        .slide:nth-child(1) .slide-badge { animation-delay: 0s; }
+        .slide:nth-child(2) .slide-badge { animation-delay: 4s; }
+        .slide:nth-child(3) .slide-badge { animation-delay: 8s; }
+
+        @keyframes badgeFade {
+            0%   { opacity: 0; }
+            4%   { opacity: 1; }
+            30%  { opacity: 1; }
+            34%  { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* ========== 文字区域（下图） ========== */
+        .text-slides {
+            position: relative;
+            width: 100%;
+            min-height: 120px;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .text-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            animation: textFade 12s infinite;
+        }
+
+        .text-slide:nth-child(1) { animation-delay: 0s; }
+        .text-slide:nth-child(2) { animation-delay: 4s; }
+        .text-slide:nth-child(3) { animation-delay: 8s; }
+
+        @keyframes textFade {
+            0%   { opacity: 0; transform: translateY(12px); }
+            5%   { opacity: 1; transform: translateY(0); }
+            30%  { opacity: 1; transform: translateY(0); }
+            34%  { opacity: 0; transform: translateY(-12px); }
+            100% { opacity: 0; transform: translateY(12px); }
+        }
+
+        .text-slide h2 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #ffffff, #a3a3a3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-slide p {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.625;
+            color: #a3a3a3;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* ========== 指示器 ========== */
+        .indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 56px;
+            z-index: 1;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .indicator::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: #818cf8;
+            opacity: 0;
+            animation: indicatorPulse 12s infinite;
+        }
+
+        .indicator:nth-child(1)::after { animation-delay: 0s; }
+        .indicator:nth-child(2)::after { animation-delay: 4s; }
+        .indicator:nth-child(3)::after { animation-delay: 8s; }
+
+        @keyframes indicatorPulse {
+            0%   { opacity: 0; transform: scale(0); }
+            4%   { opacity: 1; transform: scale(1); }
+            30%  { opacity: 1; transform: scale(1); }
+            34%  { opacity: 0; transform: scale(0); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        /* ========== 底部署名 ========== */
+        .footer-name {
+            margin-top: 48px;
+            font-size: 13px;
+            font-weight: 400;
+            color: #737373;
+            z-index: 1;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-name strong {
+            color: #a3a3a3;
+            font-weight: 500;
+        }
+
+        /* ========== 背景网格 ========== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景网格 -->
+    <div class="bg-grid"></div>
+
+    <!-- 页面标题 -->
+    <div class="page-title">CSS 幻灯片 · <span>姚琳</span></div>
+
+    <!-- 幻灯片主体 -->
+    <div class="slideshow-wrapper">
+
+        <!-- 上：图片区域 -->
+        <div class="slides-container">
+            <div class="slides-track">
+                <div class="slide">
+                    <span class="slide-badge">01 / 03</span>
+                    <img src="img/10.jpg" alt="幻灯片1">
+                </div>
+                <div class="slide">
+                    <span class="slide-badge">02 / 03</span>
+                    <img src="img/11.jpg" alt="幻灯片2">
+                </div>
+                <div class="slide">
+                    <span class="slide-badge">03 / 03</span>
+                    <img src="img/12.jpg" alt="幻灯片3">
+                </div>
+                <div class="slide" aria-hidden="true">
+                    <img src="img/10.jpg" alt="">
+                </div>
+            </div>
+        </div>
+
+        <!-- 下：文字区域 -->
+        <div class="text-slides">
+            <div class="text-slide">
+                <h2>春日和风</h2>
+                <p>春风拂面，万物复苏。光影之间，记录下这一刻的温暖与宁静，让美好定格在时光里。</p>
+            </div>
+            <div class="text-slide">
+                <h2>夏日流光</h2>
+                <p>骄阳似火，绿意盎然。在灿烂的日光下，每一帧画面都洋溢着蓬勃的生命力。</p>
+            </div>
+            <div class="text-slide">
+                <h2>秋日私语</h2>
+                <p>金风送爽，层林尽染。落叶纷飞间，岁月沉淀出最温柔的底色，诉说着收获的故事。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 指示器 -->
+    <div class="indicators">
+        <div class="indicator"></div>
+        <div class="indicator"></div>
+        <div class="indicator"></div>
+    </div>
+
+    <!-- 底部署名 -->
+    <div class="footer-name">Designed by <strong>姚琳</strong></div>
+
+</body>
+</html>

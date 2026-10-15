@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>11-1 前端长度单位</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 16px;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yao_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yao_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yao_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yao_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yao_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yao_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yao_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yao_card {
+			display: flex;
+			align-items: center;
+			gap: 1.25rem;
+			padding: 1.25rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			margin-bottom: 1rem;
+		}
+
+		.yao_info {
+			flex: 0 0 220px;
+		}
+
+		.yao_info h3 {
+			margin: 0 0 .35rem;
+			font-size: 1.1rem;
+		}
+
+		.yao_info p {
+			margin: 0;
+			color: #667579;
+			font-size: .85rem;
+			line-height: 1.5;
+		}
+
+		.yao_demo {
+			flex: 1;
+			position: relative;
+			height: 90px;
+			background: #eef1ef;
+			border-radius: .4rem;
+			overflow: hidden;
+		}
+
+		/* 固定单位：px */
+		.yao_demo_px {
+			width: 120px;
+			height: 40px;
+			background: #bd5946;
+		}
+
+		/* 相对字体单位：em */
+		.yao_em_box {
+			font-size: 20px;
+		}
+		.yao_demo_em {
+			width: 4em;
+			height: 1.5em;
+			background: #328477;
+		}
+
+		/* 相对根元素单位：rem */
+		.yao_demo_rem {
+			width: 7.5rem;
+			height: 2.5rem;
+			background: #3976a3;
+		}
+
+		/* 相对父元素百分比：% */
+		.yao_demo_percent {
+			width: 40%;
+			height: 45%;
+			background: #bd8737;
+		}
+
+		/* 视口宽度单位：vw */
+		.yao_demo_vw {
+			width: 20vw;
+			height: 40px;
+			background: #6b7e4d;
+		}
+
+		/* 视口高度单位：vh */
+		.yao_demo_vh {
+			width: 200px;
+			height: 6vh;
+			background: #a34f69;
+		}
+
+		/* 视口最小值单位：vmin */
+		.yao_demo_vmin {
+			width: 8vmin;
+			height: 8vmin;
+			background: #50667c;
+		}
+
+		/* 视口最大值单位：vmax */
+		.yao_demo_vmax {
+			width: 10vmax;
+			height: 2vmax;
+			background: #6d7050;
+		}
+
+		.yao_label {
+			position: absolute;
+			right: .5rem;
+			bottom: .5rem;
+			font-size: .75rem;
+			color: #667579;
+			background: rgba(255, 255, 255, .85);
+			padding: .15rem .4rem;
+			border-radius: .25rem;
+		}
+
+		.yao_note {
+			margin: 0;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="yao_main">
+		<header class="yao_header">
+			<div>
+				<h1>前端长度单位</h1>
+				<p class="yao_subtitle">比较 px、em、rem、%、vw、vh、vmin、vmax 的实际效果</p>
+			</div>
+			<div class="yao_author">姚琳 · 11-1</div>
+		</header>
+
+		<section class="yao_block">
+			<h2>一、固定单位</h2>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>px（像素）</h3>
+					<p>绝对长度单位，不随父元素或视口变化，是最常用的单位。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_px"></div>
+					<span class="yao_label">120px × 40px</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>二、相对字体单位</h2>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>em</h3>
+					<p>相对于当前元素的 font-size。父元素字体为 20px 时，1em = 20px。</p>
+				</div>
+				<div class="yao_demo yao_em_box">
+					<div class="yao_demo_em"></div>
+					<span class="yao_label">4em × 1.5em（font-size:20px）</span>
+				</div>
+			</div>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>rem（根 em）</h3>
+					<p>相对于根元素 html 的 font-size。默认 16px，1rem = 16px，不受父元素影响。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_rem"></div>
+					<span class="yao_label">7.5rem × 2.5rem（1rem = 16px）</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>三、相对父元素单位</h2>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>%（百分比）</h3>
+					<p>相对于父元素对应属性的比例。父元素变宽高，子元素随之缩放。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_percent"></div>
+					<span class="yao_label">宽度 40% × 高度 45%</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>四、视口单位</h2>
+			<p class="yao_note">可尝试拖动浏览器窗口改变视口大小，观察色块变化。</p>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>vw（视口宽度）</h3>
+					<p>1vw = 视口宽度的 1%。视口越宽，色块越宽。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_vw"></div>
+					<span class="yao_label">20vw × 40px</span>
+				</div>
+			</div>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>vh（视口高度）</h3>
+					<p>1vh = 视口高度的 1%。视口越高，色块越高。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_vh"></div>
+					<span class="yao_label">200px × 6vh</span>
+				</div>
+			</div>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>vmin</h3>
+					<p>取视口宽高中较小的那个的 1%。正方形随较小边缩放。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_vmin"></div>
+					<span class="yao_label">8vmin × 8vmin</span>
+				</div>
+			</div>
+
+			<div class="yao_card">
+				<div class="yao_info">
+					<h3>vmax</h3>
+					<p>取视口宽高中较大的那个的 1%。正方形随较大边缩放。</p>
+				</div>
+				<div class="yao_demo">
+					<div class="yao_demo_vmax"></div>
+					<span class="yao_label">10vmax × 2vmax</span>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        ul{
+            list-style:none;
+        }
+        img{
+            display:block;
+        }
+        .ilist{
+            display:flex;
+            margin:8px;
+        }
+        .ilist li{
+            width:30%;
+            margin-right:2px;
+            flex-grow:1;
+            position:relative;/*传说中的4pxbug*/
+        }
+        .ilist img{
+            width:100%;
+        }
+        .ilist p{
+            /*居中*/
+            text-align:center;
+            font-size:14px;
+            line-height:33px;
+            /*绝对定位*/
+            position:absolute;           
+            left:0;
+            bottom:0;
+            width:100%;
+            background:rgba(0,0,0,0.5);
+            color:#fff;
+            /*加粗*/
+            font-weight:bold;
+        }
+   </style>     
+</head>
+<body>
+    <ul class='ilist'>
+        <li>
+            <img src="./img/4.jpg" alt="">
+        <p>姚琳的上图下文</p>
+        </li>    
+        <li>
+            <img src="./img/5.jpg" alt="">
+            <p>图片5</p>
+        </li>
+        <li>
+            <img src="./img/6.jpg" alt="">
+            <p>图片6</p>
+        </li>
+    </ul>
+</body>
+</html>

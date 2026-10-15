@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>10-4 媒体查询响应式布局</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		main {
+			width: min(1200px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.box-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: .875rem;
+		}
+
+		.box {
+			display: flex;
+			min-width: 0;
+			aspect-ratio: 1;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 1rem;
+			border-radius: .5rem;
+			color: #fff;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .1);
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.box:hover {
+			transform: translateY(-.25rem);
+			box-shadow: 0 .8rem 1.5rem rgba(38, 52, 58, .16);
+		}
+
+		.box-number {
+			font-size: .85rem;
+			opacity: .8;
+		}
+
+		.box-name {
+			font-size: 1.125rem;
+			font-weight: 600;
+		}
+
+		.box:nth-child(1) { background: #bd5946; }
+		.box:nth-child(2) { background: #328477; }
+		.box:nth-child(3) { background: #3976a3; }
+		.box:nth-child(4) { background: #bd8737; }
+		.box:nth-child(5) { background: #6b7e4d; }
+		.box:nth-child(6) { background: #a34f69; }
+		.box:nth-child(7) { background: #50667c; }
+		.box:nth-child(8) { background: #6d7050; }
+
+		@media (min-width: 320px) and (max-width: 599px) {
+			main {
+				padding: 2rem 1rem 3rem;
+			}
+
+			header {
+				align-items: start;
+			}
+
+			h1 {
+				font-size: 1.65rem;
+			}
+
+			.subtitle {
+				font-size: .8rem;
+			}
+
+			.author {
+				font-size: .9rem;
+			}
+
+			.box-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (min-width: 600px) and (max-width: 1023px) {
+			.box-grid {
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.box-grid {
+				grid-template-columns: repeat(8, minmax(0, 1fr));
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<header>
+			<div>
+				<h1>响应式盒子布局</h1>
+				<p class="subtitle">调整视口宽度，观察每行盒子的数量</p>
+			</div>
+			<div class="author">姚琳 · 10-4</div>
+		</header>
+		<section class="box-grid" aria-label="八个响应式盒子">
+			<div class="box"><span class="box-number">01</span><span class="box-name">盒子一</span></div>
+			<div class="box"><span class="box-number">02</span><span class="box-name">盒子二</span></div>
+			<div class="box"><span class="box-number">03</span><span class="box-name">盒子三</span></div>
+			<div class="box"><span class="box-number">04</span><span class="box-name">盒子四</span></div>
+			<div class="box"><span class="box-number">05</span><span class="box-name">盒子五</span></div>
+			<div class="box"><span class="box-number">06</span><span class="box-name">盒子六</span></div>
+			<div class="box"><span class="box-number">07</span><span class="box-name">盒子七</span></div>
+			<div class="box"><span class="box-number">08</span><span class="box-name">盒子八</span></div>
+		</section>
+	</main>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            padding:30px;
+            background: #f5f7fa;
+        }
+        /* 外层大容器，4个盒子横向排列 */
+        .wrap{
+            display:flex;
+            gap:24px;
+        }
+        /* 每个大面板 */
+        /*.panel{
+            width:320px;
+            height:400px;
+            border:1px solid #aaa;
+            background:#fff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }*/
+        .item{
+            background:#ddd;
+            border:1px solid #222;
+            background:#b30303;
+        }
+
+        /* 布局1：单个方块 */
+        .box1{
+            width:120px;
+            height:120px;
+            
+        }
+
+        /* 布局2：上下两个矩形 */
+        .box2{
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            
+        }
+        .box2 .item{
+            width:140px;
+            height:90px;
+            
+        }
+
+        /* 布局3：2行2列四格 */
+        .box3{
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:12px;
+           
+        }
+        .box3 .item{
+            width:140px;
+            height:90px;
+           
+        }
+
+        /* 布局4：上通栏，下两格 */
+        .box4{
+            display:grid;
+            grid-template-rows: auto auto;
+            gap:12px;
+            
+        }
+        .box4 .top{
+            width:300px;
+            height:90px;
+            
+        }
+        .box4 .bottom{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:12px;
+           
+        }
+        .box4 .bottom .item{
+            width:140px;
+            height:90px;
+           
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <!-- 第1个面板：1个方块 -->
+        <div class="panel">
+            <div class="item box1"></div>
+        </div>
+        <!-- 第2个面板：上下2个 -->
+        <div class="panel">
+            <div class="box2">
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div>
+        <!-- 第3个面板：2*2四格 -->
+        <div class="panel">
+            <div class="box3">
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+                <div class="item"></div>
+            </div>
+        </div>
+        <!-- 第4个面板：上1通栏，下2并排 -->
+        <div class="panel">
+            <div class="box4">
+                <div class="item top"></div>
+                <div class="bottom">
+                    <div class="item"></div>
+                    <div class="item"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

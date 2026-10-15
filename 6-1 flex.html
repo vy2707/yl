@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        .flex{
+            /*容器*/
+            display:flex;
+            /*子元素在一行显示*/
+            flex-wrap:wrap;
+        }
+        .flex li{
+            /*项目，item*/
+           /* float:left;*/
+            border:1px solid #039;
+            width: 49%;
+            line-height:100px;
+            list-style:none;
+            text-align:center;
+            flex-grow:1;
+            display:flex;
+        }
+        .flex li:nth-child(1){
+            align-items:center;
+            /*水平居中*/
+            justify-content:center;
+        }
+        .box{
+            width:50px;
+            height:50px;
+            background-color:rgb(197, 24, 119);
+        }
+        /*.flex li:nth-child(1)  .box{
+            background-color:rgb(24, 197, 53);
+        }*/
+    </style>
+</head>
+<body>
+    <h2>姚琳 flex</h2>
+    <ul class='flex'>
+        <li><div class='box'></div>
+        </li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+    </ul>
+</body>
+</html>

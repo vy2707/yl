@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>10-3 媒体查询背景变化</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.screen {
+			display: grid;
+			min-height: 100vh;
+			min-height: 100dvh;
+			place-content: center;
+			justify-items: center;
+			gap: 16px;
+			padding: 24px;
+			background-color: #d66f55;
+			color: #fffdf7;
+			text-align: center;
+			transition: background-color .5s ease;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 3.5rem;
+			font-weight: 600;
+			line-height: 1;
+		}
+
+		p {
+			margin: 0;
+			font-size: .9rem;
+		}
+
+		.device::after {
+			content: "手机视口 · 小于等于 600px";
+		}
+
+		@media (min-width: 601px) and (max-width: 1024px) {
+			.screen {
+				background-color: #318b83;
+			}
+
+			h1 {
+				font-size: 4rem;
+			}
+
+			p {
+				font-size: 1rem;
+			}
+
+			.device::after {
+				content: "平板视口 · 601px 至 1024px";
+			}
+		}
+
+		@media (min-width: 1025px) {
+			.screen {
+				background-color: #386fa4;
+			}
+
+			h1 {
+				font-size: 5rem;
+			}
+
+			p {
+				font-size: 1.125rem;
+			}
+
+			.device::after {
+				content: "桌面视口 · 大于等于 1025px";
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="screen">
+		<h1>姚琳</h1>
+		<p>调整浏览器窗口，背景颜色会随视口宽度变化</p>
+		<p class="device" aria-live="polite"></p>
+	</main>
+</body>
+</html>

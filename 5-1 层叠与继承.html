@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--link和p谁在后面谁起作用-->
+    <style>
+        p{/*段落语义中文*/
+            color: green;
+            font-size: 100px;
+        }
+        .text{
+            color: red;
+        }
+        #text{
+            color: blue;
+        }
+        .box p{
+            color: yellow;
+        }
+        #box #text{
+            color: pink;/*2个id，0个class，0个标签选择器  选择器很高啦 (2,0,0)*/
+        }
+        .text{
+            color: purple!important;/*能覆盖内嵌*/
+            /*hack，可覆盖内嵌css*/
+        }
+        /*优先级：类选择器选择性高，覆盖id选择器  id>class>标签*/
+        #box{
+            /*宽400，高400，灰色背景，距离，字间距5px*/
+            width: 400px;
+            height: 400px;
+            background-color: gray;
+            margin: 10px;
+            padding: 10px;/*文字相关的都继承了，盒子的都没有继承*/
+            letter-spacing: 25px;
+            /*圆角矩形50%*/
+            border-radius:30px;
+        }
+    </style><!--内部的CSS-->
+    <link rel="stylesheet" href="css.css"><!--外部的CSS--> 
+    <!--后定义的覆盖前定义的-->
+</head>
+<body>
+    <h2>层叠与继承</h2>
+    <div id="box" class="box">
+        <p id="text" class="text">630 姚琳</p>
+        <p>层叠与继承的优先级</p>
+    </div>
+</body>
+</html>

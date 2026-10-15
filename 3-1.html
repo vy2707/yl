@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>630 姚琳</title>
+</head>
+<body>
+    <h2>HTML表单form</h2>
+    <form action="https://huanqiu.com" name="yl">
+        <p> 
+            用户名:<input type="text" name="username">
+        </p>
+        <p>
+            密码:<input type="password" name="password">
+        <p>
+        <p>
+            性别:<input type="radio" name="sex" value="m">男
+            <input type="radio" name="sex" value="f">女
+            <!--保密-->
+            <input type="radio" name="sex" value="s">保密
+        </p>
+        <p>
+            爱好:<input type="checkbox" name="hobby" value="1">跳舞
+            <input type="checkbox" name="hobby" value="2">唱歌
+            <input type="checkbox" name="hobby" value="3">烹饪
+        </p>
+        <!--籍贯-->
+        籍贯:<select name="jiguan">
+            <option value="1">北京</option>
+            <option value="2">上海</option>
+            <option value="3" selected>四川</option>
+            <option value="4">天津</option>
+            <option value="5">河北</option>
+        </select>
+        <!--个人简介textarea-->
+        <p>
+            个人简介:<textarea name="jianjie" cols="30" rows="5"></textarea>
+        </p>
+        <!--出生日期-->
+        <p>
+            出生日期:<input type="date" name="birthday">
+        <p>
+        <!--多文件上传-->
+        <p>
+            多文件上传:<input type="file" name="files" multiple>
+        <p> 
+        <!--按钮：普通按钮、提交按钮、重置按钮-->
+        <p>
+            普通按钮:<input type="button" value="普通按钮">
+            提交按钮:<input type="submit" value="提交">
+            重置按钮:<input type="reset" value="重置">
+        </p>
+        
+    </form>
+             <!--按钮buttton-->
+             <button>表单外的按钮</button>
+    </form>
+</body>
+</html>

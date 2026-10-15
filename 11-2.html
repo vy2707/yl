@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>11-2 CSS3 3D 动画</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 16px;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yao_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yao_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yao_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yao_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yao_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yao_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yao_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yao_note {
+			margin: 0 0 1rem;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+
+		/* 3D 舞台：设置透视，鼠标移上可交互旋转 */
+		.yao_stage {
+			position: relative;
+			width: 200px;
+			height: 200px;
+			margin: 1rem auto 2.5rem;
+			perspective: 700px;
+		}
+
+		.yao_cube {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+			animation: yao_spin 8s linear infinite;
+		}
+
+		.yao_stage:hover .yao_cube {
+			animation-play-state: paused;
+		}
+
+		.yao_face {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 200px;
+			height: 200px;
+			line-height: 200px;
+			text-align: center;
+			font-size: 1.4rem;
+			font-weight: 600;
+			color: #fff;
+			border: 2px solid rgba(255, 255, 255, .6);
+			backface-visibility: visible;
+		}
+
+		.yao_face_front  { background: rgba(189, 89, 70, .85);  transform: translateZ(100px); }
+		.yao_face_back   { background: rgba(57, 118, 163, .85); transform: rotateY(180deg) translateZ(100px); }
+		.yao_face_right  { background: rgba(50, 132, 119, .85); transform: rotateY(90deg) translateZ(100px); }
+		.yao_face_left   { background: rgba(189, 135, 55, .85); transform: rotateY(-90deg) translateZ(100px); }
+		.yao_face_top    { background: rgba(163, 79, 105, .85); transform: rotateX(90deg) translateZ(100px); }
+		.yao_face_bottom { background: rgba(107, 126, 77, .85); transform: rotateX(-90deg) translateZ(100px); }
+
+		@keyframes yao_spin {
+			0%   { transform: rotateX(0deg) rotateY(0deg); }
+			100% { transform: rotateX(360deg) rotateY(360deg); }
+		}
+
+		/* 卡片翻转 */
+		.yao_grid {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.25rem;
+		}
+
+		.yao_card_wrap {
+			width: 160px;
+			height: 220px;
+			perspective: 800px;
+		}
+
+		.yao_card {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+			transition: transform .8s ease-in-out;
+		}
+
+		.yao_card_wrap:hover .yao_card {
+			transform: rotateY(180deg);
+		}
+
+		.yao_card_face {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			border-radius: .5rem;
+			color: #fff;
+			backface-visibility: hidden;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .18);
+		}
+
+		.yao_card_face h3 {
+			margin: 0 0 .4rem;
+			font-size: 1.1rem;
+		}
+
+		.yao_card_face p {
+			margin: 0;
+			font-size: .8rem;
+			padding: 0 1rem;
+			text-align: center;
+		}
+
+		.yao_card_front {
+			background: #3976a3;
+		}
+
+		.yao_card_back {
+			background: #bd5946;
+			transform: rotateY(180deg);
+		}
+
+		/* 文字翻转（绕 X 轴） */
+		.yao_flip_x {
+			display: inline-block;
+			font-size: 1.4rem;
+			font-weight: 600;
+			color: #3976a3;
+			transform-style: preserve-3d;
+			animation: yao_flipx 3s ease-in-out infinite;
+		}
+
+		@keyframes yao_flipx {
+			0%   { transform: rotateX(0deg); }
+			50%  { transform: rotateX(180deg); }
+			100% { transform: rotateX(360deg); }
+		}
+	</style>
+</head>
+<body>
+	<main class="yao_main">
+		<header class="yao_header">
+			<div>
+				<h1>CSS3 3D 动画</h1>
+				<p class="yao_subtitle">透视 perspective、旋转 rotateX/rotateY、3D 立方体与翻转卡片</p>
+			</div>
+			<div class="yao_author">姚琳 · 11-2</div>
+		</header>
+
+		<section class="yao_block">
+			<h2>一、3D 旋转立方体</h2>
+			<p class="yao_note">鼠标移上可暂停旋转；立方体由 6 个面组成，通过 translateZ 与 rotate 定位。</p>
+			<div class="yao_stage">
+				<div class="yao_cube">
+					<div class="yao_face yao_face_front">前</div>
+					<div class="yao_face yao_face_back">后</div>
+					<div class="yao_face yao_face_right">右</div>
+					<div class="yao_face yao_face_left">左</div>
+					<div class="yao_face yao_face_top">上</div>
+					<div class="yao_face yao_face_bottom">下</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>二、翻转卡片（rotateY）</h2>
+			<p class="yao_note">鼠标悬停卡片，正面翻转为背面。</p>
+			<div class="yao_grid">
+				<div class="yao_card_wrap">
+					<div class="yao_card">
+						<div class="yao_card_face yao_card_front">
+							<h3>正面</h3>
+							<p>rotateY 翻转动画</p>
+						</div>
+						<div class="yao_card_face yao_card_back">
+							<h3>背面</h3>
+							<p>backface-visibility: hidden</p>
+						</div>
+					</div>
+				</div>
+				<div class="yao_card_wrap">
+					<div class="yao_card">
+						<div class="yao_card_face yao_card_front">
+							<h3>正面</h3>
+							<p>transition 过渡</p>
+						</div>
+						<div class="yao_card_face yao_card_back">
+							<h3>背面</h3>
+							<p>perspective: 800px</p>
+						</div>
+					</div>
+				</div>
+				<div class="yao_card_wrap">
+					<div class="yao_card">
+						<div class="yao_card_face yao_card_front">
+							<h3>正面</h3>
+							<p>preserve-3d</p>
+						</div>
+						<div class="yao_card_face yao_card_back">
+							<h3>背面</h3>
+							<p>transform-style</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>三、文字翻转（rotateX）</h2>
+			<p class="yao_note">keyframes 关键帧驱动，文字绕 X 轴循环翻转。</p>
+			<p><span class="yao_flip_x">3D 翻转文字</span></p>
+		</section>
+	</main>
+</body>
+</html>
