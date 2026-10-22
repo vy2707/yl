@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-22
+	功能名称：演示 JavaScript 基本的 6 种数据类型
+	-->
+	<title>14-2 JavaScript 基本数据类型</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		code {
+			padding: .1rem .35rem;
+			background: #f0f4f8;
+			border-radius: .25rem;
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			font-size: .85em;
+		}
+
+		.yl_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_note {
+			margin: 0 0 1rem;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+
+		/* 类型总览表 */
+		.yl_table {
+			width: 100%;
+			border-collapse: collapse;
+			background: #fff;
+			border-radius: .5rem;
+			overflow: hidden;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+		}
+
+		.yl_table th,
+		.yl_table td {
+			padding: .7rem .9rem;
+			text-align: left;
+			font-size: .9rem;
+			border-bottom: 1px solid #eee9dd;
+		}
+
+		.yl_table th {
+			background: #3976a3;
+			color: #fff;
+			font-weight: 600;
+		}
+
+		.yl_table tr:last-child td {
+			border-bottom: none;
+		}
+
+		/* 交互演示区 */
+		.yl_btn_group {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .6rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_btn {
+			padding: .5rem 1rem;
+			border: 1px solid #3976a3;
+			border-radius: .4rem;
+			background: #fff;
+			color: #3976a3;
+			font-size: .85rem;
+			font-family: inherit;
+			cursor: pointer;
+			transition: background .2s ease, color .2s ease;
+		}
+
+		.yl_btn:hover {
+			background: #3976a3;
+			color: #fff;
+		}
+
+		.yl_btn_clear {
+			border-color: #a34e3c;
+			color: #a34e3c;
+		}
+
+		.yl_btn_clear:hover {
+			background: #a34e3c;
+			color: #fff;
+		}
+
+		.yl_console {
+			min-height: 14rem;
+			max-height: 22rem;
+			padding: 1rem 1.25rem;
+			background: #26343a;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .15);
+			font-family: Consolas, monospace;
+			font-size: .85rem;
+			line-height: 1.7;
+			color: #d8e2e8;
+			overflow: auto;
+		}
+
+		.yl_console .yl_line_code {
+			color: #9ecbe8;
+		}
+
+		.yl_console .yl_line_result {
+			color: #8fd3a6;
+		}
+
+		.yl_console_placeholder {
+			color: #6b7c85;
+		}
+
+		/* 注意事项卡片 */
+		.yl_card_list {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			padding: 1rem 1.1rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			font-size: .88rem;
+			line-height: 1.7;
+		}
+
+		.yl_card b {
+			display: block;
+			margin-bottom: .3rem;
+			color: #3976a3;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JavaScript 基本数据类型</h1>
+				<p class="yl_subtitle">6 种基本类型：String、Number、Boolean、Undefined、Null、Object（使用 typeof 检测）</p>
+			</div>
+			<div class="yl_author">姚琳 · 14-2</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、6 种数据类型总览</h2>
+			<table class="yl_table">
+				<thead>
+					<tr>
+						<th>数据类型</th>
+						<th>说明</th>
+						<th>示例</th>
+						<th>typeof 结果</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>String</td>
+						<td>字符串，由引号包裹的文本</td>
+						<td><code>"姚琳"</code>、<code>'630'</code></td>
+						<td><code>"string"</code></td>
+					</tr>
+					<tr>
+						<td>Number</td>
+						<td>数值，含整数、浮点数、NaN、Infinity</td>
+						<td><code>100</code>、<code>3.14</code>、<code>NaN</code></td>
+						<td><code>"number"</code></td>
+					</tr>
+					<tr>
+						<td>Boolean</td>
+						<td>布尔值，只有真和假两个值</td>
+						<td><code>true</code>、<code>false</code></td>
+						<td><code>"boolean"</code></td>
+					</tr>
+					<tr>
+						<td>Undefined</td>
+						<td>已声明但未赋值的变量的默认值</td>
+						<td><code>var yl_x;</code></td>
+						<td><code>"undefined"</code></td>
+					</tr>
+					<tr>
+						<td>Null</td>
+						<td>空值，表示“没有对象”</td>
+						<td><code>null</code></td>
+						<td><code>"object"</code>（历史遗留）</td>
+					</tr>
+					<tr>
+						<td>Object</td>
+						<td>对象，含数组、函数等引用类型</td>
+						<td><code>{}</code>、<code>[]</code>、<code>function(){}</code></td>
+						<td><code>"object"</code> / <code>"function"</code></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、typeof 交互演示</h2>
+			<p class="yl_note">点击按钮运行对应的 typeof 检测，结果输出到下方控制台。</p>
+			<div class="yl_btn_group" id="yl_btn_group"></div>
+			<div class="yl_console" id="yl_console">
+				<div class="yl_console_placeholder">// 控制台就绪，点击上方按钮开始演示……</div>
+			</div>
+		</section>
+
+		<section class="yl_block">
+			<h2>三、注意事项</h2>
+			<div class="yl_card_list">
+				<div class="yl_card">
+					<b>typeof null === "object"</b>
+					这是 JavaScript 早期实现的历史遗留问题，判断空值应使用 <code>=== null</code>。
+				</div>
+				<div class="yl_card">
+					<b>函数是特殊的 Object</b>
+					<code>typeof function(){}</code> 返回 <code>"function"</code>，但函数本质上仍属于对象类型。
+				</div>
+				<div class="yl_card">
+					<b>NaN 属于 Number</b>
+					NaN 表示“非数字”，但它的数据类型仍然是 <code>"number"</code>。
+				</div>
+				<div class="yl_card">
+					<b>未赋值不等于未声明</b>
+					只声明未赋值的变量是 undefined；typeof 检测未声明变量也返回 <code>"undefined"</code>，但直接使用未声明变量会报错。
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		// 6 种数据类型的演示数据（变量名均以 yl_ 开头）
+		var yl_demoList = [
+			{ label: '字符串 String', code: 'typeof "姚琳 630"', result: 'string' },
+			{ label: '数值 Number', code: 'typeof 3.14', result: 'number' },
+			{ label: '布尔 Boolean', code: 'typeof true', result: 'boolean' },
+			{ label: '未定义 Undefined', code: 'var yl_tmp; typeof yl_tmp', result: 'undefined' },
+			{ label: '空值 Null', code: 'typeof null', result: 'object（历史遗留）' },
+			{ label: '对象 Object', code: 'typeof { name: "姚琳" }', result: 'object' }
+		];
+
+		// 获取控制台与按钮容器元素
+		var yl_consoleEl = document.getElementById('yl_console');
+		var yl_btnGroupEl = document.getElementById('yl_btn_group');
+
+		// 向控制台追加一行输出
+		function yl_addLine(yl_text, yl_cls) {
+			var yl_line = document.createElement('div');
+			yl_line.className = yl_cls;
+			yl_line.textContent = yl_text;
+			yl_consoleEl.appendChild(yl_line);
+			yl_consoleEl.scrollTop = yl_consoleEl.scrollHeight;
+		}
+
+		// 运行某一条演示：输出代码与 typeof 结果
+		function yl_runDemo(yl_index) {
+			var yl_item = yl_demoList[yl_index];
+			yl_addLine('> ' + yl_item.code, 'yl_line_code');
+			yl_addLine('← ' + yl_item.result, 'yl_line_result');
+		}
+
+		// 清空控制台
+		function yl_clearConsole() {
+			yl_consoleEl.innerHTML = '<div class="yl_console_placeholder">// 控制台已清空，点击上方按钮开始演示……</div>';
+		}
+
+		// 初始化：根据演示数据生成按钮，并附加清空按钮
+		(function yl_init() {
+			yl_demoList.forEach(function (yl_item, yl_i) {
+				var yl_btn = document.createElement('button');
+				yl_btn.className = 'yl_btn';
+				yl_btn.type = 'button';
+				yl_btn.textContent = yl_item.label;
+				yl_btn.onclick = function () { yl_runDemo(yl_i); };
+				yl_btnGroupEl.appendChild(yl_btn);
+			});
+
+			var yl_clearBtn = document.createElement('button');
+			yl_clearBtn.className = 'yl_btn yl_btn_clear';
+			yl_clearBtn.type = 'button';
+			yl_clearBtn.textContent = '清空控制台';
+			yl_clearBtn.onclick = yl_clearConsole;
+			yl_btnGroupEl.appendChild(yl_clearBtn);
+		})();
+	</script>
+</body>
+</html>

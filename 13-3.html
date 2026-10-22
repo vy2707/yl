@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>13-3 移动端底部导航（字体图标）制作人：630姚琳</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #e9ecf1;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		/* 移动端容器：100% 自适应宽度 */
+		.yao_main {
+			position: relative;
+			width: 100%;
+			min-height: 100vh;
+			background: #f6f6f8;
+		}
+
+		.yao_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 1.25rem 1rem 1rem;
+			border-bottom: 1px solid #e3e5ea;
+			background: #fff;
+		}
+
+		.yao_header h1 {
+			margin: 0;
+			font-size: 1.25rem;
+			font-weight: 600;
+		}
+
+		.yao_subtitle {
+			margin: .3rem 0 0;
+			color: #000000;
+			font-size: .8rem;
+		}
+
+		.yao_author {
+			flex: 0 0 auto;
+			color: #000000;
+			font-size: .85rem;
+			font-weight: 600;
+		}
+
+		/* 内容区：留出底部导航高度，便于滚动 */
+		.yao_content {
+			padding: 1rem 1rem 5.5rem;
+		}
+
+		.yao_section_title {
+			margin: .5rem 0 .9rem;
+			font-size: 1.05rem;
+			font-weight: 600;
+		}
+
+		.yao_card {
+			display: flex;
+			align-items: center;
+			gap: .75rem;
+			padding: .9rem .75rem;
+			margin-bottom: .7rem;
+			background: #fff;
+			border-radius: .6rem;
+			box-shadow: 0 .25rem .6rem rgba(24, 36, 48, .05);
+		}
+
+		.yao_card .iconfont {
+			font-size: 1.4rem;
+			color: #000000;
+		}
+
+		.yao_card_title {
+			font-size: .92rem;
+			font-weight: 600;
+		}
+
+		.yao_card_desc {
+			margin-top: .2rem;
+			color: #000000;
+			font-size: .78rem;
+		}
+
+		/* 底部导航：固定定位，100% 自适应宽度 */
+		.yao_tabbar {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			display: flex;
+			background: #fff;
+			border-top: 1px solid #eceef1;
+			box-shadow: 0 -2px 12px rgba(24, 36, 48, .06);
+			user-select: none;
+			padding-bottom: env(safe-area-inset-bottom);
+		}
+
+		.yao_item {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: .25rem;
+			padding: .5rem 0 .45rem;
+			color: #000000;
+			text-decoration: none;
+		}
+
+		.yao_item .iconfont {
+			font-size: 1.45rem;
+			line-height: 1;
+		}
+
+		.yao_label {
+			font-size: .72rem;
+			line-height: 1;
+		}
+
+		.yao_item_active {
+			color: #000000
+		}
+
+		/* 图标右上角角标容器 */
+		.yao_icon_wrap {
+			position: relative;
+			display: inline-flex;
+			line-height: 1;
+		}
+
+		/* 数字徽章 */
+		.yao_badge {
+			position: absolute;
+			top: -6px;
+			right: -12px;
+			min-width: 16px;
+			height: 16px;
+			padding: 0 4px;
+			border-radius: 8px;
+			background: #000000;
+			color: #fff;
+			font-size: 10px;
+			line-height: 16px;
+			text-align: center;
+			border: 1.5px solid #fff;
+			box-sizing: border-box;
+		}
+
+		/* 红点 */
+		.yao_dot {
+			position: absolute;
+			top: -2px;
+			right: -6px;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background: #000000;
+			border: 1.5px solid #fff;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+<body>
+	<main class="yao_main">
+		<header class="yao_header">
+			<div>
+				<h1>移动端底部导航</h1>
+				<p class="yao_subtitle">字体图标方式 · iconfont（Font class）</p>
+			</div>
+			<div class="yao_author">姚琳 · 13-3</div>
+		</header>
+
+		<div class="yao_content">
+			<p class="yao_section_title">今日推荐</p>
+			<div class="yao_card">
+				<i class="iconfont icon-bofang"></i>
+				<div>
+					<div class="yao_card_title">晴天</div>
+					<div class="yao_card_desc">周杰伦 · 叶惠美</div>
+				</div>
+			</div>
+			<div class="yao_card">
+				<i class="iconfont icon-changge"></i>
+				<div>
+					<div class="yao_card_title">稻香</div>
+					<div class="yao_card_desc">周杰伦 · 魔杰座</div>
+				</div>
+			</div>
+			<div class="yao_card">
+				<i class="iconfont icon-aixin"></i>
+				<div>
+					<div class="yao_card_title">起风了</div>
+					<div class="yao_card_desc">买辣椒也用券</div>
+				</div>
+			</div>
+			<div class="yao_card">
+				<i class="iconfont icon-xingguang-copy"></i>
+				<div>
+					<div class="yao_card_title">星晴</div>
+					<div class="yao_card_desc">周杰伦 · Jay</div>
+				</div>
+			</div>
+		</div>
+
+		<nav class="yao_tabbar">
+			<a class="yao_item yao_item_active" href="#">
+				<span class="yao_icon_wrap"><i class="iconfont icon-shouye-copy-copy-copy"></i></span>
+				<span class="yao_label">首页</span>
+			</a>
+			<a class="yao_item" href="#">
+				<span class="yao_icon_wrap">
+					<i class="iconfont icon-shipin-copy"></i>
+					<!--<span class="yao_badge">3</span> -->
+				</span>
+				<span class="yao_label">视频</span>
+			</a>
+			<a class="yao_item" href="#">
+				<span class="yao_icon_wrap">
+					<i class="iconfont icon-leida1-copy-copy"></i>
+					<!--<span class="yao_badge">99+</span> -->
+				</span>
+				<span class="yao_label">刷歌</span>
+			</a>
+			<a class="yao_item" href="#">
+				<span class="yao_icon_wrap">
+					<i class="iconfont icon-xingguang-copy"></i>
+					<!--<span class="yao_dot"></span> -->
+				</span>
+				<span class="yao_label">星光</span>
+			</a>
+			<a class="yao_item" href="#">
+				<span class="yao_icon_wrap">
+					<i class="iconfont icon-wode"></i>
+					<!--<span class="yao_badge">12</span> 12条未读消息 -->
+				</span>
+				<span class="yao_label">我的</span>
+			</a>
+		</nav>
+	</main>
+</body>
+</html>

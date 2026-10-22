@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>13-1 Font Awesome 字体图标</title>
+	<link rel="stylesheet" href="cdn/font-awesome/css/all.min.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 16px;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yao_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yao_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yao_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yao_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yao_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yao_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yao_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yao_note {
+			margin: 0 0 1rem;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+
+		/* 图标网格 */
+		.yao_grid {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		.yao_icon_card {
+			flex: 0 0 150px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: .6rem;
+			padding: 1.25rem .5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			text-align: center;
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.yao_icon_card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 .8rem 1.5rem rgba(38, 52, 58, .15);
+		}
+
+		.yao_icon_card i {
+			font-size: 2.2rem;
+			color: #3976a3;
+		}
+
+		.yao_icon_card span {
+			font-size: .8rem;
+			color: #667579;
+		}
+
+		/* 尺寸演示 */
+		.yao_sizes {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 2rem;
+			padding: 1.5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+		}
+
+		.yao_sizes i {
+			color: #328477;
+		}
+
+		.yao_fa_xs { font-size: .75rem; }
+		.yao_fa_sm { font-size: .875rem; }
+		.yao_fa_lg { font-size: 1.5rem; }
+		.yao_fa_2x { font-size: 2rem; }
+		.yao_fa_3x { font-size: 3rem; }
+		.yao_fa_5x { font-size: 5rem; }
+
+		/* 颜色与动画演示 */
+		.yao_demo_row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 1.5rem;
+			padding: 1.5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+		}
+
+		.yao_demo_row i {
+			font-size: 2rem;
+		}
+
+		.yao_color_red { color: #bd5946; }
+		.yao_color_gold { color: #bd8737; }
+		.yao_color_green { color: #6b7e4d; }
+		.yao_color_pink { color: #a34f69; }
+
+		.yao_spin { animation: yao_fa_spin 2s linear infinite; }
+
+		.yao_pulse { animation: yao_fa_pulse 1.5s ease-in-out infinite; }
+
+		.yao_bounce { animation: yao_fa_bounce 1.2s ease-in-out infinite; }
+
+		@keyframes yao_fa_spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		@keyframes yao_fa_pulse {
+			0%, 100% { transform: scale(1); }
+			50% { transform: scale(1.3); }
+		}
+
+		@keyframes yao_fa_bounce {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-10px); }
+		}
+	</style>
+</head>
+<body>
+	<main class="yao_main">
+		<header class="yao_header">
+			<div>
+				<h1>Font Awesome 字体图标</h1>
+				<p class="yao_subtitle">通过 &lt;i&gt; 标签与 CSS 字体文件渲染图标（字体图标方式）</p>
+			</div>
+			<div class="yao_author">姚琳 · 13-1</div>
+		</header>
+
+		<section class="yao_block">
+			<h2>一、实心图标（fa-solid）</h2>
+			<div class="yao_grid">
+				<div class="yao_icon_card"><i class="fa-solid fa-house"></i><span>fa-house</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-user"></i><span>fa-user</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-heart"></i><span>fa-heart</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-star"></i><span>fa-star</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-gear"></i><span>fa-gear</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-envelope"></i><span>fa-envelope</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-camera"></i><span>fa-camera</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-music"></i><span>fa-music</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-car"></i><span>fa-car</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-bell"></i><span>fa-bell</span></div>
+				<div class="yao_icon_card"><i class="fa-solid fa-location-dot"></i><span>fa-location-dot</span></div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>二、线性图标（fa-regular）</h2>
+			<div class="yao_grid">
+				<div class="yao_icon_card"><i class="fa-regular fa-heart"></i><span>fa-heart</span></div>
+				<div class="yao_icon_card"><i class="fa-regular fa-star"></i><span>fa-star</span></div>
+				<div class="yao_icon_card"><i class="fa-regular fa-bell"></i><span>fa-bell</span></div>
+				<div class="yao_icon_card"><i class="fa-regular fa-clock"></i><span>fa-clock</span></div>
+				<div class="yao_icon_card"><i class="fa-regular fa-face-smile"></i><span>fa-face-smile</span></div>
+				<div class="yao_icon_card"><i class="fa-regular fa-circle"></i><span>fa-circle</span></div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>三、品牌图标（fa-brands）</h2>
+			<div class="yao_grid">
+				<div class="yao_icon_card"><i class="fa-brands fa-weixin"></i><span>fa-weixin</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-weibo"></i><span>fa-weibo</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-qq"></i><span>fa-qq</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-zhihu"></i><span>fa-zhihu</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-github"></i><span>fa-github</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-html5"></i><span>fa-html5</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-css3-alt"></i><span>fa-css3-alt</span></div>
+				<div class="yao_icon_card"><i class="fa-brands fa-js"></i><span>fa-js</span></div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>四、尺寸演示</h2>
+			<p class="yao_note">通过 font-size 直接改变图标大小，与文字缩放方式一致。</p>
+			<div class="yao_sizes">
+				<i class="fa-solid fa-star yao_fa_xs"></i>
+				<i class="fa-solid fa-star yao_fa_sm"></i>
+				<i class="fa-solid fa-star yao_fa_lg"></i>
+				<i class="fa-solid fa-star yao_fa_2x"></i>
+				<i class="fa-solid fa-star yao_fa_3x"></i>
+				<i class="fa-solid fa-star yao_fa_5x"></i>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>五、颜色与动画</h2>
+			<p class="yao_note">字体图标继承 color 属性，可像文字一样着色，并可用 keyframes 做动画。</p>
+			<div class="yao_demo_row">
+				<i class="fa-solid fa-heart yao_color_red"></i>
+				<i class="fa-solid fa-sun yao_color_gold"></i>
+				<i class="fa-solid fa-leaf yao_color_green"></i>
+				<i class="fa-solid fa-flower yao_color_pink"></i>
+				<i class="fa-solid fa-spinner yao_spin"></i>
+				<i class="fa-solid fa-heart yao_pulse yao_color_red"></i>
+				<i class="fa-solid fa-arrow-up yao_bounce"></i>
+			</div>
+		</section>
+	</main>
+</body>
+</html>

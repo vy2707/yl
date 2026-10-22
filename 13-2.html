@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>13-2 Lucide SVG 图标</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 16px;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yao_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yao_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yao_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yao_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yao_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yao_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yao_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yao_note {
+			margin: 0 0 1rem;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+
+		/* 图标网格 */
+		.yao_grid {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		.yao_icon_card {
+			flex: 0 0 150px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: .6rem;
+			padding: 1.25rem .5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			text-align: center;
+			color: #3976a3;
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.yao_icon_card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 .8rem 1.5rem rgba(38, 52, 58, .15);
+		}
+
+		.yao_icon_card svg {
+			width: 2.2rem;
+			height: 2.2rem;
+			stroke-width: 1.8;
+		}
+
+		.yao_icon_card span {
+			font-size: .8rem;
+			color: #667579;
+		}
+
+		/* 尺寸演示 */
+		.yao_sizes {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 2rem;
+			padding: 1.5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			color: #328477;
+		}
+
+		.yao_sizes svg {
+			stroke-width: 1.6;
+		}
+
+		/* 颜色与动画演示 */
+		.yao_demo_row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 1.5rem;
+			padding: 1.5rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+		}
+
+		.yao_demo_row svg {
+			width: 2.2rem;
+			height: 2.2rem;
+		}
+
+		.yao_color_red { color: #bd5946; }
+		.yao_color_gold { color: #bd8737; }
+		.yao_color_green { color: #6b7e4d; }
+		.yao_color_pink { color: #a34f69; }
+
+		.yao_spin { animation: yao_lucide_spin 2s linear infinite; }
+
+		.yao_pulse { animation: yao_lucide_pulse 1.5s ease-in-out infinite; }
+
+		.yao_bounce { animation: yao_lucide_bounce 1.2s ease-in-out infinite; }
+
+		@keyframes yao_lucide_spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		@keyframes yao_lucide_pulse {
+			0%, 100% { transform: scale(1); }
+			50% { transform: scale(1.3); }
+		}
+
+		@keyframes yao_lucide_bounce {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-10px); }
+		}
+	</style>
+</head>
+<body>
+	<main class="yao_main">
+		<header class="yao_header">
+			<div>
+				<h1>Lucide SVG 图标</h1>
+				<p class="yao_subtitle">通过 data-lucide 属性由脚本动态生成内联 SVG（SVG 方式）</p>
+			</div>
+			<div class="yao_author">姚琳 · 13-2</div>
+		</header>
+
+		<section class="yao_block">
+			<h2>一、常用图标</h2>
+			<div class="yao_grid">
+				<div class="yao_icon_card"><i data-lucide="home"></i><span>home</span></div>
+				<div class="yao_icon_card"><i data-lucide="user"></i><span>user</span></div>
+				<div class="yao_icon_card"><i data-lucide="heart"></i><span>heart</span></div>
+				<div class="yao_icon_card"><i data-lucide="star"></i><span>star</span></div>
+				<div class="yao_icon_card"><i data-lucide="search"></i><span>search</span></div>
+				<div class="yao_icon_card"><i data-lucide="settings"></i><span>settings</span></div>
+				<div class="yao_icon_card"><i data-lucide="mail"></i><span>mail</span></div>
+				<div class="yao_icon_card"><i data-lucide="camera"></i><span>camera</span></div>
+				<div class="yao_icon_card"><i data-lucide="music"></i><span>music</span></div>
+				<div class="yao_icon_card"><i data-lucide="car"></i><span>car</span></div>
+				<div class="yao_icon_card"><i data-lucide="bell"></i><span>bell</span></div>
+				<div class="yao_icon_card"><i data-lucide="clock"></i><span>clock</span></div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>二、更多图标</h2>
+			<div class="yao_grid">
+				<div class="yao_icon_card"><i data-lucide="smile"></i><span>smile</span></div>
+				<div class="yao_icon_card"><i data-lucide="github"></i><span>github</span></div>
+				<div class="yao_icon_card"><i data-lucide="code"></i><span>code</span></div>
+				<div class="yao_icon_card"><i data-lucide="image"></i><span>image</span></div>
+				<div class="yao_icon_card"><i data-lucide="phone"></i><span>phone</span></div>
+				<div class="yao_icon_card"><i data-lucide="map-pin"></i><span>map-pin</span></div>
+				<div class="yao_icon_card"><i data-lucide="coffee"></i><span>coffee</span></div>
+				<div class="yao_icon_card"><i data-lucide="sun"></i><span>sun</span></div>
+				<div class="yao_icon_card"><i data-lucide="leaf"></i><span>leaf</span></div>
+				<div class="yao_icon_card"><i data-lucide="flower"></i><span>flower</span></div>
+				<div class="yao_icon_card"><i data-lucide="cloud"></i><span>cloud</span></div>
+				<div class="yao_icon_card"><i data-lucide="zap"></i><span>zap</span></div>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>三、尺寸演示</h2>
+			<p class="yao_note">通过设置 SVG 的 width / height 属性改变图标大小。</p>
+			<div class="yao_sizes">
+				<i data-lucide="star" width="16" height="16"></i>
+				<i data-lucide="star" width="20" height="20"></i>
+				<i data-lucide="star" width="28" height="28"></i>
+				<i data-lucide="star" width="36" height="36"></i>
+				<i data-lucide="star" width="48" height="48"></i>
+				<i data-lucide="star" width="64" height="64"></i>
+			</div>
+		</section>
+
+		<section class="yao_block">
+			<h2>四、颜色与动画</h2>
+			<p class="yao_note">SVG 使用 currentColor 描边，可继承文字颜色，并可用 keyframes 做动画。</p>
+			<div class="yao_demo_row">
+				<i data-lucide="heart" class="yao_color_red"></i>
+				<i data-lucide="sun" class="yao_color_gold"></i>
+				<i data-lucide="leaf" class="yao_color_green"></i>
+				<i data-lucide="flower" class="yao_color_pink"></i>
+				<i data-lucide="loader-circle" class="yao_spin"></i>
+				<i data-lucide="heart" class="yao_pulse yao_color_red"></i>
+				<i data-lucide="arrow-up" class="yao_bounce"></i>
+			</div>
+		</section>
+	</main>
+
+	<script src="cdn/lucide/lucide.min.js"></script>
+	<script>
+		lucide.createIcons();
+	</script>
+</body>
+</html>
