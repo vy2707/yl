@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-26
+	功能名称：JavaScript 程序结构、循环与条件演示
+	-->
+	<title>15-2 JavaScript 程序结构 · 循环 · 条件</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+		}
+
+		.yl_code {
+			margin: 0 0 1rem;
+			padding: 1rem 1.1rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .85rem;
+			line-height: 1.7;
+			overflow-x: auto;
+			white-space: pre;
+		}
+
+		.yl_code .yl_cm {
+			color: #8aa6b3;
+		}
+
+		.yl_code .yl_kw {
+			color: #f2c66d;
+		}
+
+		.yl_code .yl_st {
+			color: #a8d58b;
+		}
+
+		.yl_cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.1rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_card h3 {
+			margin: 0 0 .6rem;
+			font-size: 1rem;
+			font-weight: 600;
+			color: #a34e3c;
+		}
+
+		.yl_card p {
+			margin: 0 0 .6rem;
+			font-size: .85rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_output {
+			padding: .7rem .8rem;
+			background: #f6f3ea;
+			border-radius: .4rem;
+			font-size: .9rem;
+			color: #26343a;
+			min-height: 2.2rem;
+			line-height: 1.6;
+			word-break: break-all;
+		}
+
+		.yl_output b {
+			color: #a34e3c;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			margin-top: .7rem;
+			padding: .45rem 1rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_input {
+			width: 6rem;
+			margin-top: .7rem;
+			padding: .4rem .5rem;
+			border: 1px solid #b9c6cf;
+			border-radius: .4rem;
+			font-size: .9rem;
+		}
+
+		.yl_table {
+			display: grid;
+			grid-template-columns: repeat(9, 1fr);
+			gap: 4px;
+		}
+
+		.yl_cell {
+			padding: .35rem 0;
+			text-align: center;
+			background: #f6f3ea;
+			border-radius: .3rem;
+			font-size: .75rem;
+			color: #26343a;
+		}
+
+		.yl_week {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .4rem;
+		}
+
+		.yl_day {
+			padding: .35rem .6rem;
+			border-radius: .4rem;
+			font-size: .8rem;
+			background: #f6f3ea;
+			border: 1px solid #d5d5cc;
+		}
+
+		.yl_day_weekend {
+			background: #fbe9e7;
+			border-color: #d8a79a;
+			color: #a34e3c;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JavaScript 程序结构 · 循环 · 条件</h1>
+				<p class="yl_subtitle">变量与语句、for / while / do-while 循环、if / switch / 三元运算符条件判断</p>
+			</div>
+			<div class="yl_author">姚琳 · 15-2</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 程序结构 -->
+		<section class="yl_block">
+			<h2>一、程序结构</h2>
+			<p class="yl_block_desc">一个 JS 程序由语句（statement）组成，语句以分号结尾；数据存放在变量中，配合注释让代码可读。</p>
+			<pre class="yl_code"><span class="yl_cm">// 1. 变量与常量：用关键字声明并存储不同类型的数据</span>
+<span class="yl_kw">let</span> yl_name = <span class="yl_st">"姚琳"</span>;              <span class="yl_cm">// 字符串</span>
+<span class="yl_kw">const</span> yl_age = 20;               <span class="yl_cm">// 数字（常量不可改）</span>
+<span class="yl_kw">let</span> yl_score = 88;               <span class="yl_cm">// 数字</span>
+<span class="yl_kw">let</span> yl_isPass = <span class="yl_kw">true</span>;           <span class="yl_cm">// 布尔值</span>
+<span class="yl_kw">let</span> yl_hobbies = [<span class="yl_st">"绘画"</span>, <span class="yl_st">"前端"</span>]; <span class="yl_cm">// 数组</span>
+<span class="yl_kw">let</span> yl_student = { name: yl_name, age: yl_age }; <span class="yl_cm">// 对象</span>
+
+<span class="yl_cm">// 2. 表达式与运算符</span>
+<span class="yl_kw">let</span> yl_total = yl_score + 12;    <span class="yl_cm">// 算术运算</span>
+<span class="yl_kw">let</span> yl_result = yl_total &gt;= 60; <span class="yl_cm">// 比较运算</span>
+
+<span class="yl_cm">// 3. 语句（以分号结尾，顺序执行）</span>
+console.log(yl_name + <span class="yl_st">" 总分："</span> + yl_total);</pre>
+			<div class="yl_output" id="yl_structure_out"></div>
+		</section>
+
+		<!-- 循环 -->
+		<section class="yl_block">
+			<h2>二、循环</h2>
+			<p class="yl_block_desc">循环用于重复执行一段代码：for 适合确定次数，while 先判断后执行，do-while 至少执行一次。</p>
+			<div class="yl_cards">
+				<div class="yl_card">
+					<h3>for 循环 · 1~100 累加</h3>
+					<p>确定次数时最常用，含初始值、条件、步进三部分。</p>
+					<div class="yl_output" id="yl_for_out"></div>
+				</div>
+				<div class="yl_card">
+					<h3>while 循环 · 打印偶数</h3>
+					<p>先判断条件再执行，条件不满足则跳过。</p>
+					<div class="yl_output" id="yl_while_out"></div>
+				</div>
+				<div class="yl_card">
+					<h3>do-while 循环 · 至少一次</h3>
+					<p>先执行再判断，即使条件为假也执行一次。</p>
+					<div class="yl_output" id="yl_dowhile_out"></div>
+				</div>
+				<div class="yl_card">
+					<h3>嵌套 for · 九九乘法表</h3>
+					<p>外层控制行、内层控制列，两两相乘。</p>
+					<div class="yl_table" id="yl_table"></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 条件 -->
+		<section class="yl_block">
+			<h2>三、条件</h2>
+			<p class="yl_block_desc">条件判断让程序根据不同的情况执行不同的代码分支。</p>
+			<div class="yl_cards">
+				<div class="yl_card">
+					<h3>if ... else if ... else · 成绩等级</h3>
+					<p>输入 0~100 的分数，输出对应等级。</p>
+					<input class="yl_input" id="yl_score_input" type="number" min="0" max="100" value="88" placeholder="输入分数">
+					<button class="yl_btn" id="yl_score_btn">判断等级</button>
+					<div class="yl_output" id="yl_if_out"></div>
+				</div>
+				<div class="yl_card">
+					<h3>switch · 星期判断</h3>
+					<p>根据星期几判断是工作日还是周末（红色为周末）。</p>
+					<div class="yl_week" id="yl_week"></div>
+					<div class="yl_output" id="yl_switch_out"></div>
+				</div>
+				<div class="yl_card">
+					<h3>三元运算符 · 奇偶判断</h3>
+					<p>输入任意整数，判断奇偶（条件 ? 真 : 假）。</p>
+					<input class="yl_input" id="yl_num_input" type="number" value="7" placeholder="输入整数">
+					<button class="yl_btn" id="yl_num_btn">判断奇偶</button>
+					<div class="yl_output" id="yl_ternary_out"></div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		// ===== 一、程序结构 =====
+		(function yl_showStructure() {
+			var yl_name = "姚琳";
+			var yl_age = 20;
+			var yl_score = 88;
+			var yl_isPass = true;
+			var yl_hobbies = ["绘画", "前端"];
+			var yl_student = { name: yl_name, age: yl_age };
+			var yl_total = yl_score + 12;
+			var yl_result = yl_total >= 60;
+
+			document.getElementById('yl_structure_out').innerHTML =
+				'姓名：<b>' + yl_name + '</b>　年龄：<b>' + yl_age + '</b>　成绩：<b>' + yl_score + '</b>　' +
+				'及格：<b>' + yl_isPass + '</b>　总分：<b>' + yl_total + '</b>（≥60：<b>' + yl_result + '</b>）　' +
+				'爱好：<b>' + yl_hobbies.join('、') + '</b>　对象：<b>' + JSON.stringify(yl_student) + '</b>';
+		})();
+
+		// ===== 二、循环 =====
+		// for 循环：累加 1~100
+		(function yl_showFor() {
+			var yl_sum = 0;
+			for (var yl_i = 1; yl_i <= 100; yl_i++) {
+				yl_sum += yl_i;
+			}
+			document.getElementById('yl_for_out').innerHTML = '1 + 2 + … + 100 = <b>' + yl_sum + '</b>';
+		})();
+
+		// while 循环：打印 1~10 的偶数
+		(function yl_showWhile() {
+			var yl_j = 1;
+			var yl_evens = [];
+			while (yl_j <= 10) {
+				if (yl_j % 2 === 0) {
+					yl_evens.push(yl_j);
+				}
+				yl_j++;
+			}
+			document.getElementById('yl_while_out').innerHTML = '1~10 中的偶数：<b>' + yl_evens.join('、') + '</b>';
+		})();
+
+		// do-while 循环：至少执行一次
+		(function yl_showDoWhile() {
+			var yl_k = 0;
+			do {
+				yl_k++;
+			} while (yl_k < 1);
+			document.getElementById('yl_dowhile_out').innerHTML = '条件 yl_k &lt; 1 为假，但循环体仍执行，yl_k = <b>' + yl_k + '</b>（至少执行一次）';
+		})();
+
+		// 嵌套 for：九九乘法表
+		(function yl_showTable() {
+			var yl_tableEl = document.getElementById('yl_table');
+			for (var yl_row = 1; yl_row <= 9; yl_row++) {
+				for (var yl_col = 1; yl_col <= 9; yl_col++) {
+					var yl_cell = document.createElement('div');
+					yl_cell.className = 'yl_cell';
+					yl_cell.textContent = yl_row + '×' + yl_col + '=' + (yl_row * yl_col);
+					yl_tableEl.appendChild(yl_cell);
+				}
+			}
+		})();
+
+		// ===== 三、条件 =====
+		// if ... else if ... else：成绩等级
+		(function yl_initIf() {
+			var yl_input = document.getElementById('yl_score_input');
+			var yl_out = document.getElementById('yl_if_out');
+
+			function yl_judge(yl_score) {
+				var yl_grade;
+				if (yl_score >= 90) {
+					yl_grade = '优秀';
+				} else if (yl_score >= 80) {
+					yl_grade = '良好';
+				} else if (yl_score >= 60) {
+					yl_grade = '及格';
+				} else {
+					yl_grade = '不及格';
+				}
+				return yl_grade;
+			}
+
+			function yl_runJudge() {
+				var yl_score = Number(yl_input.value);
+				if (isNaN(yl_score) || yl_score < 0 || yl_score > 100) {
+					yl_out.innerHTML = '请输入 0~100 之间的分数。';
+					return;
+				}
+				yl_out.innerHTML = '分数 <b>' + yl_score + '</b> 对应等级：<b>' + yl_judge(yl_score) + '</b>';
+			}
+
+			document.getElementById('yl_score_btn').onclick = yl_runJudge;
+			yl_runJudge();
+		})();
+
+		// switch：星期判断
+		(function yl_initSwitch() {
+			var yl_weekEl = document.getElementById('yl_week');
+			var yl_out = document.getElementById('yl_switch_out');
+			var yl_names = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+			var yl_weekendCount = 0;
+
+			for (var yl_day = 1; yl_day <= 7; yl_day++) {
+				var yl_type;
+				switch (yl_day) {
+					case 6:
+					case 7:
+						yl_type = '周末';
+						break;
+					default:
+						yl_type = '工作日';
+				}
+
+				var yl_span = document.createElement('span');
+				yl_span.className = 'yl_day';
+				yl_span.textContent = yl_names[yl_day - 1];
+				if (yl_type === '周末') {
+					yl_span.classList.add('yl_day_weekend');
+					yl_weekendCount++;
+				}
+				yl_weekEl.appendChild(yl_span);
+			}
+
+			yl_out.innerHTML = '共 7 天，其中 <b>' + yl_weekendCount + '</b> 天为周末（周六、周日）。';
+		})();
+
+		// 三元运算符：奇偶判断
+		(function yl_initTernary() {
+			var yl_input = document.getElementById('yl_num_input');
+			var yl_out = document.getElementById('yl_ternary_out');
+
+			function yl_runParity() {
+				var yl_num = Number(yl_input.value);
+				if (isNaN(yl_num) || !Number.isInteger(yl_num)) {
+					yl_out.innerHTML = '请输入一个整数。';
+					return;
+				}
+				var yl_parity = (yl_num % 2 === 0) ? '偶数' : '奇数';
+				yl_out.innerHTML = '<b>' + yl_num + '</b> 是 <b>' + yl_parity + '</b>（表达式：yl_num % 2 === 0 ? "偶数" : "奇数"）';
+			}
+
+			document.getElementById('yl_num_btn').onclick = yl_runParity;
+			yl_runParity();
+		})();
+	</script>
+</body>
+</html>
