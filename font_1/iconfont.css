@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5245663 */
-  src: url('iconfont.woff2?t=1792630752505') format('woff2'),
-       url('iconfont.woff?t=1792630752505') format('woff'),
-       url('iconfont.ttf?t=1792630752505') format('truetype');
+  src: url('iconfont.woff2?t=1792656900633') format('woff2'),
+       url('iconfont.woff?t=1792656900633') format('woff'),
+       url('iconfont.ttf?t=1792656900633') format('truetype');
 }
 
 .iconfont {
@@ -13,19 +13,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-jiantou:before {
-  content: "\e799";
+.icon-qqmusic:before {
+  content: "\e655";
+}
+
+.icon-da-youjiantou:before {
+  content: "\e608";
+}
+
+.icon-da-zuojiantou:before {
+  content: "\e609";
+}
+
+.icon-da-zuojiantou-copy:before {
+  content: "\e79e";
 }
 
 .icon-youjiantoucu:before {
   content: "\e607";
 }
 
-.icon-sigeyuandian-copy-copy-copy:before {
-  content: "\e79b";
-}
-
-.icon-yuandian:before {
-  content: "\e604";
+.icon-yuandian-copy:before {
+  content: "\e79f";
 }
 

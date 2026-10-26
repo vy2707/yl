@@ -6,11 +6,32 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "28945560",
-      "name": "箭头",
-      "font_class": "jiantou",
-      "unicode": "e799",
-      "unicode_decimal": 59289
+      "icon_id": "30469778",
+      "name": "QQ音乐",
+      "font_class": "qqmusic",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "2305747",
+      "name": "大-右箭头",
+      "font_class": "da-youjiantou",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "2305748",
+      "name": "大-左箭头",
+      "font_class": "da-zuojiantou",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "48743704",
+      "name": "大-左箭头-copy",
+      "font_class": "da-zuojiantou-copy",
+      "unicode": "e79e",
+      "unicode_decimal": 59294
     },
     {
       "icon_id": "30088004",
@@ -20,18 +41,11 @@
       "unicode_decimal": 58887
     },
     {
-      "icon_id": "48739626",
-      "name": "四个圆点-copy-copy-copy",
-      "font_class": "sigeyuandian-copy-copy-copy",
-      "unicode": "e79b",
-      "unicode_decimal": 59291
-    },
-    {
-      "icon_id": "6262758",
+      "icon_id": "48743706",
       "name": "圆点",
-      "font_class": "yuandian",
-      "unicode": "e604",
-      "unicode_decimal": 58884
+      "font_class": "yuandian-copy",
+      "unicode": "e79f",
+      "unicode_decimal": 59295
     }
   ]
 }

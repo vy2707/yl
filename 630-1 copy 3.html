@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>精彩推荐 - 屏幕边缘宽间距箭头版</title>
+    <title>精彩推荐 - 完美间距悬浮箭头</title>
     <!-- 替换为你自己的 iconfont 路径 -->
     <link rel="stylesheet" href="./font_1/iconfont.css">
 </head>
@@ -14,14 +14,13 @@
     * { box-sizing: border-box; }
     body { margin: 0; background-color: #f7f7f7; }
 
-    /* 主容器：限制最大宽度并居中，这就是为什么两边会有很大距离的原因 */
+    /* 主容器：限制最大宽度，居中显示 */
     .recommend-section {
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px 0;
       font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      position: relative; 
     }
 
     .section-title {
@@ -32,10 +31,15 @@
       margin-bottom: 20px;
     }
 
-    /* 轮播外层包裹器：去掉 padding，让卡片宽度撑满 */
+    /* 【核心修改 1】扩大悬停区域和边距 */
     .carousel-wrapper {
       position: relative;
       width: 100%;
+      /* 左右各留出 220px 给箭头，这就是你想要b的“距离” */
+      padding: 0 220px; 
+      /* 为了防止大屏下鼠标移到屏幕边缘箭头消失，我们把触发感应区向外扩展 */
+      margin: 0 -220px;
+      width: calc(100% + 440px); /* 2 * 220px */
     }
 
     /* 卡片滑动容器 */
@@ -110,51 +114,51 @@
       text-overflow: ellipsis;
     }
 
-    /* === 箭头样式（固定在屏幕两边，拉大距离） === */
+    /* === 左右箭头样式 === */
     .arrow {
-      /* 【核心修改】使用 fixed 相对于浏览器窗口固定 */
-      position: fixed; 
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 48px;
-      height: 96px;
+      width: 70px;
+      height: 100px;
       
-      /* 浅灰色背景（与截图完全一致） */
-      background-color: rgba(235, 235, 235, 0.9); 
-      border-radius: 6px;
+      /* 半透明浅灰背景 */
+      background-color: rgba(240, 240, 240, 0.9); 
+      
       
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      z-index: 9999; /* 保证在最上层能点击 */
+      z-index: 999; 
       
-      font-size: 32px;
-      color: #333; 
+      font-size: 44px;
+      color: #666; 
       
       /* 默认隐藏 */
       opacity: 0; 
       pointer-events: none; 
-      transition: opacity 0.4s ease, background-color 0.3s ease;
+      transition: opacity 0.4s ease, background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* 鼠标移入轮播区域时，箭头出现 */
+    /* 【核心修改 2】鼠标移入整个包裹层（包括外侧留白），箭头平滑出现 */
     .carousel-wrapper:hover .arrow {
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* 悬停状态加深背景 */
+    /* 鼠标放到箭头上，方块颜色变深 */
     .arrow:hover { 
+      color: #333; 
       background-color: rgba(220, 220, 220, 1); 
     }
 
-    /* 【精准贴边】：贴死屏幕的左右边缘，距离屏幕边缘 10px */
+    /* 把箭头定位在留白区的边缘（距离图片 80px） */
     .arrow-left { 
-      left: 10px; 
+      left: 0; 
     }
     .arrow-right { 
-      right: 10px; 
+      right: 0; 
     }
 
     /* 底部小圆点 */
@@ -181,7 +185,7 @@
 
     <div class="carousel-wrapper">
       
-      <!-- 左箭头（固定在屏幕最左侧） -->
+      <!-- 左箭头（距离图片 80px） -->
       <div class="arrow arrow-left" id="btnLeft"><i class="iconfont icon-jiantou"></i></div>
       
       <!-- 卡片区 -->
@@ -272,7 +276,8 @@
         </div>
       </div>
 
-      <!-- 右箭头（固定在屏幕最右侧） -->
+  
+      <!-- 右箭头（距离图片 100px） -->
       <div class="arrow arrow-right" id="btnRight"><i class="iconfont icon-youjiantoucu"></i></div>
       
     </div>

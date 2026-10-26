@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-26
+	功能名称：数7游戏（逢七过）一百个盒子展示
+	-->
+	<title>15-1 数7游戏</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 1rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_note {
+			margin: 0 0 1rem;
+			color: #a34e3c;
+			font-size: .85rem;
+		}
+
+		.yl_legend {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.5rem;
+			margin-bottom: 1rem;
+			font-size: .85rem;
+			color: #667579;
+		}
+
+		.yl_legend i {
+			display: inline-block;
+			width: 1rem;
+			height: 1rem;
+			margin-right: .35rem;
+			vertical-align: -.15rem;
+			border-radius: .2rem;
+		}
+
+		.yl_legend_num {
+			background: #fff;
+			border: 1px solid #b9c6cf;
+		}
+
+		.yl_legend_empty {
+			background: #fdf6e3;
+			border: 1px dashed #d8b65c;
+		}
+
+		.yl_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+			gap: .6rem;
+		}
+
+		.yl_box {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			aspect-ratio: 1 / 1;
+			background: #fff;
+			border: 1px solid #b9c6cf;
+			border-radius: .5rem;
+			font-size: 1.1rem;
+			font-weight: 600;
+			cursor: pointer;
+			user-select: none;
+			transition: transform .15s ease, box-shadow .15s ease;
+		}
+
+		.yl_box:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 .3rem .6rem rgba(38, 52, 58, .15);
+		}
+
+		.yl_box_empty {
+			background: #fdf6e3;
+			border: 1px dashed #d8b65c;
+		}
+
+		.yl_box_empty span {
+			visibility: hidden;
+		}
+
+		.yl_box_empty.yl_box_show span {
+			visibility: visible;
+			color: #d8b65c;
+		}
+
+		.yl_stats {
+			margin-top: 1.5rem;
+			padding: 1rem 1.1rem;
+			background: #fff;
+			border-radius: .5rem;
+			box-shadow: 0 .5rem 1.25rem rgba(38, 52, 58, .08);
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_stats b {
+			color: #a34e3c;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>数7游戏（逢七过）</h1>
+				<p class="yl_subtitle">1 ~ 100 共一百个盒子：满足数7规则的显示空盒子，其余正常显示数字</p>
+			</div>
+			<div class="yl_author">姚琳 · 15-1</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一百个盒子</h2>
+			<p class="yl_note">数7规则：是 7 的倍数、个位是 7、十位是 7 —— 满足其一即触发“过”，显示为空盒子。</p>
+			<div class="yl_legend">
+				<span><i class="yl_legend_num"></i>不满足规则：显示数字</span>
+				<span><i class="yl_legend_empty"></i>满足规则：空盒子（点击可查看）</span>
+			</div>
+			<div class="yl_grid" id="yl_grid"></div>
+			<div class="yl_stats" id="yl_stats"></div>
+		</section>
+	</main>
+
+	<script>
+		// 数7规则：7 的倍数、个位为 7、十位为 7，满足其一即返回 true
+		function yl_isSeven(yl_num) {
+			return yl_num % 7 === 0 || yl_num % 10 === 7 || Math.floor(yl_num / 10) % 10 === 7;
+		}
+
+		// 生成 1 ~ 100 共一百个盒子
+		var yl_gridEl = document.getElementById('yl_grid');
+		var yl_statsEl = document.getElementById('yl_stats');
+		var yl_emptyCount = 0;
+
+		for (var yl_i = 1; yl_i <= 100; yl_i++) {
+			var yl_box = document.createElement('div');
+			yl_box.className = 'yl_box';
+			yl_box.appendChild(document.createElement('span')).textContent = yl_i;
+
+			// 满足数7规则：显示为空盒子（数字保留在 span 中但隐藏）
+			if (yl_isSeven(yl_i)) {
+				yl_box.classList.add('yl_box_empty');
+				yl_emptyCount++;
+			}
+
+			// 点击盒子：切换是否显示隐藏的数字
+			yl_box.onclick = function () {
+				this.classList.toggle('yl_box_show');
+			};
+
+			yl_gridEl.appendChild(yl_box);
+		}
+
+		// 统计信息
+		yl_statsEl.innerHTML = '共 <b>100</b> 个盒子，其中 <b>' + yl_emptyCount + '</b> 个满足数7规则显示为空盒子：' +
+			'7 的倍数（7、14、…、98）、个位为 7（7、17、…、97）、十位为 7（70 ~ 79）。';
+	</script>
+</body>
+</html>
