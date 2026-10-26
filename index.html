@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="姚琳的《高级网页设计》课堂实践作品集入口">
+    <!--
+    姓名：姚琳
+    日期：2026-10-26
+    功能名称：课堂实践作品集首页（全目录超链接）
+    -->
     <title>高级网页设计 · 课堂实践</title>
     <style>
         :root {
@@ -161,6 +166,21 @@
             border-top: 1px solid var(--line);
         }
 
+        .work-group {
+            margin-top: 34px;
+        }
+
+        .work-group:first-of-type { margin-top: 0; }
+
+        .work-group-title {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: .14em;
+        }
+
         .work-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -206,6 +226,19 @@
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 13px;
             line-height: 1.7;
+        }
+
+        .work-tag {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            color: var(--gold);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 11px;
+            font-weight: normal;
+            vertical-align: 2px;
         }
 
         .arrow {
@@ -278,7 +311,7 @@
             <div>
                 <div class="eyebrow">Course Practice</div>
                 <h1 id="page-title">高级网页设计<br>课堂实践</h1>
-                <p class="hero-copy">姚琳的网页设计学习记录。从 HTML 元素、超链接与表单，到 CSS 选择器和样式进阶，在一页之中回看每一次动手练习。</p>
+                <p class="hero-copy">姚琳的网页设计学习记录。从 HTML 元素、超链接与表单，到 CSS 选择器、布局、动画与响应式设计，再到 JavaScript 程序结构，一页汇集本目录下的全部课堂练习页面。</p>
             </div>
             <div class="hero-art" aria-label="课堂实践图片展示">
                 <div class="art-grid">
@@ -292,81 +325,167 @@
         <section class="page-shell works" id="works" aria-labelledby="works-title">
             <div class="section-heading">
                 <h2 id="works-title">实践目录</h2>
-                <p class="section-note">点击卡片打开对应课堂页面</p>
+                <p class="section-note">点击卡片打开对应课堂页面 · 共 34 页</p>
             </div>
-            <div class="work-grid">
-                <a class="work-card" href="2-1.html">
-                    <div><span class="work-number">01 / HTML</span><h3>HTML 元素</h3><p>从标签、文本到列表，认识网页的基本骨架。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="2-2.html">
-                    <div><span class="work-number">02 / LINK</span><h3>超链接与图像</h3><p>练习相对路径、图片超链接与表格内容组织。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="3-1.html">
-                    <div><span class="work-number">03 / FORM</span><h3>HTML 表单</h3><p>用输入框、单选框和按钮搭建交互表单。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="3-2%20css.html">
-                    <div><span class="work-number">04 / CSS</span><h3>层叠样式表</h3><p>探索标签、类名与 ID 选择器的样式表达。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="4-1%20css.html">
-                    <div><span class="work-number">05 / CSS+</span><h3>CSS 进阶</h3><p>理解盒模型、层叠继承与文字样式的组合。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="5-1%20层叠与继承.html">
-                    <div><span class="work-number">06 / CSS</span><h3>层叠与继承</h3><p>观察样式规则的优先级，以及属性如何在元素间传递。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="5-2%20盒模型.html">
-                    <div><span class="work-number">07 / BOX</span><h3>盒模型</h3><p>练习内容、内边距、边框与外边距组成的空间关系。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="6-1%20flex.html">
-                    <div><span class="work-number">08 / FLEX</span><h3>Flex 布局</h3><p>使用弹性盒模型完成灵活、整齐的页面排版。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="6-2.html">
-                    <div><span class="work-number">09 / FLEX+</span><h3>Flex 实践</h3><p>继续组合主轴、交叉轴与排列方式，完成布局练习。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="7-1.html">
-                    <div><span class="work-number">10 / LAYOUT</span><h3>页面布局</h3><p>综合运用 CSS 技巧，组织页面中的不同内容区域。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="7-2%20左图右文.html">
-                    <div><span class="work-number">11 / PRACTICE</span><h3>左图右文</h3><p>用 Flex 完成图片与文字并列的列表式内容布局。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="8-1%20css3选择器.html">
-                    <div><span class="work-number">12 / CSS3</span><h3>CSS3 选择器</h3><p>通过伪类选择器练习元素状态、位置与过渡效果。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="9-1%20transition.html">
-                    <div><span class="work-number">13 / TRANSITION</span><h3>Transition 过渡</h3><p>为图片缩放与文字面板展开添加平滑的交互变化。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="11-2.html">
-                    <div><span class="work-number">14 / 3D</span><h3>CSS3 3D 动画</h3><p>练习透视、空间旋转与翻转卡片，构建三维立体效果。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="13-1.html">
-                    <div><span class="work-number">15 / ICON</span><h3>Font Awesome 字体图标</h3><p>通过字体文件与 &lt;i&gt; 标签渲染图标，练习字体图标方式。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="13-2.html">
-                    <div><span class="work-number">16 / SVG</span><h3>Lucide SVG 图标</h3><p>通过脚本动态生成内联 SVG，练习 SVG 图标方式。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="13-3.html">
-                    <div><span class="work-number">17 / TABBAR</span><h3>移动端底部导航（字体图标）</h3><p>用 iconfont 字体图标完成固定自适应宽度的下导航，含数字徽章与红点。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
-                <a class="work-card" href="13-4.html">
-                    <div><span class="work-number">18 / TABBAR+</span><h3>移动端底部导航（SVG）</h3><p>用 iconfont symbol 雪碧图完成同样的下导航，练习 SVG 图标方式。</p></div>
-                    <span class="arrow">打开页面　→</span>
-                </a>
+
+            <div class="work-group">
+                <p class="work-group-title">HTML 与 CSS 基础</p>
+                <div class="work-grid">
+                    <a class="work-card" href="2-1.html">
+                        <div><span class="work-number">01 / HTML</span><h3>HTML 元素</h3><p>从标签、文本到列表，认识网页的基本骨架。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="2-2.html">
+                        <div><span class="work-number">02 / LINK</span><h3>超链接与图像</h3><p>练习相对路径、图片超链接与表格内容组织。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="3-1.html">
+                        <div><span class="work-number">03 / FORM</span><h3>HTML 表单</h3><p>用输入框、单选框和按钮搭建交互表单。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="3-2%20css.html">
+                        <div><span class="work-number">04 / CSS</span><h3>层叠样式表</h3><p>探索标签、类名与 ID 选择器的样式表达。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="4-1%20css.html">
+                        <div><span class="work-number">05 / CSS+</span><h3>CSS 进阶</h3><p>理解盒模型、层叠继承与文字样式的组合。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="5-1%20层叠与继承.html">
+                        <div><span class="work-number">06 / CSS</span><h3>层叠与继承</h3><p>观察样式规则的优先级，以及属性如何在元素间传递。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="5-2%20盒模型.html">
+                        <div><span class="work-number">07 / BOX</span><h3>盒模型</h3><p>练习内容、内边距、边框与外边距组成的空间关系。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="work-group">
+                <p class="work-group-title">布局与响应式</p>
+                <div class="work-grid">
+                    <a class="work-card" href="6-1%20flex.html">
+                        <div><span class="work-number">08 / FLEX</span><h3>Flex 布局</h3><p>使用弹性盒模型完成灵活、整齐的页面排版。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="6-2.html">
+                        <div><span class="work-number">09 / FLEX+</span><h3>Flex 实践</h3><p>继续组合主轴、交叉轴与排列方式，完成布局练习。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="7-1.html">
+                        <div><span class="work-number">10 / LAYOUT</span><h3>页面布局</h3><p>综合运用 CSS 技巧，组织页面中的不同内容区域。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="7-2%20左图右文.html">
+                        <div><span class="work-number">11 / PRACTICE</span><h3>左图右文</h3><p>用 Flex 完成图片与文字并列的列表式内容布局。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="8-1%20css3选择器.html">
+                        <div><span class="work-number">12 / CSS3</span><h3>CSS3 选择器</h3><p>通过伪类选择器练习元素状态、位置与过渡效果。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="9-1%20transition.html">
+                        <div><span class="work-number">13 / TRANSITION</span><h3>Transition 过渡</h3><p>为图片缩放与文字面板展开添加平滑的交互变化。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="10-1-animation.html">
+                        <div><span class="work-number">14 / ANIMATION</span><h3>Animation 动画</h3><p>用 @keyframes 定义关键帧，让背景颜色随时间平滑变化。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="10-2.html">
+                        <div><span class="work-number">15 / ANIMATION+</span><h3>动画综合</h3><p>综合运用动画与过渡，完成页面动效练习。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="10-3.html">
+                        <div><span class="work-number">16 / MEDIA</span><h3>媒体查询 · 背景</h3><p>根据屏幕宽度切换背景颜色，认识 @media 查询。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="10-4.html">
+                        <div><span class="work-number">17 / MEDIA+</span><h3>媒体查询 · 响应式布局</h3><p>根据视口宽度调整排版，实现自适应响应式布局。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="11-1.html">
+                        <div><span class="work-number">18 / UNIT</span><h3>前端长度单位</h3><p>认识 px、em、rem、% 等前端常用长度单位与换算。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="11-2.html">
+                        <div><span class="work-number">19 / 3D</span><h3>CSS3 3D 动画</h3><p>练习透视、空间旋转与翻转卡片，构建三维立体效果。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="work-group">
+                <p class="work-group-title">图标与 JavaScript</p>
+                <div class="work-grid">
+                    <a class="work-card" href="13-1.html">
+                        <div><span class="work-number">20 / ICON</span><h3>Font Awesome 字体图标</h3><p>通过字体文件与 &lt;i&gt; 标签渲染图标，练习字体图标方式。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="13-2.html">
+                        <div><span class="work-number">21 / SVG</span><h3>Lucide SVG 图标</h3><p>通过脚本动态生成内联 SVG，练习 SVG 图标方式。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="13-3.html">
+                        <div><span class="work-number">22 / TABBAR</span><h3>移动端底部导航（字体图标）</h3><p>用 iconfont 字体图标完成固定自适应宽度的下导航，含数字徽章与红点。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="13-4.html">
+                        <div><span class="work-number">23 / TABBAR+</span><h3>移动端底部导航（SVG）</h3><p>用 iconfont symbol 雪碧图完成同样的下导航，练习 SVG 图标方式。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="14-1.html">
+                        <div><span class="work-number">24 / JS</span><h3>JavaScript 入门<span class="work-tag">待完成</span></h3><p>JavaScript 入门页面占位，内容待补充。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="14-2.html">
+                        <div><span class="work-number">25 / JS</span><h3>JavaScript 基本数据类型</h3><p>认识字符串、数字、布尔值等 JavaScript 基本数据类型。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="15-1.html">
+                        <div><span class="work-number">26 / JS</span><h3>数7游戏</h3><p>循环生成 1~100 个盒子，按数7规则显示空盒子并统计。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="15-2.html">
+                        <div><span class="work-number">27 / JS</span><h3>程序结构 · 循环 · 条件</h3><p>演示变量语句、for/while 循环与 if/switch 条件判断。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="work-group">
+                <p class="work-group-title">拓展练习 · 630 系列</p>
+                <div class="work-grid">
+                    <a class="work-card" href="630-1.html">
+                        <div><span class="work-number">28 / PROJECT</span><h3>第一个网页元素</h3><p>完整图片与悬浮文字，认识网页基础元素。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-1%20copy.html">
+                        <div><span class="work-number">29 / PROJECT</span><h3>一页三张卡片</h3><p>带左右箭头的三张卡片轮播展示。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-1%20copy%202.html">
+                        <div><span class="work-number">30 / PROJECT</span><h3>精彩推荐 · 无限循环</h3><p>精彩推荐栏目的无限循环滚动版本。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-1%20copy%203.html">
+                        <div><span class="work-number">31 / PROJECT</span><h3>精彩推荐 · 完美间距</h3><p>精彩推荐栏目，优化间距与悬浮箭头。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-2.html">
+                        <div><span class="work-number">32 / PROJECT</span><h3>QQ 音乐导航栏</h3><p>复刻 QQ 音乐导航栏布局。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-2%20copy.html">
+                        <div><span class="work-number">33 / PROJECT</span><h3>QQ 音乐导航栏 · 副本</h3><p>复刻 QQ 音乐导航栏布局（副本）。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                    <a class="work-card" href="630-2%20copy%202.html">
+                        <div><span class="work-number">34 / PROJECT</span><h3>QQ 音乐导航栏 · 副本2</h3><p>复刻 QQ 音乐导航栏布局（副本二）。</p></div>
+                        <span class="arrow">打开页面　→</span>
+                    </a>
+                </div>
             </div>
         </section>
 
