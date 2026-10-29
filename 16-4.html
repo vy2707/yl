@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-29
+	功能名称：横向标签切换榜单列表（排行榜）
+	-->
+	<title>16-4 排行榜标签切换</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background: #fff;
+			color: #1a1a1a;
+			font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+			display: flex;
+			justify-content: center;
+			padding: 2rem 1rem;
+		}
+
+		.yl_box {
+			width: 100%;
+			max-width: 680px;
+			border: 1px solid #e5e5e5;
+		}
+
+		/* ===== 顶部：标题 + 标签栏 ===== */
+		.yl_tabbar {
+			display: flex;
+			align-items: flex-end;
+			border-bottom: 1px solid #e5e5e5;
+		}
+
+		.yl_tab {
+			cursor: pointer;
+			user-select: none;
+			white-space: nowrap;
+			position: relative;
+		}
+
+		/* 左侧大标题「排行榜」同时也是第一个标签 */
+		.yl_tab_main {
+			font-size: 1.65rem;
+			font-weight: 700;
+			color: #1a1a1a;
+			padding: .6rem 1.2rem .7rem 1rem;
+			flex: 1;
+		}
+
+		/* 右侧小标签，带竖向分隔线 */
+		.yl_tab_sub {
+			font-size: 1.05rem;
+			color: #1a1a1a;
+			padding: .75rem 1.15rem .8rem;
+			border-left: 1px solid #e5e5e5;
+		}
+
+		.yl_tab_sub:last-child {
+			border-right: 1px solid #e5e5e5;
+		}
+
+		/* 选中项：蓝色粗横线在上方 */
+		.yl_tab.yl_active::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			height: .25rem;
+			background: #2440b3;
+			z-index: 2;
+		}
+
+		/* 选中项：向下延伸 1px 用白底盖住底边框，实现下边不封口 */
+		.yl_tab.yl_active {
+			font-weight: 700;
+			color: #2440b3;
+			background: #fff;
+			margin-bottom: -1px;
+			z-index: 1;
+		}
+
+		/* ===== 榜单列表 ===== */
+		.yl_list {
+			list-style: none;
+			padding: .8rem 0;
+		}
+
+		.yl_item {
+			display: flex;
+			align-items: center;
+			gap: .7rem;
+			padding: .55rem 1rem;
+			cursor: pointer;
+		}
+
+		.yl_item:hover .yl_text {
+			color: #2440b3;
+		}
+
+		.yl_num {
+			flex: 0 0 auto;
+			width: 1.35rem;
+			height: 1.35rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: .8rem;
+			background: #f2f2f2;
+			border: 1px solid #d9d9d9;
+			color: #333;
+			font-style: normal;
+		}
+
+		.yl_num.yl_hot {
+			background: #d92b2b;
+			border-color: #d92b2b;
+			color: #fff;
+			font-weight: 700;
+		}
+
+		.yl_text {
+			font-size: .95rem;
+			color: #1a1a1a;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	</style>
+</head>
+<body>
+	<div class="yl_box">
+		<header class="yl_tabbar" id="yl_tabbar"></header>
+		<ul class="yl_list" id="yl_list"></ul>
+	</div>
+
+	<script>
+		// ===== 榜单数据 =====
+		var yl_data = {
+			"排行榜": [
+				"构建“股市+债市”稳市机制！央行新工具来了",
+				"美媒：美军已准备好再打击伊朗 特朗普或中期选举后",
+				"姆巴佩发表涉中国不当言论，多家品牌终止合作，媒体发声",
+				"东鹏饮料集团：零容忍伤害民族感情行为，终止与姆巴佩合作",
+				"300672，业绩暴涨超5600%！10股业绩大增（附股）",
+				"史上最大IPO要来了！7位创始人身均超130亿美元",
+				"外交部：对英国警方任意、过度执法行为表示强烈不满",
+				"1000000美元！特朗普重金悬赏",
+				"张一鸣以6700亿元刷新中国首富财富纪录！《2026胡润百富榜》发布",
+				"Gucci卖不动了 开云今年将关掉至少125家门店"
+			],
+			"新闻": [
+				"神舟二十号载人飞船发射取得圆满成功",
+				"全国秋粮收获已过八成 丰收格局基本定型",
+				"新版职业目录发布 新增19个新职业",
+				"京沪高铁宣布浮动票价机制 热门线路票价调整",
+				"多地上线一次性购房补贴 吸引人才回流",
+				"今年全国快递业务量突破1200亿件",
+				"第五届中国国际进口博览会筹备工作基本就绪",
+				"国产大飞机C929研制取得重要进展",
+				"教育部：中小学生课间时间将延长至15分钟",
+				"北方多地迎来今冬首场降雪 各部门启动应急预案"
+			],
+			"证券": [
+				"三大指数集体收涨 沪指重回3400点上方",
+				"券商板块午后拉升 两市成交额突破1.5万亿",
+				"北向资金今日净买入超80亿元 重点加仓这些股",
+				"多家上市公司发布三季报 业绩预增股名单出炉",
+				"新股申购：本周共有7只新股可申购",
+				"半导体板块持续走强 多只个股涨停",
+				"证监会：进一步深化上市公司并购重组改革",
+				"两融余额创年内新高 市场情绪持续回暖",
+				"券商研报：明年这些行业有望迎来景气拐点",
+				"沪深交易所发布程序化交易管理实施细则"
+			],
+			"理财": [
+				"银行理财平均收益率升至3.2% 这些产品值得关注",
+				"存款利率再度下调 百万存款一年少赚4500元",
+				"国债逆回购节前飙升 最高年化超8%",
+				"黄金价格再创新地 投资者该如何配置",
+				"货币基金收益率跌破1.5% 低风险理财怎么选",
+				"个人养老金账户开户数突破7000万",
+				"银行大额存单额度紧张 部分银行停售长期产品",
+				"理财子公司新品发行提速 固收类产品占比超八成",
+				"基金定投正当时 三季度定投账户平均收益4.6%",
+				"保险预定利率下调 分红型产品成新宠"
+			],
+			"博客": [
+				"程序员如何优雅地管理自己的知识体系",
+				"从0到1搭建个人博客：我的踩坑记录",
+				"写给新人的前端学习路线图（2026版）",
+				"深度好文：为什么我劝你别盲目跟风学AI",
+				"一人公司实践三年，我总结出这些经验",
+				"读书笔记：《穷查理宝典》里的投资智慧",
+				"坚持写作1000天，我收获了什么",
+				"独立开发者月入过万的真实复盘",
+				"如何高效阅读一篇英文技术文档",
+				"我为什么从大厂离职去做自由职业"
+			]
+		};
+
+		var yl_tabs = ["排行榜", "新闻", "证券", "理财", "博客"];
+		var yl_tabbarEl = document.getElementById('yl_tabbar');
+		var yl_listEl = document.getElementById('yl_list');
+		var yl_curTab = "排行榜";
+
+		// 生成标签栏
+		for (var yl_i = 0; yl_i < yl_tabs.length; yl_i++) {
+			var yl_name = yl_tabs[yl_i];
+			var yl_tab = document.createElement('div');
+			yl_tab.className = 'yl_tab ' + (yl_name === '排行榜' ? 'yl_tab_main' : 'yl_tab_sub');
+			yl_tab.textContent = yl_name;
+			yl_tab.setAttribute('data-tab', yl_name);
+			yl_tab.onclick = function () {
+				yl_switch(this.getAttribute('data-tab'));
+			};
+			yl_tabbarEl.appendChild(yl_tab);
+		}
+
+		// 切换标签并渲染列表
+		function yl_switch(yl_name) {
+			yl_curTab = yl_name;
+			var yl_tabEls = yl_tabbarEl.children;
+			for (var yl_j = 0; yl_j < yl_tabEls.length; yl_j++) {
+				yl_tabEls[yl_j].classList.toggle('yl_active', yl_tabEls[yl_j].getAttribute('data-tab') === yl_name);
+			}
+			yl_render();
+		}
+
+		function yl_render() {
+			yl_listEl.innerHTML = '';
+			var yl_items = yl_data[yl_curTab];
+			for (var yl_k = 0; yl_k < yl_items.length; yl_k++) {
+				var yl_li = document.createElement('li');
+				yl_li.className = 'yl_item';
+
+				var yl_num = document.createElement('i');
+				yl_num.className = 'yl_num' + (yl_k < 3 ? ' yl_hot' : '');
+				yl_num.textContent = yl_k + 1;
+
+				var yl_text = document.createElement('span');
+				yl_text.className = 'yl_text';
+				yl_text.textContent = yl_items[yl_k];
+
+				yl_li.appendChild(yl_num);
+				yl_li.appendChild(yl_text);
+				yl_listEl.appendChild(yl_li);
+			}
+		}
+
+		yl_switch(yl_curTab);
+	</script>
+</body>
+</html>

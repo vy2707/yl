@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-29
+	功能名称：JavaScript 数组主要方法可视化演示
+	-->
+	<title>16-1 JavaScript 数组方法</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+		}
+
+		/* ===== 数组可视化 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_board_top {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_len_badge {
+			color: #667579;
+			font-size: .85rem;
+		}
+
+		.yl_len_badge b {
+			color: #a34e3c;
+			font-size: 1rem;
+		}
+
+		.yl_array {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .55rem;
+			min-height: 92px;
+			align-items: flex-end;
+			padding: .4rem;
+			border: 2px dashed #d5d5cc;
+			border-radius: .5rem;
+			background: #faf9f4;
+		}
+
+		.yl_chip {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: 56px;
+			height: 56px;
+			border-radius: .5rem;
+			color: #fff;
+			font-weight: 700;
+			position: relative;
+			box-shadow: 0 .2rem .4rem rgba(38, 52, 58, .18);
+		}
+
+		.yl_chip_val {
+			font-size: 1.25rem;
+			line-height: 1;
+		}
+
+		.yl_chip_idx {
+			position: absolute;
+			bottom: .3rem;
+			font-size: .65rem;
+			font-weight: 400;
+			opacity: .85;
+		}
+
+		.yl_chip_idx::before {
+			content: "第";
+		}
+
+		.yl_chip_idx::after {
+			content: "个";
+		}
+
+		.yl_chip_new {
+			animation: yl_pop .3s ease;
+		}
+
+		@keyframes yl_pop {
+			0% { transform: scale(0); }
+			70% { transform: scale(1.15); }
+			100% { transform: scale(1); }
+		}
+
+		.yl_empty_hint {
+			color: #b0b6b8;
+			font-size: .9rem;
+		}
+
+		/* ===== 按钮 ===== */
+		.yl_btns {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-top: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, transform .1s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn:active {
+			transform: translateY(1px);
+		}
+
+		.yl_btn_warn {
+			background: #a34e3c;
+		}
+
+		.yl_btn_warn:hover {
+			background: #8a4233;
+		}
+
+		.yl_btn_reset {
+			background: #6b7a81;
+		}
+
+		.yl_btn_reset:hover {
+			background: #57646a;
+		}
+
+		.yl_input {
+			width: 5rem;
+			padding: .48rem .5rem;
+			border: 1px solid #b9c6cf;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_result {
+			margin-top: 1rem;
+			padding: .8rem 1rem;
+			background: #f6f3ea;
+			border-radius: .4rem;
+			font-size: .9rem;
+			line-height: 1.7;
+			min-height: 2.4rem;
+		}
+
+		.yl_result b {
+			color: #a34e3c;
+		}
+
+		.yl_result .yl_ret {
+			color: #3976a3;
+			font-weight: 600;
+		}
+
+		/* ===== 方法速查卡片 ===== */
+		.yl_cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.1rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_card h3 {
+			display: inline-block;
+			margin: 0 .5rem 0 0;
+			font-size: 1rem;
+			font-weight: 600;
+			color: #3976a3;
+			font-family: Consolas, "Courier New", monospace;
+		}
+
+		.yl_tag {
+			display: inline-block;
+			padding: .1rem .5rem;
+			border-radius: .6rem;
+			background: #f2ede0;
+			color: #a34e3c;
+			font-size: .72rem;
+			vertical-align: .1rem;
+		}
+
+		.yl_card_desc {
+			margin: .55rem 0 .6rem;
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_code {
+			margin: 0 0 .6rem;
+			padding: .6rem .7rem;
+			background: #26343a;
+			border-radius: .4rem;
+			color: #e8eef2;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .78rem;
+			line-height: 1.5;
+			overflow-x: auto;
+			white-space: pre;
+		}
+
+		.yl_code .yl_cm {
+			color: #8aa6b3;
+		}
+
+		.yl_demo {
+			font-size: .8rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_demo .yl_arr {
+			display: inline;
+			font-family: Consolas, "Courier New", monospace;
+			color: #26343a;
+			font-weight: 600;
+		}
+
+		.yl_demo .yl_out {
+			color: #a34e3c;
+			font-weight: 600;
+		}
+
+		.yl_arrow {
+			color: #3976a3;
+			margin: 0 .2rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JavaScript 数组方法</h1>
+				<p class="yl_subtitle">把数组想象成一列有编号的盒子，点击按钮看它们如何被添加、删除、重排与转换</p>
+			</div>
+			<div class="yl_author">姚琳 · 16-1</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、互动演练场 -->
+		<section class="yl_block">
+			<h2>一、互动演练场</h2>
+			<p class="yl_block_desc">下面一行彩色盒子就是一个数组 <code>[5, 3, 8, 1, 9, 7]</code>，盒子下方的小字是它的下标（第几个）。点击按钮，看看数组如何实时变化。</p>
+
+			<div class="yl_board">
+				<div class="yl_board_top">
+					<span class="yl_len_badge">当前数组长度：<b id="yl_len">6</b></span>
+					<span>
+						<input class="yl_input" id="yl_val_input" type="number" value="6" placeholder="值">
+					</span>
+				</div>
+
+				<div class="yl_array" id="yl_array"></div>
+
+				<div class="yl_btns">
+					<button class="yl_btn" data-m="push">push() 末尾添加</button>
+					<button class="yl_btn" data-m="pop">pop() 末尾删除</button>
+					<button class="yl_btn" data-m="unshift">unshift() 开头添加</button>
+					<button class="yl_btn" data-m="shift">shift() 开头删除</button>
+					<button class="yl_btn" data-m="splice">splice() 删除指定</button>
+					<button class="yl_btn" data-m="reverse">reverse() 反转</button>
+					<button class="yl_btn" data-m="sort">sort() 排序</button>
+					<button class="yl_btn" data-m="join">join() 连接</button>
+					<button class="yl_btn" data-m="includes">includes() 查找</button>
+					<button class="yl_btn yl_btn_warn" data-m="reduce">reduce() 求和</button>
+					<button class="yl_btn yl_btn_reset" data-m="reset">重置</button>
+				</div>
+
+				<div class="yl_result" id="yl_result">点一个按钮试试，这里会显示每个方法返回的结果。</div>
+			</div>
+		</section>
+
+		<!-- 二、方法速查 -->
+		<section class="yl_block">
+			<h2>二、常用方法速查</h2>
+			<p class="yl_block_desc">下表汇总了数组最常用的方法：新增、删除、提取、排序、查找与遍历。标 <span class="yl_tag">修改原数组</span> 的方法会直接改变原数组，其余返回一个新值或新数组。</p>
+			<div class="yl_cards" id="yl_cards"></div>
+		</section>
+	</main>
+
+	<script>
+		// ===== 一、互动演练场 =====
+		(function yl_initPlayground() {
+			var yl_init = [5, 3, 8, 1, 9, 7];
+			var yl_arr = yl_init.slice();
+			var yl_arrayEl = document.getElementById('yl_array');
+			var yl_lenEl = document.getElementById('yl_len');
+			var yl_resultEl = document.getElementById('yl_result');
+			var yl_valInput = document.getElementById('yl_val_input');
+
+			// 每个盒子的配色，按值循环取色，让数组更形象
+			var yl_colors = ['#4f8fbd', '#e0a53c', '#c75b6d', '#5aa06c', '#9b6fbf', '#e07b53', '#4ca3a3'];
+
+			function yl_render(yl_newIdx) {
+				yl_arrayEl.innerHTML = '';
+				if (yl_arr.length === 0) {
+					var yl_hint = document.createElement('span');
+					yl_hint.className = 'yl_empty_hint';
+					yl_hint.textContent = '数组为空，试试 unshift() 或 push() 添加元素';
+					yl_arrayEl.appendChild(yl_hint);
+				} else {
+					yl_arr.forEach(function (yl_v, yl_i) {
+						var yl_chip = document.createElement('div');
+						yl_chip.className = 'yl_chip';
+						yl_chip.style.background = yl_colors[yl_i % yl_colors.length];
+						if (yl_newIdx === yl_i) {
+							yl_chip.classList.add('yl_chip_new');
+						}
+						var yl_val = document.createElement('span');
+						yl_val.className = 'yl_chip_val';
+						yl_val.textContent = yl_v;
+						var yl_idx = document.createElement('span');
+						yl_idx.className = 'yl_chip_idx';
+						yl_idx.textContent = yl_i;
+						yl_chip.appendChild(yl_val);
+						yl_chip.appendChild(yl_idx);
+						yl_arrayEl.appendChild(yl_chip);
+					});
+				}
+				yl_lenEl.textContent = yl_arr.length;
+			}
+
+			function yl_say(yl_msg, yl_ret) {
+				var yl_html = yl_msg;
+				if (yl_ret !== undefined && yl_ret !== null) {
+					yl_html += '　返回：<span class="yl_ret">' + yl_ret + '</span>';
+				}
+				yl_resultEl.innerHTML = yl_html;
+			}
+
+			function yl_arrText(yl_a) {
+				return '[' + yl_a.join(', ') + ']';
+			}
+
+			function yl_readVal() {
+				var yl_v = Number(yl_valInput.value);
+				if (isNaN(yl_v)) {
+					yl_v = Math.floor(Math.random() * 9) + 1;
+				}
+				return yl_v;
+			}
+
+			function yl_do(yl_m) {
+				var yl_ret;
+				switch (yl_m) {
+					case 'push': {
+						var yl_v = yl_readVal();
+						yl_ret = yl_arr.push(yl_v);
+						yl_render(yl_arr.length - 1);
+						yl_say('push(<b>' + yl_v + '</b>) 在<b>末尾</b>追加了一个元素，新数组：<b>' + yl_arrText(yl_arr) + '</b>', '新长度 ' + yl_ret);
+						break;
+					}
+					case 'pop': {
+						if (yl_arr.length === 0) { yl_say('数组已为空，无法 pop()。'); break; }
+						yl_ret = yl_arr.pop();
+						yl_render();
+						yl_say('pop() 把<b>末尾</b>的元素删掉了，新数组：<b>' + yl_arrText(yl_arr) + '</b>', '被删掉的 ' + yl_ret);
+						break;
+					}
+					case 'unshift': {
+						var yl_v = yl_readVal();
+						yl_ret = yl_arr.unshift(yl_v);
+						yl_render(0);
+						yl_say('unshift(<b>' + yl_v + '</b>) 在<b>开头</b>插入了一个元素，新数组：<b>' + yl_arrText(yl_arr) + '</b>', '新长度 ' + yl_ret);
+						break;
+					}
+					case 'shift': {
+						if (yl_arr.length === 0) { yl_say('数组已为空，无法 shift()。'); break; }
+						yl_ret = yl_arr.shift();
+						yl_render();
+						yl_say('shift() 把<b>开头</b>的元素删掉了，新数组：<b>' + yl_arrText(yl_arr) + '</b>', '被删掉的 ' + yl_ret);
+						break;
+					}
+					case 'splice': {
+						if (yl_arr.length === 0) { yl_say('数组已为空，无法 splice()。'); break; }
+						var yl_start = 1;
+						var yl_cnt = Math.min(2, yl_arr.length - yl_start);
+						yl_ret = yl_arr.splice(yl_start, yl_cnt);
+						yl_render();
+						yl_say('splice(<b>' + yl_start + '</b>, <b>' + yl_cnt + '</b>) 从第 ' + yl_start + ' 个起删掉 ' + yl_cnt + ' 个，新数组：<b>' + yl_arrText(yl_arr) + '</b>', '被删掉的 [' + yl_ret.join(', ') + ']');
+						break;
+					}
+					case 'reverse': {
+						yl_arr.reverse();
+						yl_render();
+						yl_say('reverse() 把数组<b>头尾颠倒</b>，新数组：<b>' + yl_arrText(yl_arr) + '</b>');
+						break;
+					}
+					case 'sort': {
+						yl_arr.sort(function (a, b) { return a - b; });
+						yl_render();
+						yl_say('sort() 按<b>从小到大</b>排序，新数组：<b>' + yl_arrText(yl_arr) + '</b>');
+						break;
+					}
+					case 'join': {
+						yl_ret = yl_arr.join('、');
+						yl_say('join("、") 把数组连成一个<b>字符串</b>（原数组不变）：', '"' + yl_ret + '"');
+						break;
+					}
+					case 'includes': {
+						var yl_v = yl_readVal();
+						yl_ret = yl_arr.indexOf(yl_v) !== -1;
+						yl_say('includes(<b>' + yl_v + '</b>) 判断数组中是否有这个值（原数组不变）：', yl_ret ? 'true（第 ' + yl_arr.indexOf(yl_v) + ' 个就是它）' : 'false（没有 ' + yl_v + '）');
+						break;
+					}
+					case 'reduce': {
+						if (yl_arr.length === 0) { yl_say('数组已为空，无法 reduce()。'); break; }
+						yl_ret = yl_arr.reduce(function (acc, cur) { return acc + cur; }, 0);
+						yl_say('reduce() 把数组<b>逐个累加</b>（原数组不变），' + yl_arrText(yl_arr) + ' 相加 =', yl_ret);
+						break;
+					}
+					case 'reset': {
+						yl_arr = yl_init.slice();
+						yl_render();
+						yl_say('已重置为初始数组：<b>' + yl_arrText(yl_arr) + '</b>');
+						break;
+					}
+				}
+			}
+
+			var yl_btns = document.querySelectorAll('.yl_btn[data-m]');
+			for (var yl_b = 0; yl_b < yl_btns.length; yl_b++) {
+				yl_btns[yl_b].onclick = function () {
+					yl_do(this.getAttribute('data-m'));
+				};
+			}
+
+			yl_render();
+		})();
+
+		// ===== 二、方法速查卡片 =====
+		(function yl_initCards() {
+			// 用到的演示数组（字符串形式展示，便于阅读）
+			var yl_demoArr = [3, 1, 4, 1, 5, 9];
+
+			function yl_a(yl_list) {
+				return '[' + yl_list.join(', ') + ']';
+			}
+
+			// 每个方法：name 名称、tag 标签、desc 描述、code 代码、before/after 结果文本
+			var yl_methods = [
+				{
+					name: 'push(item)', tag: '修改原数组', desc: '在数组末尾追加一个或多个元素，返回新长度。',
+					code: 'yl_a.push(7);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.concat(7)) + '</span>'
+				},
+				{
+					name: 'pop()', tag: '修改原数组', desc: '删除数组末尾的最后一个元素，返回被删除的值。',
+					code: 'yl_a.pop();',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice(0, -1)) + '</span>'
+				},
+				{
+					name: 'unshift(item)', tag: '修改原数组', desc: '在数组开头插入一个或多个元素，返回新长度。',
+					code: 'yl_a.unshift(7);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a([7].concat(yl_demoArr)) + '</span>'
+				},
+				{
+					name: 'shift()', tag: '修改原数组', desc: '删除数组开头的第一个元素，返回被删除的值。',
+					code: 'yl_a.shift();',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice(1)) + '</span>'
+				},
+				{
+					name: 'splice(start, n)', tag: '修改原数组', desc: '从 start 位置删除 n 个元素（也可在中间插入新元素），返回被删除的数组。',
+					code: 'yl_a.splice(1, 2);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice(0, 1).concat(yl_demoArr.slice(3))) + '</span>'
+				},
+				{
+					name: 'slice(start, end)', tag: '返回新数组', desc: '截取 start 到 end（不含 end）之间的一段，原数组不变。',
+					code: 'yl_a.slice(1, 3);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice(1, 3)) + '</span>'
+				},
+				{
+					name: 'concat(arr2)', tag: '返回新数组', desc: '把当前数组与另一个数组连接起来，返回新数组。',
+					code: 'yl_a.concat([2, 6]);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.concat([2, 6])) + '</span>'
+				},
+				{
+					name: 'join(sep)', tag: '返回字符串', desc: '用分隔符把数组所有元素连成一个字符串。',
+					code: 'yl_a.join("-");',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">"' + yl_demoArr.join('-') + '"</span>'
+				},
+				{
+					name: 'reverse()', tag: '修改原数组', desc: '把数组元素的顺序头尾颠倒。',
+					code: 'yl_a.reverse();',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice().reverse()) + '</span>'
+				},
+				{
+					name: 'sort(fn)', tag: '修改原数组', desc: '按比较函数对数组排序；数字需传 (a,b)=>a-b 才会从小到大。',
+					code: 'yl_a.sort((a,b)=>a-b);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.slice().sort(function (a, b) { return a - b; })) + '</span>'
+				},
+				{
+					name: 'indexOf(item)', tag: '返回下标', desc: '返回元素第一次出现的位置下标，找不到返回 -1。',
+					code: 'yl_a.indexOf(4);',
+					demo: '[' + yl_demoArr.join(', ') + '] 中 4 在第 <span class="yl_out">' + yl_demoArr.indexOf(4) + '</span> 个'
+				},
+				{
+					name: 'includes(item)', tag: '返回布尔', desc: '判断数组是否包含某个值，返回 true / false。',
+					code: 'yl_a.includes(9);',
+					demo: '[' + yl_demoArr.join(', ') + '] 中是否有 9：<span class="yl_out">' + (yl_demoArr.indexOf(9) !== -1) + '</span>'
+				},
+				{
+					name: 'forEach(fn)', tag: '遍历', desc: '对数组每个元素执行一次函数，常用于打印或累加。',
+					code: 'yl_a.forEach(v => console.log(v));',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> 逐个打印 <span class="yl_out">3 1 4 1 5 9</span>'
+				},
+				{
+					name: 'map(fn)', tag: '返回新数组', desc: '对每个元素做变换，返回一个等长的新数组。',
+					code: 'yl_a.map(v => v * 2);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.map(function (v) { return v * 2; })) + '</span>'
+				},
+				{
+					name: 'filter(fn)', tag: '返回新数组', desc: '保留满足条件的元素，返回筛选后的新数组。',
+					code: 'yl_a.filter(v => v > 3);',
+					demo: '[' + yl_demoArr.join(', ') + '] <span class="yl_arrow">→</span> <span class="yl_out">' + yl_a(yl_demoArr.filter(function (v) { return v > 3; })) + '</span>'
+				},
+				{
+					name: 'reduce(fn, init)', tag: '返回一个值', desc: '把数组归并成一个值，如累加求和。',
+					code: 'yl_a.reduce((s,v)=>s+v, 0);',
+					demo: '[' + yl_demoArr.join(', ') + '] 求和 <span class="yl_arrow">=</span> <span class="yl_out">' + yl_demoArr.reduce(function (s, v) { return s + v; }, 0) + '</span>'
+				}
+			];
+
+			var yl_cardsEl = document.getElementById('yl_cards');
+
+			for (var yl_i = 0; yl_i < yl_methods.length; yl_i++) {
+				var yl_m = yl_methods[yl_i];
+
+				var yl_card = document.createElement('div');
+				yl_card.className = 'yl_card';
+
+				var yl_title = document.createElement('div');
+				var yl_h3 = document.createElement('h3');
+				yl_h3.textContent = yl_m.name;
+				var yl_tag = document.createElement('span');
+				yl_tag.className = 'yl_tag';
+				yl_tag.textContent = yl_m.tag;
+				yl_title.appendChild(yl_h3);
+				yl_title.appendChild(yl_tag);
+
+				var yl_desc = document.createElement('p');
+				yl_desc.className = 'yl_card_desc';
+				yl_desc.textContent = yl_m.desc;
+
+				var yl_code = document.createElement('pre');
+				yl_code.className = 'yl_code';
+				yl_code.textContent = yl_m.code;
+
+				var yl_demo = document.createElement('div');
+				yl_demo.className = 'yl_demo';
+				yl_demo.innerHTML = yl_m.demo;
+
+				yl_card.appendChild(yl_title);
+				yl_card.appendChild(yl_desc);
+				yl_card.appendChild(yl_code);
+				yl_card.appendChild(yl_demo);
+				yl_cardsEl.appendChild(yl_card);
+			}
+		})();
+	</script>
+</body>
+</html>

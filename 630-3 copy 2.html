@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ音乐排行榜模块</title>
+    <link rel="stylesheet" href="font_2/iconfont.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 微软雅黑, sans-serif;
+        }
+        body{
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        /* 排行榜外层容器 */
+        .yl_rank-wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* 头部：标题 + 更多 */
+        .yl_rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .yl_rank-title {
+            font-size: 36px;
+            color: #333;
+            font-weight: normal;
+        }
+        .yl_rank-more {
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* 榜单卡片容器，横向排列 */
+        .yl_rank-list {
+            display: flex;
+            gap: 16px;
+        }
+        /* 单个榜单卡片 */
+        .yl_rank-card {
+            flex: 1;
+            height: 420px;
+            color: #fff;
+            padding: 40px 24px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
+        /* 每个卡片单独背景色+蒙版，匹配你给的长条背景图 */
+        .yl_card1 {
+            background: linear-gradient(rgba(232, 120, 152, 0.85), rgba(214, 90, 124, 0.85)), url("./img/rank-bg.jpg");
+            background-position: 0 0;
+        }
+        .yl_card2 {
+            background: linear-gradient(rgba(112, 161, 196, 0.85), rgba(75, 123, 155, 0.85)), url("./img/rank-bg.jpg");
+            background-position: 25% 0;
+        }
+        .yl_card3 {
+            background: linear-gradient(rgba(112, 211, 201, 0.85), rgba(56, 184, 170, 0.85)), url("./img/rank-bg.jpg");
+            background-position: 50% 0;
+        }
+        .yl_card4 {
+            background: linear-gradient(rgba(72, 148, 144, 0.85), rgba(43, 114, 110, 0.85)), url("./img/rank-bg.jpg");
+            background-position: 75% 0;
+        }
+        .yl_card5 {
+            background: linear-gradient(rgba(255, 174, 110, 0.85), rgba(240, 130, 70, 0.85)), url("./img/rank-bg.jpg");
+            background-position: 100% 0;
+        }
+
+        /* 卡片顶部文字：巅峰榜 + 榜单名 */
+        .yl_card-top-text {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .yl_card-tag {
+            font-size:18px;
+            opacity: 0.9;
+        }
+        .yl_card-name {
+            font-size:28px;
+            margin-top:4px;
+        }
+
+        /* 容器：横线 + 播放图标放在同一个盒子里 */
+        .yl_line-play-box {
+            width: 47px;
+            height: 47px;
+            margin:0 auto 30px;
+            position: relative;
+            cursor: pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        /* 默认：白色横线 */
+        .yl_line-play-box .line {
+            width: 47px;
+            height:2px;
+            background:#fff;
+            transition: opacity 0.25s ease;
+        }
+        /* 播放图标：外圈白色，内部三角默认白色 */
+        .yl_line-play-box .iconfont {
+            position: absolute;
+            font-size:47px;
+            color:#ffffff;
+            opacity:0;
+            transform: scale(0.3);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        /* hover时：横线消失，图标出现，三角变深灰 */
+        .yl_line-play-box:hover .line {
+            opacity:0;
+        }
+        .yl_line-play-box:hover .iconfont {
+            opacity:1;
+            transform: scale(1);
+            /* 重点：内部三角深色，和你的图片一致 */
+            fill: #444444 !important;
+        }
+
+        /* 歌曲条目 */
+        .yl_song-item {
+            margin-bottom: 22px;
+        }
+        .yl_song-num {
+            font-size:16px;
+            margin-right: 6px;
+        }
+        .yl_song-name {
+            font-size:16px;
+        }
+        .yl_song-singer {
+            font-size:14px;
+            opacity: 0.85;
+            margin-left: 22px;
+            margin-top:4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="yl_rank-wrap">
+        <div class="yl_rank-header">
+            <h2 class="yl_rank-title">排行榜</h2>
+            <a href="#" class="yl_rank-more">更多 &gt;</a>
+        </div>
+        <div class="yl_rank-list">
+            <!-- 卡片1 热歌 -->
+            <div class="yl_rank-card yl_card1">
+                <div class="yl_card-top-text">
+                    <div class="yl_card-tag">巅峰榜</div>
+                    <div class="yl_card-name">热歌</div>
+                </div>
+                <div class="yl_line-play-box">
+                    <div class="line"></div>
+                    <i class="iconfont icon-bofang1"></i>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">1</span>
+                    <span class="yl_song-name">我好像在哪见过你</span>
+                    <div class="yl_song-singer">薛之谦</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">2</span>
+                    <span class="yl_song-name">季候风</span>
+                    <div class="yl_song-singer">王菲</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">3</span>
+                    <span class="yl_song-name">天龙八部之宿敌</span>
+                    <div class="yl_song-singer">许嵩</div>
+                </div>
+            </div>
+            <!-- 卡片2 新歌 -->
+            <div class="yl_rank-card yl_card2">
+                <div class="yl_card-top-text">
+                    <div class="yl_card-tag">巅峰榜</div>
+                    <div class="yl_card-name">新歌</div>
+                </div>
+                <div class="yl_line-play-box">
+                    <div class="line"></div>
+                    <i class="iconfont icon-bofang1"></i>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">1</span>
+                    <span class="yl_song-name">DESERVE</span>
+                    <div class="yl_song-singer">BABYMONSTER</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">2</span>
+                    <span class="yl_song-name">NEON</span>
+                    <div class="yl_song-singer">A2O LITE</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">3</span>
+                    <span class="yl_song-name">今夜让我带你高飞远走</span>
+                    <div class="yl_song-singer">五月天 阿信</div>
+                </div>
+            </div>
+            <!-- 卡片3 流行指数 -->
+            <div class="yl_rank-card yl_card3">
+                <div class="yl_card-top-text">
+                    <div class="yl_card-tag">巅峰榜</div>
+                    <div class="yl_card-name">流行指数</div>
+                </div>
+                <div class="yl_line-play-box">
+                    <div class="line"></div>
+                    <i class="iconfont icon-bofang1"></i>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">1</span>
+                    <span class="yl_song-name">季候风</span>
+                    <div class="yl_song-singer">王菲</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">2</span>
+                    <span class="yl_song-name">DESERVE</span>
+                    <div class="yl_song-singer">BABYMONSTER</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">3</span>
+                    <span class="yl_song-name">时过境迁</span>
+                    <div class="yl_song-singer">苏艺馨Chency</div>
+                </div>
+            </div>
+            <!-- 卡片4 欧美 -->
+            <div class="yl_rank-card yl_card4">
+                <div class="yl_card-top-text">
+                    <div class="yl_card-tag">巅峰榜</div>
+                    <div class="yl_card-name">欧美</div>
+                </div>
+                <div class="yl_line-play-box">
+                    <div class="line"></div>
+                    <i class="iconfont icon-bofang1"></i>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">1</span>
+                    <span class="yl_song-name">FIRESTARTER</span>
+                    <div class="yl_song-singer">K/DA/英雄联盟/i-dle...</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">2</span>
+                    <span class="yl_song-name">Patient Zero (Piano ...</span>
+                    <div class="yl_song-singer">Taylor Swift</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">3</span>
+                    <span class="yl_song-name">Housewife</span>
+                    <div class="yl_song-singer">Tate McRae</div>
+                </div>
+            </div>
+            <!-- 卡片5 韩国 -->
+            <div class="yl_rank-card yl_card5">
+                <div class="yl_card-top-text">
+                    <div class="yl_card-tag">巅峰榜</div>
+                    <div class="yl_card-name">韩国</div>
+                </div>
+                <div class="yl_line-play-box">
+                    <div class="line"></div>
+                    <i class="iconfont icon-bofang1"></i>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">1</span>
+                    <span class="yl_song-name">NEON</span>
+                    <div class="yl_song-singer">A2O LITE/A2O</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">2</span>
+                    <span class="yl_song-name">SUPERSTAR</span>
+                    <div class="yl_song-singer">A2O SOUL/A2O</div>
+                </div>
+                <div class="yl_song-item">
+                    <span class="yl_song-num">3</span>
+                    <span class="yl_song-name">Dear my crazy soul...</span>
+                    <div class="yl_song-singer">IU (아이유)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 点击触发播放
+        document.querySelectorAll('.yl_line-play-box').forEach(box => {
+            box.addEventListener('click', function () {
+                console.log('点击榜单播放');
+            })
+        })
+    </script>
+</body>
+</html>

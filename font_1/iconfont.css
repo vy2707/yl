@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5245663 */
-  src: url('iconfont.woff2?t=1792656900633') format('woff2'),
-       url('iconfont.woff?t=1792656900633') format('woff'),
-       url('iconfont.ttf?t=1792656900633') format('truetype');
+  src: url('iconfont.woff2?t=1793001754521') format('woff2'),
+       url('iconfont.woff?t=1793001754521') format('woff'),
+       url('iconfont.ttf?t=1793001754521') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-youshixinjiantou:before {
+  content: "\e72d";
 }
 
 .icon-qqmusic:before {
@@ -23,14 +27,6 @@
 
 .icon-da-zuojiantou:before {
   content: "\e609";
-}
-
-.icon-da-zuojiantou-copy:before {
-  content: "\e79e";
-}
-
-.icon-youjiantoucu:before {
-  content: "\e607";
 }
 
 .icon-yuandian-copy:before {

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-29
+	功能名称：移动端音乐播放页（黑胶唱片样式）
+	-->
+	<title>16-3 音乐播放页</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			min-height: 100vh;
+			background: #d9d5dd;
+			font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+			display: flex;
+			justify-content: center;
+		}
+
+		.yl_page {
+			width: 100%;
+			max-width: 420px;
+			min-height: 100vh;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			background: linear-gradient(180deg, #f2eff3 0%, #eeeaef 45%, #f4f2f4 100%);
+			color: #1a1a1a;
+			overflow: hidden;
+		}
+
+		/* ===== 顶部栏 ===== */
+		.yl_topbar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1.1rem 1.3rem .4rem;
+		}
+
+		.yl_topbar i {
+			font-size: 1.5rem;
+			color: #1a1a1a;
+		}
+
+		.yl_top_right {
+			display: flex;
+			align-items: center;
+			gap: 1.4rem;
+		}
+
+		/* 顶部中间小圆点 */
+		.yl_page_dots {
+			display: flex;
+			align-items: center;
+			gap: .4rem;
+		}
+
+		.yl_page_dots span {
+			width: .35rem;
+			height: .35rem;
+			border-radius: 50%;
+			background: #c5c1c8;
+		}
+
+		.yl_page_dots span.yl_dot_active {
+			width: 1.4rem;
+			height: .4rem;
+			border-radius: .3rem;
+			background: #1a1a1a;
+		}
+
+		/* ===== 黑胶唱片区 ===== */
+		.yl_disc_wrap {
+			position: relative;
+			height: 24rem;
+			margin-top: .8rem;
+		}
+
+		.yl_disc {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 21rem;
+			height: 21rem;
+			transform: translate(-58%, -50%);
+			border-radius: 50%;
+			background:
+				radial-gradient(circle at 38% 32%, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 45%),
+				repeating-radial-gradient(circle, rgba(255, 255, 255, .18) 0 1px, rgba(255, 255, 255, 0) 1px 8px),
+				radial-gradient(circle, #c9a7ee 0%, #c39aea 32%, #d3b4f2 55%, #e5d6f6 78%, #efe9f6 100%);
+			box-shadow:
+				0 1.2rem 3.5rem rgba(168, 120, 220, .45),
+				0 0 5rem rgba(196, 158, 240, .35),
+				inset 0 0 2.5rem rgba(255, 255, 255, .35);
+		}
+
+		/* 唱片旋转动画（播放时） */
+		.yl_disc.yl_spinning {
+			animation: yl_rotate 12s linear infinite;
+		}
+
+		@keyframes yl_rotate {
+			from { transform: translate(-58%, -50%) rotate(0deg); }
+			to { transform: translate(-58%, -50%) rotate(360deg); }
+		}
+
+		.yl_cover {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 9.5rem;
+			height: 9.5rem;
+			transform: translate(-58%, -50%);
+			border-radius: 50%;
+			object-fit: cover;
+			box-shadow: 0 0 0 .35rem rgba(255, 255, 255, .55), 0 .6rem 1.5rem rgba(120, 70, 180, .35);
+		}
+
+		/* ===== 唱臂 ===== */
+		.yl_arm {
+			position: absolute;
+			right: .9rem;
+			top: 1.6rem;
+			width: 3.4rem;
+			height: 21.5rem;
+		}
+
+		.yl_arm_head {
+			position: absolute;
+			left: 50%;
+			top: 0;
+			transform: translateX(-50%);
+			width: 3rem;
+			height: 3rem;
+			border-radius: 50%;
+			background: radial-gradient(circle at 35% 30%, #f6d9f5, #e5c3ef 60%, #d9b2ea);
+			box-shadow: 0 .4rem .9rem rgba(150, 100, 200, .35);
+		}
+
+		.yl_arm_head::after {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 1rem;
+			height: 1rem;
+			border-radius: 50%;
+			background: #f3e7f8;
+			box-shadow: inset 0 .1rem .25rem rgba(160, 120, 200, .5);
+		}
+
+		.yl_arm_rod {
+			position: absolute;
+			left: 50%;
+			top: 2.4rem;
+			transform: translateX(-50%);
+			width: .55rem;
+			height: 16.5rem;
+			border-radius: .4rem;
+			background: linear-gradient(90deg, #e9e6ec, #f8f7fa 45%, #d9d6de);
+			box-shadow: .15rem 0 .4rem rgba(120, 110, 130, .25);
+		}
+
+		.yl_arm_foot {
+			position: absolute;
+			left: 50%;
+			bottom: 0;
+			transform: translateX(-50%);
+			width: 1.4rem;
+			height: 3rem;
+			border-radius: .7rem;
+			background: linear-gradient(180deg, #e8d3f0, #d3aee8);
+			box-shadow: 0 .3rem .7rem rgba(150, 100, 200, .4);
+		}
+
+		/* ===== 歌曲信息 ===== */
+		.yl_info {
+			padding: .4rem 1.5rem 0;
+		}
+
+		.yl_title_row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.yl_title {
+			font-size: 2.2rem;
+			font-weight: 800;
+			letter-spacing: .02rem;
+		}
+
+		.yl_like {
+			display: flex;
+			align-items: center;
+			gap: 1.3rem;
+			font-size: 1.5rem;
+			color: #1a1a1a;
+		}
+
+		.yl_like i {
+			cursor: pointer;
+			transition: transform .15s ease, color .15s ease;
+		}
+
+		.yl_like i:active {
+			transform: scale(.85);
+		}
+
+		.yl_like .yl_liked {
+			color: #b57ae0;
+		}
+
+		/* 破碎爱心：爱心图标 + 斜杠遮罩 */
+		.yl_heart_broken {
+			position: relative;
+			display: inline-block;
+		}
+
+		.yl_heart_broken::after {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 130%;
+			height: .14rem;
+			background: #f2eff3;
+			transform: translate(-50%, -50%) rotate(-38deg);
+		}
+
+		.yl_artist_row {
+			display: flex;
+			align-items: center;
+			gap: .55rem;
+			margin-top: .8rem;
+		}
+
+		.yl_artist {
+			font-size: 1.05rem;
+			color: #333;
+			white-space: nowrap;
+		}
+
+		.yl_tags {
+			display: flex;
+			align-items: center;
+			gap: .35rem;
+			flex-wrap: nowrap;
+			overflow: hidden;
+		}
+
+		.yl_tag {
+			display: inline-flex;
+			align-items: center;
+			gap: .12rem;
+			padding: .12rem .38rem;
+			border: 1px solid #ddd9de;
+			border-radius: .3rem;
+			font-size: .68rem;
+			color: #555;
+			background: #faf9fb;
+			white-space: nowrap;
+		}
+
+		.yl_tag i {
+			font-size: .75rem;
+		}
+
+		/* ===== 功能图标行 ===== */
+		.yl_actions {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1.7rem 1.9rem 0;
+		}
+
+		.yl_actions i {
+			font-size: 1.45rem;
+			color: #1a1a1a;
+			cursor: pointer;
+		}
+
+		/* ===== 进度条 ===== */
+		.yl_progress {
+			padding: 1.5rem 1.3rem 0;
+		}
+
+		.yl_track {
+			position: relative;
+			height: .5rem;
+			cursor: pointer;
+		}
+
+		.yl_track::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 50%;
+			height: .14rem;
+			transform: translateY(-50%);
+			background: #d9d5dc;
+			border-radius: .1rem;
+		}
+
+		.yl_track_fill {
+			position: absolute;
+			left: 0;
+			top: 50%;
+			height: .14rem;
+			transform: translateY(-50%);
+			background: #1a1a1a;
+			border-radius: .1rem;
+			width: 9%;
+		}
+
+		.yl_track_thumb {
+			position: absolute;
+			top: 50%;
+			width: .55rem;
+			height: .55rem;
+			border-radius: 50%;
+			background: #1a1a1a;
+			transform: translate(-50%, -50%);
+			left: 9%;
+		}
+
+		.yl_times {
+			display: flex;
+			justify-content: space-between;
+			margin-top: .55rem;
+			font-size: .8rem;
+			color: #555;
+		}
+
+		/* ===== 底部控制栏 ===== */
+		.yl_controls {
+			margin-top: auto;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1.1rem 1.9rem 2rem;
+		}
+
+		.yl_controls i {
+			font-size: 1.6rem;
+			color: #1a1a1a;
+			cursor: pointer;
+		}
+
+		.yl_play_btn {
+			width: 4.3rem;
+			height: 4.3rem;
+			border-radius: 50%;
+			background: radial-gradient(circle at 35% 30%, #c99bf0, #b57ae0 70%);
+			box-shadow: 0 .5rem 1.4rem rgba(170, 115, 220, .5);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: none;
+			cursor: pointer;
+		}
+
+		.yl_play_btn i {
+			font-size: 1.7rem;
+			color: #fff;
+		}
+
+		.yl_toast {
+			position: absolute;
+			left: 50%;
+			bottom: 7.5rem;
+			transform: translateX(-50%);
+			background: rgba(30, 30, 30, .82);
+			color: #fff;
+			font-size: .78rem;
+			padding: .45rem .9rem;
+			border-radius: .5rem;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity .25s ease;
+			white-space: nowrap;
+			z-index: 10;
+		}
+
+		.yl_toast.yl_show {
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<div class="yl_page">
+		<!-- 顶部栏 -->
+		<header class="yl_topbar">
+			<i class="iconfont icon-xiahuasanjiao" id="yl_btn_back"></i>
+			<div class="yl_page_dots">
+				<span></span>
+				<span class="yl_dot_active"></span>
+				<span></span>
+			</div>
+			<div class="yl_top_right">
+				<i class="iconfont icon-gexingzhuangban"></i>
+				<i class="iconfont icon-fenxiang"></i>
+			</div>
+		</header>
+
+		<!-- 黑胶唱片 + 唱臂 -->
+		<section class="yl_disc_wrap">
+			<div class="yl_disc yl_spinning" id="yl_disc"></div>
+			<img class="yl_cover" src="img/16-3_cover.png" alt="专辑封面">
+			<div class="yl_arm">
+				<span class="yl_arm_head"></span>
+				<span class="yl_arm_rod"></span>
+				<span class="yl_arm_foot"></span>
+			</div>
+		</section>
+
+		<!-- 歌曲信息 -->
+		<section class="yl_info">
+			<div class="yl_title_row">
+				<h1 class="yl_title">Gone</h1>
+				<div class="yl_like">
+					<span class="yl_heart_broken"><i class="iconfont icon-aixin1" id="yl_btn_broken"></i></span>
+					<i class="iconfont icon-aixin" id="yl_btn_like"></i>
+				</div>
+			</div>
+			<div class="yl_artist_row">
+				<span class="yl_artist">ROSÉ (로제)</span>
+				<div class="yl_tags">
+					<span class="yl_tag"><i class="iconfont icon-changge"></i>97</span>
+					<span class="yl_tag">HQ</span>
+					<span class="yl_tag">VIP</span>
+					<span class="yl_tag">原声</span>
+				</div>
+			</div>
+		</section>
+
+		<!-- 功能图标行 -->
+		<nav class="yl_actions">
+			<i class="iconfont icon-changge"></i>
+			<i class="iconfont icon-banzou"></i>
+			<i class="iconfont icon-xiazai"></i>
+			<i class="iconfont icon-geci24"></i>
+			<i class="iconfont icon-gengduo"></i>
+		</nav>
+
+		<!-- 进度条 -->
+		<section class="yl_progress">
+			<div class="yl_track" id="yl_track">
+				<div class="yl_track_fill" id="yl_fill"></div>
+				<div class="yl_track_thumb" id="yl_thumb"></div>
+			</div>
+			<div class="yl_times">
+				<span id="yl_time_cur">00:18</span>
+				<span>03:27</span>
+			</div>
+		</section>
+
+		<!-- 底部控制栏 -->
+		<nav class="yl_controls">
+			<i class="iconfont icon-gl-repeat2" id="yl_btn_mode"></i>
+			<i class="iconfont icon-shangyishou" id="yl_btn_prev"></i>
+			<button class="yl_play_btn" id="yl_btn_play">
+				<i class="iconfont icon-bofang" id="yl_play_icon"></i>
+			</button>
+			<i class="iconfont icon-xiayishou" id="yl_btn_next"></i>
+			<i class="iconfont icon-liebiao" id="yl_btn_list"></i>
+		</nav>
+
+		<div class="yl_toast" id="yl_toast"></div>
+	</div>
+
+	<script>
+		// ===== 简易提示 =====
+		var yl_toastEl = document.getElementById('yl_toast');
+		var yl_toastTimer = null;
+
+		function yl_toast(yl_msg) {
+			yl_toastEl.textContent = yl_msg;
+			yl_toastEl.classList.add('yl_show');
+			clearTimeout(yl_toastTimer);
+			yl_toastTimer = setTimeout(function () {
+				yl_toastEl.classList.remove('yl_show');
+			}, 1200);
+		}
+
+		// ===== 播放 / 暂停 =====
+		var yl_playing = true;
+		var yl_discEl = document.getElementById('yl_disc');
+		var yl_playIcon = document.getElementById('yl_play_icon');
+
+		function yl_setPlay(yl_on) {
+			yl_playing = yl_on;
+			if (yl_playing) {
+				yl_playIcon.className = 'iconfont icon-zanting';
+				yl_discEl.classList.add('yl_spinning');
+			} else {
+				yl_playIcon.className = 'iconfont icon-bofang';
+				yl_discEl.classList.remove('yl_spinning');
+			}
+		}
+
+		document.getElementById('yl_btn_play').onclick = function () {
+			yl_setPlay(!yl_playing);
+		};
+
+		// ===== 进度模拟（00:18 / 03:27 = 207 秒）=====
+		var yl_total = 207;
+		var yl_cur = 18;
+		var yl_fillEl = document.getElementById('yl_fill');
+		var yl_thumbEl = document.getElementById('yl_thumb');
+		var yl_timeCurEl = document.getElementById('yl_time_cur');
+		var yl_trackEl = document.getElementById('yl_track');
+
+		function yl_fmt(yl_s) {
+			var yl_m = Math.floor(yl_s / 60);
+			var yl_r = Math.floor(yl_s % 60);
+			return (yl_m < 10 ? '0' : '') + yl_m + ':' + (yl_r < 10 ? '0' : '') + yl_r;
+		}
+
+		function yl_renderProgress() {
+			var yl_pct = (yl_cur / yl_total) * 100;
+			yl_fillEl.style.width = yl_pct + '%';
+			yl_thumbEl.style.left = yl_pct + '%';
+			yl_timeCurEl.textContent = yl_fmt(yl_cur);
+		}
+
+		setInterval(function () {
+			if (!yl_playing) return;
+			yl_cur += 1;
+			if (yl_cur >= yl_total) yl_cur = 0;
+			yl_renderProgress();
+		}, 1000);
+
+		// 点击进度条跳转
+		yl_trackEl.onclick = function (yl_e) {
+			var yl_rect = this.getBoundingClientRect();
+			var yl_ratio = (yl_e.clientX - yl_rect.left) / yl_rect.width;
+			yl_cur = Math.round(yl_total * Math.min(1, Math.max(0, yl_ratio)));
+			yl_renderProgress();
+		};
+
+		// ===== 红心收藏 =====
+		var yl_likeEl = document.getElementById('yl_btn_like');
+		yl_likeEl.onclick = function () {
+			this.classList.toggle('yl_liked');
+			yl_toast(this.classList.contains('yl_liked') ? '已收藏到我喜欢' : '已取消收藏');
+		};
+		document.getElementById('yl_btn_broken').onclick = function () {
+			yl_toast('已加入「不喜欢」');
+		};
+
+		// ===== 其他按钮 =====
+		document.getElementById('yl_btn_prev').onclick = function () { yl_toast('上一首'); };
+		document.getElementById('yl_btn_next').onclick = function () { yl_toast('下一首'); };
+		document.getElementById('yl_btn_mode').onclick = function () { yl_toast('列表循环'); };
+		document.getElementById('yl_btn_list').onclick = function () { yl_toast('播放列表'); };
+		document.getElementById('yl_btn_back').onclick = function () { yl_toast('收起播放页'); };
+
+		yl_renderProgress();
+	</script>
+</body>
+</html>

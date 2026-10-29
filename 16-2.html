@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-10-29
+	功能名称：JavaScript 对象及其方法、属性可视化演示
+	-->
+	<title>16-2 JavaScript 对象</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			background: #e9e6db;
+			padding: .1rem .35rem;
+			border-radius: .25rem;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .85em;
+		}
+
+		/* ===== 对象可视化 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_obj_card {
+			border: 2px solid #3976a3;
+			border-radius: .6rem;
+			overflow: hidden;
+		}
+
+		.yl_obj_name {
+			background: #3976a3;
+			color: #fff;
+			padding: .55rem 1rem;
+			font-size: .9rem;
+			font-family: Consolas, "Courier New", monospace;
+		}
+
+		.yl_obj_body {
+			padding: .4rem 0;
+		}
+
+		.yl_prop {
+			display: flex;
+			align-items: baseline;
+			padding: .5rem 1rem;
+			border-bottom: 1px solid #f0eee6;
+		}
+
+		.yl_prop:last-child {
+			border-bottom: none;
+		}
+
+		.yl_prop_key {
+			flex: 0 0 8.5rem;
+			color: #a34e3c;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .9rem;
+			font-weight: 600;
+		}
+
+		.yl_prop_val {
+			font-size: .9rem;
+			word-break: break-all;
+		}
+
+		.yl_prop_val.yl_str { color: #5aa06c; }
+		.yl_prop_val.yl_num { color: #4f8fbd; }
+		.yl_prop_val.yl_bool { color: #e07b53; }
+		.yl_prop_val.yl_arr { color: #9b6fbf; }
+		.yl_prop_val.yl_fn { color: #8a8f92; font-style: italic; }
+
+		.yl_prop_new {
+			animation: yl_flash .6s ease;
+		}
+
+		@keyframes yl_flash {
+			0% { background: #fff4cf; }
+			100% { background: transparent; }
+		}
+
+		.yl_type_badge {
+			display: inline-block;
+			margin-left: .4rem;
+			padding: 0 .35rem;
+			border-radius: .4rem;
+			font-size: .65rem;
+			color: #fff;
+			background: #b9c6cf;
+			vertical-align: .12rem;
+		}
+
+		/* ===== 按钮 ===== */
+		.yl_btns {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-top: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, transform .1s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn:active {
+			transform: translateY(1px);
+		}
+
+		.yl_btn_warn {
+			background: #a34e3c;
+		}
+
+		.yl_btn_warn:hover {
+			background: #8a4233;
+		}
+
+		.yl_btn_reset {
+			background: #6b7a81;
+		}
+
+		.yl_btn_reset:hover {
+			background: #57646a;
+		}
+
+		.yl_input {
+			width: 6rem;
+			padding: .48rem .5rem;
+			border: 1px solid #b9c6cf;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_result {
+			margin-top: 1rem;
+			padding: .8rem 1rem;
+			background: #f6f3ea;
+			border-radius: .4rem;
+			font-size: .9rem;
+			line-height: 1.7;
+			min-height: 2.4rem;
+		}
+
+		.yl_result b {
+			color: #a34e3c;
+		}
+
+		.yl_result .yl_ret {
+			color: #3976a3;
+			font-weight: 600;
+		}
+
+		/* ===== 速查卡片 ===== */
+		.yl_cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.1rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_card h3 {
+			display: inline-block;
+			margin: 0 .5rem 0 0;
+			font-size: 1rem;
+			font-weight: 600;
+			color: #3976a3;
+			font-family: Consolas, "Courier New", monospace;
+		}
+
+		.yl_tag {
+			display: inline-block;
+			padding: .1rem .5rem;
+			border-radius: .6rem;
+			background: #f2ede0;
+			color: #a34e3c;
+			font-size: .72rem;
+			vertical-align: .1rem;
+		}
+
+		.yl_card_desc {
+			margin: .55rem 0 .6rem;
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_code {
+			margin: 0 0 .6rem;
+			padding: .6rem .7rem;
+			background: #26343a;
+			border-radius: .4rem;
+			color: #e8eef2;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .78rem;
+			line-height: 1.5;
+			overflow-x: auto;
+			white-space: pre;
+		}
+
+		.yl_code .yl_cm {
+			color: #8aa6b3;
+		}
+
+		.yl_demo {
+			font-size: .8rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_demo .yl_out {
+			color: #a34e3c;
+			font-weight: 600;
+		}
+
+		.yl_arrow {
+			color: #3976a3;
+			margin: 0 .2rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JavaScript 对象</h1>
+				<p class="yl_subtitle">对象 = 一组「键: 值」的集合，像一张填写了各种信息的资料卡，方法就是卡片上会“做事”的函数</p>
+			</div>
+			<div class="yl_author">姚琳 · 16-2</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、互动演练场 -->
+		<section class="yl_block">
+			<h2>一、互动演练场</h2>
+			<p class="yl_block_desc">下面这张蓝色资料卡就是一个对象 <code>yl_stu</code>：左边是属性名（键），右边是属性值。不同类型的数据用不同颜色区分。点击按钮，看看对象如何被读取、修改和遍历。</p>
+
+			<div class="yl_board">
+				<div class="yl_obj_card">
+					<div class="yl_obj_name">const yl_stu = { ... }</div>
+					<div class="yl_obj_body" id="yl_obj_body"></div>
+				</div>
+
+				<div class="yl_btns">
+					<button class="yl_btn" data-m="get">点语法 读取</button>
+					<button class="yl_btn" data-m="set">改属性值</button>
+					<button class="yl_btn" data-m="add">添加属性</button>
+					<button class="yl_btn" data-m="del">delete 删除</button>
+					<button class="yl_btn" data-m="keys">Object.keys()</button>
+					<button class="yl_btn" data-m="values">Object.values()</button>
+					<button class="yl_btn" data-m="entries">Object.entries()</button>
+					<button class="yl_btn" data-m="has">hasOwnProperty()</button>
+					<button class="yl_btn" data-m="in">in 运算符</button>
+					<button class="yl_btn yl_btn_warn" data-m="method">调用方法</button>
+					<button class="yl_btn yl_btn_reset" data-m="reset">重置</button>
+				</div>
+
+				<div class="yl_result" id="yl_result">点一个按钮试试，这里会显示操作返回的结果。</div>
+			</div>
+		</section>
+
+		<!-- 二、速查 -->
+		<section class="yl_block">
+			<h2>二、对象常用知识点速查</h2>
+			<p class="yl_block_desc">下面是对象最常用的知识点：创建与访问、增删改、遍历、方法、以及内置对象 <code>Math</code>、<code>Date</code> 和 <code>JSON</code>。</p>
+			<div class="yl_cards" id="yl_cards"></div>
+		</section>
+	</main>
+
+	<script>
+		// ===== 一、互动演练场 =====
+		(function yl_initPlayground() {
+			function yl_makeStu() {
+				return {
+					name: "姚琳",
+					age: 20,
+					score: 88,
+					isPass: true,
+					hobbies: ["绘画", "前端"],
+					sayHi: function () {
+						return "大家好，我是" + this.name + "，今年 " + this.age + " 岁。";
+					}
+				};
+			}
+
+			var yl_stu = yl_makeStu();
+			var yl_bodyEl = document.getElementById('yl_obj_body');
+			var yl_resultEl = document.getElementById('yl_result');
+
+			// 属性值按类型显示不同颜色与后缀
+			function yl_type(yl_v) {
+				if (typeof yl_v === 'function') return { cls: 'yl_fn', txt: '[函数] ', badge: 'function' };
+				if (Array.isArray(yl_v)) return { cls: 'yl_arr', txt: '[' + yl_v.join(', ') + ']', badge: 'array' };
+				if (typeof yl_v === 'number') return { cls: 'yl_num', txt: yl_v, badge: 'number' };
+				if (typeof yl_v === 'boolean') return { cls: 'yl_bool', txt: yl_v, badge: 'boolean' };
+				if (typeof yl_v === 'string') return { cls: 'yl_str', txt: '"' + yl_v + '"', badge: 'string' };
+				return { cls: '', txt: JSON.stringify(yl_v), badge: 'object' };
+			}
+
+			function yl_render(yl_newKey) {
+				yl_bodyEl.innerHTML = '';
+				var yl_keys = Object.keys(yl_stu);
+				for (var yl_i = 0; yl_i < yl_keys.length; yl_i++) {
+					var yl_k = yl_keys[yl_i];
+					var yl_v = yl_stu[yl_k];
+					var yl_t = yl_type(yl_v);
+
+					var yl_row = document.createElement('div');
+					yl_row.className = 'yl_prop';
+					if (yl_k === yl_newKey) {
+						yl_row.classList.add('yl_prop_new');
+					}
+
+					var yl_key = document.createElement('span');
+					yl_key.className = 'yl_prop_key';
+					yl_key.textContent = yl_k;
+
+					var yl_val = document.createElement('span');
+					yl_val.className = 'yl_prop_val ' + yl_t.cls;
+					yl_val.textContent = yl_t.txt;
+					if (yl_t.badge) {
+						var yl_badge = document.createElement('span');
+						yl_badge.className = 'yl_type_badge';
+						yl_badge.textContent = yl_t.badge;
+						yl_val.appendChild(yl_badge);
+					}
+
+					yl_row.appendChild(yl_key);
+					yl_row.appendChild(yl_val);
+					yl_bodyEl.appendChild(yl_row);
+				}
+			}
+
+			function yl_say(yl_msg, yl_ret) {
+				var yl_html = yl_msg;
+				if (yl_ret !== undefined && yl_ret !== null) {
+					yl_html += '　返回：<span class="yl_ret">' + yl_ret + '</span>';
+				}
+				yl_resultEl.innerHTML = yl_html;
+			}
+
+			function yl_do(yl_m) {
+				switch (yl_m) {
+					case 'get':
+						yl_say('用点语法读取 <b>yl_stu.name</b> =', '"' + yl_stu.name + '"');
+						break;
+					case 'set': {
+						yl_stu.score += 1;
+						yl_render('score');
+						yl_say('用 <b>yl_stu.score = yl_stu.score + 1</b> 把分数加 1，现在 score =', yl_stu.score);
+						break;
+					}
+					case 'add': {
+						yl_stu.city = "深圳";
+						yl_render('city');
+						yl_say('用 <b>yl_stu.city = "深圳"</b> 直接给对象新增了一个属性 city =', '"深圳"');
+						break;
+					}
+					case 'del': {
+						delete yl_stu.isPass;
+						yl_render();
+						yl_say('用 <b>delete yl_stu.isPass</b> 把 isPass 属性删掉了（卡片里已消失）。');
+						break;
+					}
+					case 'keys':
+						yl_say('Object.keys(yl_stu) 拿到所有<b>键</b>（属性名）：', JSON.stringify(Object.keys(yl_stu)));
+						break;
+					case 'values':
+						yl_say('Object.values(yl_stu) 拿到所有<b>值</b>：', JSON.stringify(Object.values(yl_stu)));
+						break;
+					case 'entries':
+						yl_say('Object.entries(yl_stu) 拿到所有<b>键值对</b>（二维数组）：', JSON.stringify(Object.entries(yl_stu)));
+						break;
+					case 'has':
+						yl_say('yl_stu.hasOwnProperty("name") 判断对象<b>自身</b>是否有 name 属性：', yl_stu.hasOwnProperty('name'));
+						break;
+					case 'in':
+						yl_say('"age" in yl_stu 用 in 运算符判断属性是否存在：', ('age' in yl_stu));
+						break;
+					case 'method':
+						yl_say('调用对象的方法 <b>yl_stu.sayHi()</b>（方法里的 this 指对象本身）：', yl_stu.sayHi());
+						break;
+					case 'reset':
+						yl_stu = yl_makeStu();
+						yl_render();
+						yl_say('已重置为初始对象 <b>yl_stu</b>。');
+						break;
+				}
+			}
+
+			var yl_btns = document.querySelectorAll('.yl_btn[data-m]');
+			for (var yl_b = 0; yl_b < yl_btns.length; yl_b++) {
+				yl_btns[yl_b].onclick = function () {
+					yl_do(this.getAttribute('data-m'));
+				};
+			}
+
+			yl_render();
+		})();
+
+		// ===== 二、速查卡片 =====
+		(function yl_initCards() {
+			var yl_methods = [
+				{
+					name: '对象字面量', tag: '创建对象', desc: '用一对花括号 { } 直接创建对象，属性写成「键: 值」，用逗号分隔。',
+					code: 'var yl_stu = {\n  name: "姚琳",\n  age: 20\n};',
+					demo: '创建了一个对象，含 <span class="yl_out">name</span> 和 <span class="yl_out">age</span> 两个属性'
+				},
+				{
+					name: '访问属性 . / []', tag: '读取', desc: '点语法直接写属性名；方括号语法可写变量或带特殊字符的键。',
+					code: 'yl_stu.name;\nyl_stu["age"];',
+					demo: '<span class="yl_out">"姚琳"</span>　/　<span class="yl_out">20</span>'
+				},
+				{
+					name: '添加 / 修改属性', tag: '写入', desc: '直接对不存在的键赋值就是「新增」，对已有键赋值就是「修改」。',
+					code: 'yl_stu.city = "深圳";\nyl_stu.age = 21;',
+					demo: '新增 <span class="yl_out">city</span> 属性，把 <span class="yl_out">age</span> 改成 21'
+				},
+				{
+					name: 'delete 删除属性', tag: '删除', desc: '用 delete 运算符删除对象中某个属性，返回 true。',
+					code: 'delete yl_stu.isPass;',
+					demo: '对象里的 <span class="yl_out">isPass</span> 属性被移除'
+				},
+				{
+					name: 'for...in 遍历', tag: '遍历', desc: '遍历对象的所有可枚举属性名。',
+					code: 'for (var k in yl_stu) {\n  console.log(k);\n}',
+					demo: '逐个打印 <span class="yl_out">name age score ...</span>'
+				},
+				{
+					name: 'Object.keys(obj)', tag: '返回数组', desc: '返回对象所有键（属性名）组成的数组。',
+					code: 'Object.keys(yl_stu);',
+					demo: '<span class="yl_out">["name", "age", "score", "isPass", "hobbies"]</span>'
+				},
+				{
+					name: 'Object.values(obj)', tag: '返回数组', desc: '返回对象所有值组成的数组。',
+					code: 'Object.values(yl_stu);',
+					demo: '<span class="yl_out">["姚琳", 20, 88, true, [...]]</span>'
+				},
+				{
+					name: 'Object.entries(obj)', tag: '返回数组', desc: '返回「键值对」二维数组，常配合 forEach 使用。',
+					code: 'Object.entries(yl_stu);',
+					demo: '<span class="yl_out">[["name","姚琳"], ["age",20], ...]</span>'
+				},
+				{
+					name: 'hasOwnProperty(key)', tag: '返回布尔', desc: '判断该属性是否为对象自身所有（而非继承来的）。',
+					code: 'yl_stu.hasOwnProperty("name");',
+					demo: '<span class="yl_out">true</span>'
+				},
+				{
+					name: 'in 运算符', tag: '返回布尔', desc: '判断属性是否存在于对象（含原型链上的属性）。',
+					code: '"age" in yl_stu;',
+					demo: '<span class="yl_out">true</span>'
+				},
+				{
+					name: '方法 & this', tag: '对象中的函数', desc: '属性值是一个函数就叫「方法」，方法里的 this 指向当前对象。',
+					code: 'yl_stu.sayHi = function () {\n  return "我是" + this.name;\n};',
+					demo: 'yl_stu.sayHi() <span class="yl_arrow">→</span> <span class="yl_out">"我是姚琳"</span>'
+				},
+				{
+					name: 'JSON.stringify(obj)', tag: '对象转字符串', desc: '把对象转成 JSON 字符串，常用于发送数据。',
+					code: 'JSON.stringify(yl_stu);',
+					demo: '<span class="yl_out">{"name":"姚琳","age":20}</span>'
+				},
+				{
+					name: 'JSON.parse(str)', tag: '字符串转对象', desc: '把 JSON 字符串转回对象，常用于接收数据。',
+					code: 'JSON.parse(\'{"name":"姚琳"}\');',
+					demo: '<span class="yl_out">{name: "姚琳"}</span>'
+				},
+				{
+					name: 'Math 内置对象', tag: '内置对象', desc: '提供数学常量与函数，如随机数、取整、最大值。',
+					code: 'Math.random();\nMath.floor(3.7);\nMath.max(1, 8, 3);',
+					demo: '<span class="yl_out">0~1 随机小数 / 3 / 8</span>'
+				},
+				{
+					name: 'Date 内置对象', tag: '内置对象', desc: '处理日期与时间，new Date() 得到当前时间。',
+					code: 'var d = new Date();\nd.getFullYear();\nd.getDay();',
+					demo: '当前年份 <span class="yl_out">' + new Date().getFullYear() + '</span>，今天是星期 <span class="yl_out">' + new Date().getDay() + '</span>'
+				}
+			];
+
+			var yl_cardsEl = document.getElementById('yl_cards');
+
+			for (var yl_i = 0; yl_i < yl_methods.length; yl_i++) {
+				var yl_m = yl_methods[yl_i];
+
+				var yl_card = document.createElement('div');
+				yl_card.className = 'yl_card';
+
+				var yl_title = document.createElement('div');
+				var yl_h3 = document.createElement('h3');
+				yl_h3.textContent = yl_m.name;
+				var yl_tag = document.createElement('span');
+				yl_tag.className = 'yl_tag';
+				yl_tag.textContent = yl_m.tag;
+				yl_title.appendChild(yl_h3);
+				yl_title.appendChild(yl_tag);
+
+				var yl_desc = document.createElement('p');
+				yl_desc.className = 'yl_card_desc';
+				yl_desc.textContent = yl_m.desc;
+
+				var yl_code = document.createElement('pre');
+				yl_code.className = 'yl_code';
+				yl_code.textContent = yl_m.code;
+
+				var yl_demo = document.createElement('div');
+				yl_demo.className = 'yl_demo';
+				yl_demo.innerHTML = yl_m.demo;
+
+				yl_card.appendChild(yl_title);
+				yl_card.appendChild(yl_desc);
+				yl_card.appendChild(yl_code);
+				yl_card.appendChild(yl_demo);
+				yl_cardsEl.appendChild(yl_card);
+			}
+		})();
+	</script>
+</body>
+</html>
