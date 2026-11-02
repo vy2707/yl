@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-02
+	功能名称：JavaScript 定时器演示（setTimeout 与 setInterval）
+	-->
+	<title>17-5 定时器</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 知识卡片 ===== */
+		.yl_cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1rem 1.1rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_card h3 {
+			margin: 0 0 .5rem;
+			font-size: 1rem;
+			font-weight: 600;
+			color: #26343a;
+			font-family: Consolas, monospace;
+		}
+
+		.yl_card p {
+			margin: 0;
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_card code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+		}
+
+		/* ===== 交互面板 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_btns {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, transform .1s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn:active {
+			transform: translateY(1px);
+		}
+
+		.yl_btn_warn {
+			background: #a34e3c;
+		}
+
+		.yl_btn_warn:hover {
+			background: #8a4233;
+		}
+
+		.yl_btn_gray {
+			background: #6b7a81;
+		}
+
+		.yl_btn_gray:hover {
+			background: #57646a;
+		}
+
+		/* ===== setTimeout 演示舞台 ===== */
+		.yl_stage {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: .8rem;
+			padding: 1.5rem;
+			border: 2px dashed #d5d5cc;
+			border-radius: .5rem;
+			background: #faf9f4;
+			min-height: 150px;
+			justify-content: center;
+		}
+
+		.yl_light {
+			width: 90px;
+			height: 90px;
+			border-radius: 50%;
+			background: #d5d5cc;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.8rem;
+			color: #fff;
+			transition: background .3s ease, transform .3s ease;
+		}
+
+		.yl_light.yl_on {
+			background: #e0a53c;
+			box-shadow: 0 0 1.6rem rgba(224, 165, 60, .7);
+			transform: scale(1.05);
+		}
+
+		.yl_countdown {
+			font-size: 1.6rem;
+			font-weight: 700;
+			color: #3976a3;
+			min-height: 2rem;
+		}
+
+		.yl_status {
+			font-size: .85rem;
+			color: #667579;
+			min-height: 1.2rem;
+		}
+
+		/* ===== setInterval 演示舞台 ===== */
+		.yl_clock {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: .8rem;
+			padding: 1.5rem;
+			border: 2px dashed #d5d5cc;
+			border-radius: .5rem;
+			background: #faf9f4;
+		}
+
+		.yl_clock_time {
+			font-family: Consolas, monospace;
+			font-size: 2.6rem;
+			font-weight: 700;
+			color: #26343a;
+			letter-spacing: 2px;
+		}
+
+		.yl_counter {
+			display: flex;
+			align-items: baseline;
+			gap: .6rem;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+
+		.yl_counter_num {
+			font-size: 2.2rem;
+			font-weight: 700;
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+		}
+
+		.yl_counter_label {
+			font-size: .85rem;
+			color: #667579;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JavaScript 定时器</h1>
+				<p class="yl_subtitle">setTimeout 延时执行一次，setInterval 每隔一段时间重复执行</p>
+			</div>
+			<div class="yl_author">姚琳 · 17-5</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、认识定时器 -->
+		<section class="yl_block">
+			<h2>一、认识两种定时器</h2>
+			<p class="yl_block_desc">JavaScript 提供两个全局定时器函数，都返回一个 <code>ID</code>，可用它来取消定时。</p>
+			<div class="yl_cards">
+				<div class="yl_card">
+					<h3>setTimeout(fn, 毫秒)</h3>
+					<p>延时一段时间后<code>只执行一次</code>回调函数。用 <code>clearTimeout(id)</code> 取消。</p>
+				</div>
+				<div class="yl_card">
+					<h3>setInterval(fn, 毫秒)</h3>
+					<p>每隔一段时间<code>反复执行</code>回调函数。用 <code>clearInterval(id)</code> 停止。</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- 二、setTimeout -->
+		<section class="yl_block">
+			<h2>二、setTimeout —— 延时执行一次</h2>
+			<p class="yl_block_desc">点击「点灯」后，灯泡会在 <code>3 秒</code>后亮起；期间可随时点击「取消」中断它。</p>
+			<div class="yl_board">
+				<div class="yl_btns">
+					<button class="yl_btn" id="yl_btn_timeout">点灯（3 秒后亮）</button>
+					<button class="yl_btn yl_btn_gray" id="yl_btn_clear_timeout">取消 clearTimeout</button>
+				</div>
+				<div class="yl_stage">
+					<div class="yl_light" id="yl_light"><i class="iconfont icon-xingguang-copy"></i></div>
+					<div class="yl_countdown" id="yl_countdown"></div>
+					<div class="yl_status" id="yl_timeout_status">等待你的操作…</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 三、setInterval -->
+		<section class="yl_block">
+			<h2>三、setInterval —— 每隔一段时间重复执行</h2>
+			<p class="yl_block_desc">下面是一个每秒走动的电子钟和一个自动累加的数字，都由 <code>setInterval</code> 驱动。</p>
+			<div class="yl_board">
+				<div class="yl_btns">
+					<button class="yl_btn" id="yl_btn_interval">开始计时</button>
+					<button class="yl_btn yl_btn_warn" id="yl_btn_clear_interval">停止 clearInterval</button>
+				</div>
+				<div class="yl_clock">
+					<div class="yl_clock_time" id="yl_clock_time">00:00:00</div>
+					<div class="yl_counter">
+						<span class="yl_counter_num" id="yl_counter_num">0</span>
+						<span class="yl_counter_label">次 / 每秒 +1</span>
+					</div>
+					<div class="yl_status" id="yl_interval_status">尚未开始。</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		// ===== 二、setTimeout 演示 =====
+		var yl_timeoutId = null;
+		var yl_countdownId = null;
+		var yl_lightEl = document.getElementById('yl_light');
+		var yl_countdownEl = document.getElementById('yl_countdown');
+		var yl_timeoutStatusEl = document.getElementById('yl_timeout_status');
+
+		function yl_clearTimeoutDemo() {
+			if (yl_timeoutId !== null) { clearTimeout(yl_timeoutId); yl_timeoutId = null; }
+			if (yl_countdownId !== null) { clearInterval(yl_countdownId); yl_countdownId = null; }
+		}
+
+		document.getElementById('yl_btn_timeout').onclick = function () {
+			yl_clearTimeoutDemo();
+			yl_lightEl.classList.remove('yl_on');
+			var yl_left = 3;
+			yl_countdownEl.textContent = '倒计时 ' + yl_left + ' 秒';
+			yl_timeoutStatusEl.textContent = '已启动 setTimeout，3 秒后灯泡亮起…';
+
+			// 用 setInterval 显示倒计时
+			yl_countdownId = setInterval(function () {
+				yl_left--;
+				if (yl_left <= 0) {
+					clearInterval(yl_countdownId);
+					yl_countdownId = null;
+					yl_countdownEl.textContent = '';
+				} else {
+					yl_countdownEl.textContent = '倒计时 ' + yl_left + ' 秒';
+				}
+			}, 1000);
+
+			// setTimeout 只执行一次
+			yl_timeoutId = setTimeout(function () {
+				yl_lightEl.classList.add('yl_on');
+				yl_timeoutStatusEl.textContent = 'setTimeout 到时间啦，灯泡亮起！';
+				yl_timeoutId = null;
+			}, 3000);
+		};
+
+		document.getElementById('yl_btn_clear_timeout').onclick = function () {
+			if (yl_timeoutId !== null || yl_countdownId !== null) {
+				yl_clearTimeoutDemo();
+				yl_lightEl.classList.remove('yl_on');
+				yl_countdownEl.textContent = '';
+				yl_timeoutStatusEl.textContent = '已取消，clearTimeout 生效，灯泡不会亮了。';
+			} else {
+				yl_timeoutStatusEl.textContent = '当前没有待执行的 setTimeout。';
+			}
+		};
+
+		// ===== 三、setInterval 演示 =====
+		var yl_intervalId = null;
+		var yl_clockEl = document.getElementById('yl_clock_time');
+		var yl_counterEl = document.getElementById('yl_counter_num');
+		var yl_intervalStatusEl = document.getElementById('yl_interval_status');
+		var yl_counter = 0;
+
+		function yl_pad(yl_n) {
+			return (yl_n < 10 ? '0' : '') + yl_n;
+		}
+
+		document.getElementById('yl_btn_interval').onclick = function () {
+			if (yl_intervalId !== null) { return; }
+			yl_intervalStatusEl.textContent = '正在运行，每秒刷新一次…';
+
+			yl_intervalId = setInterval(function () {
+				var yl_now = new Date();
+				yl_clockEl.textContent = yl_pad(yl_now.getHours()) + ':' + yl_pad(yl_now.getMinutes()) + ':' + yl_pad(yl_now.getSeconds());
+				yl_counter++;
+				yl_counterEl.textContent = yl_counter;
+			}, 1000);
+		};
+
+		document.getElementById('yl_btn_clear_interval').onclick = function () {
+			if (yl_intervalId !== null) {
+				clearInterval(yl_intervalId);
+				yl_intervalId = null;
+				yl_intervalStatusEl.textContent = '已停止，clearInterval 生效。';
+			} else {
+				yl_intervalStatusEl.textContent = '当前没有正在运行的 setInterval。';
+			}
+		};
+	</script>
+</body>
+</html>

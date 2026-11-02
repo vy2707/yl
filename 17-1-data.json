@@ -1,0 +1,60 @@
+{
+  "title": "华语流行音乐榜单",
+  "updateTime": "2026-11-02",
+  "songs": [
+    {
+      "id": 1,
+      "name": "夜空中最亮的星",
+      "singer": "逃跑计划",
+      "album": "世界",
+      "duration": "04:12",
+      "plays": 1280000,
+      "liked": true
+    },
+    {
+      "id": 2,
+      "name": "晴天",
+      "singer": "周杰伦",
+      "album": "叶惠美",
+      "duration": "04:29",
+      "plays": 3260000,
+      "liked": true
+    },
+    {
+      "id": 3,
+      "name": "成都",
+      "singer": "赵雷",
+      "album": "无法长大",
+      "duration": "05:28",
+      "plays": 890000,
+      "liked": false
+    },
+    {
+      "id": 4,
+      "name": "光年之外",
+      "singer": "邓紫棋",
+      "album": "光年之外",
+      "duration": "03:55",
+      "plays": 2150000,
+      "liked": true
+    },
+    {
+      "id": 5,
+      "name": "平凡之路",
+      "singer": "朴树",
+      "album": "猎户星座",
+      "duration": "05:02",
+      "plays": 1560000,
+      "liked": false
+    },
+    {
+      "id": 6,
+      "name": "起风了",
+      "singer": "买辣椒也用券",
+      "album": "起风了",
+      "duration": "04:15",
+      "plays": 730000,
+      "liked": true
+    }
+  ]
+}

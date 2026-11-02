@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-02
+	功能名称：跨域接口数据获取与展示（fetch + JSONPlaceholder）
+	-->
+	<title>17-2 跨域接口数据展示</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 接口信息 ===== */
+		.yl_api {
+			display: flex;
+			align-items: center;
+			gap: .8rem;
+			flex-wrap: wrap;
+			padding: .8rem 1rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, monospace;
+			font-size: .85rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_api .yl_tag {
+			flex: 0 0 auto;
+			padding: .15rem .55rem;
+			background: #3976a3;
+			color: #fff;
+			border-radius: .4rem;
+			font-size: .75rem;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_api .yl_url {
+			flex: 1;
+			min-width: 200px;
+			word-break: break-all;
+		}
+
+		/* ===== 交互面板 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_tabs {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #e8eef2;
+			color: #3976a3;
+			border: 1px solid #c9d6de;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, color .15s ease;
+		}
+
+		.yl_btn:hover {
+			background: #dce6ec;
+		}
+
+		.yl_btn.yl_active {
+			background: #3976a3;
+			color: #fff;
+			border-color: #3976a3;
+		}
+
+		.yl_status {
+			margin-bottom: 1rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_status_ok {
+			background: #eaf3ea;
+			color: #3c7a3c;
+		}
+
+		.yl_status_err {
+			background: #fbeaea;
+			color: #a33b3b;
+		}
+
+		/* ===== 结果列表 ===== */
+		.yl_list {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: .9rem;
+		}
+
+		.yl_card {
+			background: #faf9f4;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1rem 1.1rem;
+		}
+
+		.yl_card_top {
+			display: flex;
+			align-items: center;
+			gap: .6rem;
+			margin-bottom: .55rem;
+		}
+
+		.yl_card_icon {
+			flex: 0 0 auto;
+			width: 2.1rem;
+			height: 2.1rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			background: #3976a3;
+			color: #fff;
+			font-size: 1rem;
+		}
+
+		.yl_card_title {
+			font-size: .95rem;
+			font-weight: 600;
+			color: #26343a;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.yl_card_body {
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_card_body .yl_row {
+			display: flex;
+			gap: .4rem;
+			padding: .12rem 0;
+		}
+
+		.yl_card_body .yl_k {
+			flex: 0 0 auto;
+			color: #a0a8ac;
+		}
+
+		.yl_card_body .yl_v {
+			color: #26343a;
+			word-break: break-all;
+		}
+
+		.yl_badge {
+			display: inline-block;
+			padding: .1rem .5rem;
+			border-radius: .6rem;
+			font-size: .72rem;
+		}
+
+		.yl_badge_done {
+			background: #eaf3ea;
+			color: #3c7a3c;
+		}
+
+		.yl_badge_todo {
+			background: #f6ece2;
+			color: #a34e3c;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>跨域接口数据展示</h1>
+				<p class="yl_subtitle">用 fetch 请求可跨域的公开接口 JSONPlaceholder，把返回的 JSON 数据渲染成卡片</p>
+			</div>
+			<div class="yl_author">姚琳 · 17-2</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、接口说明 -->
+		<section class="yl_block">
+			<h2>一、接口与跨域说明</h2>
+			<p class="yl_block_desc">本次使用的公开测试接口是 <code>JSONPlaceholder</code>。它的服务器在响应头里带有 <code>Access-Control-Allow-Origin: *</code>，允许任意网站跨域读取，因此浏览器不会拦截我们的请求。</p>
+			<div class="yl_api">
+				<span class="yl_tag">接口地址</span>
+				<span class="yl_url" id="yl_url">https://jsonplaceholder.typicode.com/users</span>
+			</div>
+		</section>
+
+		<!-- 二、数据展示 -->
+		<section class="yl_block">
+			<h2>二、请求并展示数据</h2>
+			<p class="yl_block_desc">选择不同的接口，点击后通过 <code>fetch()</code> 获取数据并渲染成卡片列表。</p>
+			<div class="yl_board">
+				<div class="yl_tabs" id="yl_tabs">
+					<button class="yl_btn yl_active" data-ep="users">用户 users</button>
+					<button class="yl_btn" data-ep="posts">文章 posts</button>
+					<button class="yl_btn" data-ep="todos">待办 todos</button>
+				</div>
+				<div class="yl_status" id="yl_status">正在加载数据…</div>
+				<div class="yl_list" id="yl_list"></div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		// ===== 接口配置 =====
+		var yl_base = 'https://jsonplaceholder.typicode.com/';
+		var yl_cur = 'users';
+		var yl_urlEl = document.getElementById('yl_url');
+		var yl_statusEl = document.getElementById('yl_status');
+		var yl_listEl = document.getElementById('yl_list');
+		var yl_tabsEl = document.getElementById('yl_tabs');
+
+		// 每个接口的展示图标与字段映射
+		var yl_endpoints = {
+			users: { icon: 'icon-xinxi', url: 'users' },
+			posts: { icon: 'icon-liebiao', url: 'posts' },
+			todos: { icon: 'icon-jinbi', url: 'todos' }
+		};
+
+		// ===== 渲染：用户 =====
+		function yl_renderUsers(yl_data) {
+			for (var yl_i = 0; yl_i < yl_data.length; yl_i++) {
+				var yl_u = yl_data[yl_i];
+				var yl_card = yl_makeCard(yl_u.name, 'icon-xinxi');
+				var yl_body = yl_card.querySelector('.yl_card_body');
+
+				yl_row(yl_body, '邮箱', yl_u.email);
+				yl_row(yl_body, '电话', yl_u.phone);
+				yl_row(yl_body, '网站', yl_u.website);
+				yl_row(yl_body, '公司', yl_u.company.name);
+				yl_row(yl_body, '城市', yl_u.address.city);
+
+				yl_listEl.appendChild(yl_card);
+			}
+		}
+
+		// ===== 渲染：文章 =====
+		function yl_renderPosts(yl_data) {
+			var yl_items = yl_data.slice(0, 10);
+			for (var yl_i = 0; yl_i < yl_items.length; yl_i++) {
+				var yl_p = yl_items[yl_i];
+				var yl_card = yl_makeCard('#' + yl_p.id + ' ' + yl_p.title, 'icon-liebiao');
+				var yl_body = yl_card.querySelector('.yl_card_body');
+				yl_body.textContent = yl_p.body;
+				yl_listEl.appendChild(yl_card);
+			}
+		}
+
+		// ===== 渲染：待办 =====
+		function yl_renderTodos(yl_data) {
+			var yl_items = yl_data.slice(0, 10);
+			for (var yl_i = 0; yl_i < yl_items.length; yl_i++) {
+				var yl_t = yl_items[yl_i];
+				var yl_card = yl_makeCard('#' + yl_t.id + ' 待办', 'icon-jinbi');
+				var yl_body = yl_card.querySelector('.yl_card_body');
+				yl_body.innerHTML = '<span>' + yl_t.title + '</span>';
+				var yl_badge = document.createElement('span');
+				yl_badge.className = 'yl_badge ' + (yl_t.completed ? 'yl_badge_done' : 'yl_badge_todo');
+				yl_badge.textContent = yl_t.completed ? '已完成' : '未完成';
+				yl_badge.style.marginLeft = '.4rem';
+				yl_body.appendChild(yl_badge);
+				yl_listEl.appendChild(yl_card);
+			}
+		}
+
+		// ===== 工具：生成卡片 / 一行字段 =====
+		function yl_makeCard(yl_title, yl_icon) {
+			var yl_card = document.createElement('div');
+			yl_card.className = 'yl_card';
+
+			var yl_top = document.createElement('div');
+			yl_top.className = 'yl_card_top';
+			var yl_ic = document.createElement('div');
+			yl_ic.className = 'yl_card_icon';
+			yl_ic.innerHTML = '<i class="iconfont ' + yl_icon + '"></i>';
+			var yl_tt = document.createElement('div');
+			yl_tt.className = 'yl_card_title';
+			yl_tt.textContent = yl_title;
+			yl_top.appendChild(yl_ic);
+			yl_top.appendChild(yl_tt);
+
+			var yl_body = document.createElement('div');
+			yl_body.className = 'yl_card_body';
+
+			yl_card.appendChild(yl_top);
+			yl_card.appendChild(yl_body);
+			return yl_card;
+		}
+
+		function yl_row(yl_body, yl_key, yl_val) {
+			var yl_r = document.createElement('div');
+			yl_r.className = 'yl_row';
+			var yl_k = document.createElement('span');
+			yl_k.className = 'yl_k';
+			yl_k.textContent = yl_key;
+			var yl_v = document.createElement('span');
+			yl_v.className = 'yl_v';
+			yl_v.textContent = yl_val;
+			yl_r.appendChild(yl_k);
+			yl_r.appendChild(yl_v);
+			yl_body.appendChild(yl_r);
+		}
+
+		// ===== 切换接口 =====
+		function yl_setActive(yl_name) {
+			var yl_btns = yl_tabsEl.querySelectorAll('.yl_btn');
+			for (var yl_i = 0; yl_i < yl_btns.length; yl_i++) {
+				yl_btns[yl_i].classList.toggle('yl_active', yl_btns[yl_i].getAttribute('data-ep') === yl_name);
+			}
+		}
+
+		// ===== 加载数据 =====
+		function yl_load() {
+			var yl_url = yl_base + yl_endpoints[yl_cur].url;
+			yl_urlEl.textContent = yl_url;
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '正在请求 ' + yl_url + ' …';
+			yl_listEl.innerHTML = '';
+
+			fetch(yl_url)
+				.then(function (yl_res) {
+					if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+					return yl_res.json();
+				})
+				.then(function (yl_data) {
+					if (yl_cur === 'users') { yl_renderUsers(yl_data); }
+					else if (yl_cur === 'posts') { yl_renderPosts(yl_data); }
+					else if (yl_cur === 'todos') { yl_renderTodos(yl_data); }
+
+					yl_statusEl.className = 'yl_status yl_status_ok';
+					yl_statusEl.textContent = '请求成功，返回 ' + yl_data.length + ' 条数据（' + yl_url + '）。';
+				})
+				.catch(function (yl_err) {
+					yl_statusEl.className = 'yl_status yl_status_err';
+					yl_statusEl.textContent = '请求失败：' + yl_err.message + '。请检查网络连接后重试。';
+					yl_listEl.innerHTML = '';
+				});
+		}
+
+		// ===== 绑定切换按钮 =====
+		var yl_btns = yl_tabsEl.querySelectorAll('.yl_btn');
+		for (var yl_i = 0; yl_i < yl_btns.length; yl_i++) {
+			yl_btns[yl_i].onclick = function () {
+				yl_cur = this.getAttribute('data-ep');
+				yl_setActive(yl_cur);
+				yl_load();
+			};
+		}
+
+		yl_load();
+	</script>
+</body>
+</html>

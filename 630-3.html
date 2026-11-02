@@ -2,235 +2,238 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QQ音乐排行榜模块</title>
+    <!--
+    姓名：姚琳
+    日期：2026-10-29
+    功能名称：排行榜悬浮播放按钮
+    -->
+    <title>排行榜</title>
+    <link rel="stylesheet" href="font/iconfont.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 微软雅黑, sans-serif;
+            font-family: "Microsoft Yahei", sans-serif;
         }
-        body{
-            background-color: #f5f5f5;
+        body {
+            background-color: #F7F7F7;
             padding: 40px 20px;
         }
-
-        /* 排行榜外层容器 */
-        .rank-wrap {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        /* 头部：标题 + 更多 */
-        .rank-header {
+        .header-wrap {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            position: relative;
             margin-bottom: 30px;
         }
-        .rank-title {
-            font-size: 36px;
-            color: #333;
-            font-weight: normal;
+        .title {
+            font-size: 42px;
+            color: #333333;
         }
-        .rank-more {
-            font-size: 16px;
-            color: #333;
+        .more {
+            position: absolute;
+            right: 20px;
+            font-size: 18px;
+            color: #333333;
             text-decoration: none;
         }
-
-        /* 榜单卡片容器，横向排列 */
-        .rank-list {
+        .rank-container {
             display: flex;
-            gap: 16px;
+            gap: 24px;
+            justify-content: center;
         }
-        /* 单个榜单卡片 */
         .rank-card {
-            flex: 1;
-            height: 420px;
-            color: #fff;
+            width: 240px;
+            height: 566.998px;
             padding: 40px 24px;
+            color: #ffffff;
             border-radius: 4px;
-            display: flex;
-            flex-direction: column;
+            line-height: 1.5;
         }
-        /* 每个卡片单独背景色，和截图对应 */
-        .card1 {
-            background: linear-gradient(180deg, #e87898, #d65a7c);
-        }
-        .card2 {
-            background: linear-gradient(180deg, #e87898, #d65a7c);
-        }
-        .card3 {
-            background: linear-gradient(180deg, #70a1c4, #4b7b9b);
-        }
-        .card4 {
-            background: linear-gradient(180deg, #70d3c9, #38b8aa);
-        }
-        .card5 {
-            background: linear-gradient(180deg, #489490, #2b726e);
-        }
-
-        /* 卡片顶部文字：巅峰榜 + 榜单名 */
-        .card-top-text {
+        .card-title {
             text-align: center;
+            font-size: 26px;
             margin-bottom: 16px;
         }
-        .card-tag {
-            font-size:18px;
-            opacity: 0.9;
-        }
-        .card-name {
-            font-size:28px;
-            margin-top:4px;
-        }
-        .line {
+        .divider {
             width: 36px;
-            height:2px;
-            background:#fff;
-            margin:0 auto 30px;
+            height: 36px;
+            position: relative;
+            margin: 0 auto 16px;
+            cursor: pointer;
         }
-
-        /* 歌曲条目 */
+        .divider::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 2px;
+            background: #fff;
+            transition: opacity 0.3s;
+        }
+        .divider::after {
+            content: "\e610";
+            font-family: "iconfont";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 52px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+        .divider:hover::before {
+            opacity: 0;
+        }
+        .divider:hover::after {
+            opacity: 1;
+        }
         .song-item {
-            margin-bottom: 22px;
+            position: relative;
+            margin-bottom: 24px;
+            cursor: pointer;
         }
-        .song-num {
-            font-size:16px;
-            margin-right: 6px;
+        .song-item::after {
+            content: "\e610";
+            font-family: "iconfont";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            -webkit-font-smoothing: antialiased;
+        }
+        .song-item:hover::after {
+            opacity: 1;
         }
         .song-name {
-            font-size:16px;
+            font-size: 18px;
+            margin-bottom: 6px;
         }
-        .song-singer {
-            font-size:14px;
-            opacity: 0.85;
-            margin-left: 22px;
-            margin-top:4px;
+        .singer {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        /* 卡片背景图 */
+        .card-1 {
+            background-image: url('img/背景1.jpg');
+        }
+        .card-2 {
+            background-image: url('img/背景1.jpg');
+        }
+        .card-3 {
+            background-image: url('img/背景2.jpg');
+        }
+        .card-4 {
+            background-image: url('img/背景3.jpg');
+        }
+        .card-5 {
+            background-image: url('img/背景4.jpg');
+        }
+        .rank-card {
+            background-size: cover;
+            background-position: center;
         }
     </style>
 </head>
 <body>
-    <div class="rank-wrap">
-        <div class="rank-header">
-            <h2 class="rank-title">排行榜</h2>
-            <a href="#" class="rank-more">更多 &gt;</a>
+    <div class="header-wrap">
+        <h1 class="title">排行榜</h1>
+        <a href="#" class="more">更多 ></a>
+    </div>
+    <div class="rank-container">
+        <!-- 热歌 -->
+        <div class="rank-card card-1">
+            <div class="card-title">巅峰榜<br>热歌</div>
+            <div class="divider"></div>
+            <div class="song-item">
+                <div class="song-name">1 我好像在哪见过你</div>
+                <div class="singer">薛之谦</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">2 季候风</div>
+                <div class="singer">王菲</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">3 天龙八部之宿敌</div>
+                <div class="singer">许嵩</div>
+            </div>
         </div>
-        <div class="rank-list">
-            <!-- 卡片1 热歌 -->
-            <div class="rank-card card1">
-                <div class="card-top-text">
-                    <div class="card-tag">巅峰榜</div>
-                    <div class="card-name">热歌</div>
-                </div>
-                <div class="line"></div>
-                <div class="song-item">
-                    <span class="song-num">1</span>
-                    <span class="song-name">我好像在哪见过你</span>
-                    <div class="song-singer">薛之谦</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">2</span>
-                    <span class="song-name">季候风</span>
-                    <div class="song-singer">王菲</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">3</span>
-                    <span class="song-name">天龙八部之宿敌</span>
-                    <div class="song-singer">许嵩</div>
-                </div>
+        <!-- 新歌 -->
+        <div class="rank-card card-2">
+            <div class="card-title">巅峰榜<br>新歌</div>
+            <div class="divider"></div>
+            <div class="song-item">
+                <div class="song-name">1 NEON</div>
+                <div class="singer">A2O LITE</div>
             </div>
-            <!-- 卡片2 新歌 -->
-            <div class="rank-card card2">
-                <div class="card-top-text">
-                    <div class="card-tag">巅峰榜</div>
-                    <div class="card-name">新歌</div>
-                </div>
-                <div class="line"></div>
-                <div class="song-item">
-                    <span class="song-num">1</span>
-                    <span class="song-name">DESERVE</span>
-                    <div class="song-singer">BABYMONSTER</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">2</span>
-                    <span class="song-name">NEON</span>
-                    <div class="song-singer">A2O LITE</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">3</span>
-                    <span class="song-name">今夜让我带你高飞远走</span>
-                    <div class="song-singer">五月天 阿信</div>
-                </div>
+            <div class="song-item">
+                <div class="song-name">2 DESERVE</div>
+                <div class="singer">BABYMONSTER</div>
             </div>
-            <!-- 卡片3 流行指数 -->
-            <div class="rank-card card3">
-                <div class="card-top-text">
-                    <div class="card-tag">巅峰榜</div>
-                    <div class="card-name">流行指数</div>
-                </div>
-                <div class="line"></div>
-                <div class="song-item">
-                    <span class="song-num">1</span>
-                    <span class="song-name">季候风</span>
-                    <div class="song-singer">王菲</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">2</span>
-                    <span class="song-name">DESERVE</span>
-                    <div class="song-singer">BABYMONSTER</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">3</span>
-                    <span class="song-name">时过境迁</span>
-                    <div class="song-singer">苏艺馨Chency</div>
-                </div>
+            <div class="song-item">
+                <div class="song-name">3 牵挂</div>
+                <div class="singer">曾沛慈</div>
             </div>
-            <!-- 卡片4 欧美 -->
-            <div class="rank-card card4">
-                <div class="card-top-text">
-                    <div class="card-tag">巅峰榜</div>
-                    <div class="card-name">欧美</div>
-                </div>
-                <div class="line"></div>
-                <div class="song-item">
-                    <span class="song-num">1</span>
-                    <span class="song-name">FIRESTARTER</span>
-                    <div class="song-singer">K/DA/英雄联盟/i-dle...</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">2</span>
-                    <span class="song-name">Patient Zero (Piano ...</span>
-                    <div class="song-singer">Taylor Swift</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">3</span>
-                    <span class="song-name">Housewife</span>
-                    <div class="song-singer">Tate McRae</div>
-                </div>
+        </div>
+        <!-- 流行指数 -->
+        <div class="rank-card card-3">
+            <div class="card-title">巅峰榜<br>流行指数</div>
+            <div class="divider"></div>
+            <div class="song-item">
+                <div class="song-name">1 季候风</div>
+                <div class="singer">王菲</div>
             </div>
-            <!-- 卡片5 韩国 -->
-            <div class="rank-card card5">
-                <div class="card-top-text">
-                    <div class="card-tag">巅峰榜</div>
-                    <div class="card-name">韩国</div>
-                </div>
-                <div class="line"></div>
-                <div class="song-item">
-                    <span class="song-num">1</span>
-                    <span class="song-name">NEON</span>
-                    <div class="song-singer">A2O LITE/A2O</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">2</span>
-                    <span class="song-name">SUPERSTAR</span>
-                    <div class="song-singer">A2O SOUL/A2O</div>
-                </div>
-                <div class="song-item">
-                    <span class="song-num">3</span>
-                    <span class="song-name">Dear my crazy soul...</span>
-                    <div class="song-singer">IU (아이유)</div>
-                </div>
+            <div class="song-item">
+                <div class="song-name">2 我好像在哪见过你</div>
+                <div class="singer">薛之谦</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">3 时过境迁</div>
+                <div class="singer">苏艺馨Chency</div>
+            </div>
+        </div>
+        <!-- 欧美 -->
+        <div class="rank-card card-4">
+            <div class="card-title">巅峰榜<br>欧美</div>
+            <div class="divider"></div>
+            <div class="song-item">
+                <div class="song-name">1 FIRESTARTER</div>
+                <div class="singer">K/DA/英雄联盟/i-dle...</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">2 FIRESTARTER（燃）</div>
+                <div class="singer">K/DA/英雄联盟/i-dle...</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">3 NEVER GOING BACK ...</div>
+                <div class="singer">K/DA/英雄联盟/i-dle...</div>
+            </div>
+        </div>
+        <!-- 韩国 -->
+        <div class="rank-card card-5">
+            <div class="card-title">巅峰榜<br>韩国</div>
+            <div class="divider"></div>
+            <div class="song-item">
+                <div class="song-name">1 NEON</div>
+                <div class="singer">A2O LITE/A2O</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">2 DESERVE</div>
+                <div class="singer">BABYMONSTER (베이...</div>
+            </div>
+            <div class="song-item">
+                <div class="song-name">3 Insomnia</div>
+                <div class="singer">RIIZE (라이즈)</div>
             </div>
         </div>
     </div>

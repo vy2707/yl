@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-02
+	功能名称：JSON 数据格式展示（语法、互转与 fetch 读取）
+	-->
+	<title>17-1 JSON 数据格式</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		/* ===== 代码块（JSON 高亮） ===== */
+		.yl_code {
+			margin: 0;
+			padding: 1rem 1.2rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: .84rem;
+			line-height: 1.65;
+			overflow-x: auto;
+			white-space: pre;
+		}
+
+		.yl_t_key {
+			color: #7fb6e0;
+		}
+
+		.yl_t_str {
+			color: #9ecf8a;
+		}
+
+		.yl_t_num {
+			color: #e0a53c;
+		}
+
+		.yl_t_bool {
+			color: #c78ce0;
+		}
+
+		/* ===== 知识点卡片 ===== */
+		.yl_cards {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+			gap: 1rem;
+		}
+
+		.yl_card {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1rem 1.1rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_card h3 {
+			margin: 0 0 .5rem;
+			font-size: .98rem;
+			font-weight: 600;
+			color: #26343a;
+		}
+
+		.yl_card p {
+			margin: 0;
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.6;
+		}
+
+		.yl_card code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+		}
+
+		/* ===== 交互面板 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_btns {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, transform .1s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn:active {
+			transform: translateY(1px);
+		}
+
+		.yl_btn_warn {
+			background: #a34e3c;
+		}
+
+		.yl_btn_warn:hover {
+			background: #8a4233;
+		}
+
+		.yl_hint {
+			margin: .8rem 0 0;
+			font-size: .82rem;
+			color: #667579;
+			line-height: 1.7;
+		}
+
+		.yl_hint b {
+			color: #a34e3c;
+		}
+
+		/* ===== 歌曲列表 ===== */
+		.yl_song {
+			display: flex;
+			align-items: center;
+			gap: .8rem;
+			padding: .7rem .9rem;
+			border-bottom: 1px solid #efede4;
+		}
+
+		.yl_song:last-child {
+			border-bottom: none;
+		}
+
+		.yl_song_play {
+			flex: 0 0 auto;
+			width: 2.3rem;
+			height: 2.3rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			background: #3976a3;
+			color: #fff;
+			font-size: 1rem;
+			cursor: pointer;
+		}
+
+		.yl_song_body {
+			flex: 1;
+			min-width: 0;
+		}
+
+		.yl_song_name {
+			font-size: .95rem;
+			font-weight: 600;
+			color: #26343a;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.yl_song_meta {
+			font-size: .8rem;
+			color: #8a9499;
+			margin-top: .15rem;
+		}
+
+		.yl_song_like {
+			flex: 0 0 auto;
+			color: #d5d5cc;
+			font-size: 1.05rem;
+			cursor: pointer;
+		}
+
+		.yl_song_like.yl_liked {
+			color: #d92b2b;
+		}
+
+		.yl_status {
+			margin-bottom: 1rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_status_ok {
+			background: #eaf3ea;
+			color: #3c7a3c;
+		}
+
+		.yl_status_err {
+			background: #fbeaea;
+			color: #a33b3b;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>JSON 数据格式</h1>
+				<p class="yl_subtitle">认识 JSON 的语法规则，掌握对象与 JSON 字符串的互转，并用 fetch 读取本地 JSON 数据</p>
+			</div>
+			<div class="yl_author">姚琳 · 17-1</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、什么是 JSON -->
+		<section class="yl_block">
+			<h2>一、什么是 JSON</h2>
+			<p class="yl_block_desc">JSON（JavaScript Object Notation）是一种轻量级的数据交换格式，用纯文本表示数据，方便在不同系统、前后端之间传递。它看起来像 JavaScript 对象，但规则更严格。</p>
+			<div class="yl_cards">
+				<div class="yl_card">
+					<h3>全称与定位</h3>
+					<p>JavaScript Object Notation，一种<code>数据交换格式</code>，与语言无关。</p>
+				</div>
+				<div class="yl_card">
+					<h3>键名必须加双引号</h3>
+					<p>JSON 里的<code>"键"</code>和<code>"字符串值"</code>都必须用双引号，不能用单引号。</p>
+				</div>
+				<div class="yl_card">
+					<h3>支持的数据类型</h3>
+					<p>字符串、数字、布尔值、<code>null</code>、数组 <code>[]</code>、对象 <code>{}</code>。</p>
+				</div>
+				<div class="yl_card">
+					<h3>用途广泛</h3>
+					<p>接口返回数据、配置文件、本地存储，几乎都用 JSON 传递。</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- 二、JSON 语法示例 -->
+		<section class="yl_block">
+			<h2>二、JSON 语法示例</h2>
+			<p class="yl_block_desc">下面是一段描述「学生信息」的 JSON：外层是对象，内部包含字符串、数字、布尔、数组与嵌套对象。</p>
+			<pre class="yl_code" id="yl_code_demo"></pre>
+		</section>
+
+		<!-- 三、对象与 JSON 互转 -->
+		<section class="yl_block">
+			<h2>三、JavaScript 对象与 JSON 互转</h2>
+			<p class="yl_block_desc">JavaScript 提供 <code>JSON.stringify()</code> 把对象转成 JSON 字符串，<code>JSON.parse()</code> 把 JSON 字符串转回对象。</p>
+			<div class="yl_board">
+				<div class="yl_btns">
+					<button class="yl_btn" id="yl_btn_stringify">JSON.stringify() 对象 → 字符串</button>
+					<button class="yl_btn yl_btn_warn" id="yl_btn_parse">JSON.parse() 字符串 → 对象</button>
+				</div>
+				<pre class="yl_code" id="yl_code_convert">点上方按钮，这里会显示互转的结果。</pre>
+				<p class="yl_hint" id="yl_convert_hint"></p>
+			</div>
+		</section>
+
+		<!-- 四、fetch 读取 JSON -->
+		<section class="yl_block">
+			<h2>四、用 fetch 读取 JSON 数据</h2>
+			<p class="yl_block_desc">通过原生 <code>fetch()</code> 请求本目录下的 <code>17-1-data.json</code>，把返回的 JSON 渲染成歌曲列表。</p>
+			<div class="yl_board">
+				<div class="yl_btns">
+					<button class="yl_btn" id="yl_btn_fetch">重新加载数据</button>
+				</div>
+				<div id="yl_status"></div>
+				<div id="yl_song_list"></div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		// ===== JSON 语法高亮：把 JSON 字符串包上彩色 span =====
+		function yl_highlight(yl_s) {
+			var yl_esc = yl_s
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;');
+			return yl_esc.replace(
+				/("(?:\\.|[^"\\])*")(\s*:)|("(?:\\.|[^"\\])*")|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(\b(?:true|false|null)\b)/g,
+				function (yl_m, yl_key, yl_colon, yl_str, yl_num, yl_kw) {
+					if (yl_key !== undefined) return '<span class="yl_t_key">' + yl_key + '</span>' + yl_colon;
+					if (yl_str !== undefined) return '<span class="yl_t_str">' + yl_str + '</span>';
+					if (yl_num !== undefined) return '<span class="yl_t_num">' + yl_num + '</span>';
+					if (yl_kw !== undefined) return '<span class="yl_t_bool">' + yl_kw + '</span>';
+					return yl_m;
+				}
+			);
+		}
+
+		// ===== 二、JSON 语法示例 =====
+		var yl_student = {
+			"name": "姚琳",
+			"age": 20,
+			"isStudent": true,
+			"score": null,
+			"courses": ["HTML", "CSS", "JavaScript"],
+			"address": {
+				"city": "北京",
+				"district": "海淀区"
+			}
+		};
+		document.getElementById('yl_code_demo').innerHTML = yl_highlight(JSON.stringify(yl_student, null, 2));
+
+		// ===== 三、对象与 JSON 互转 =====
+		var yl_convertCode = document.getElementById('yl_code_convert');
+		var yl_convertHint = document.getElementById('yl_convert_hint');
+		var yl_book = {
+			"title": "高级网页设计",
+			"pages": 320,
+			"inStock": true
+		};
+		var yl_jsonText = '{"title":"高级网页设计","pages":320,"inStock":true}';
+
+		document.getElementById('yl_btn_stringify').onclick = function () {
+			var yl_result = JSON.stringify(yl_book, null, 2);
+			yl_convertCode.innerHTML = yl_highlight(yl_result);
+			yl_convertHint.innerHTML = 'JSON.stringify() 把 <b>对象</b> 变成 JSON <b>字符串</b>，返回值的类型是 <b>string</b>。';
+		};
+
+		document.getElementById('yl_btn_parse').onclick = function () {
+			var yl_obj = JSON.parse(yl_jsonText);
+			yl_convertCode.innerHTML = yl_highlight(JSON.stringify(yl_obj, null, 2));
+			yl_convertHint.innerHTML = 'JSON.parse() 把 JSON <b>字符串</b> 变回 <b>对象</b>，可以用 <b>yl_obj.title</b> 取值：<b>' + yl_obj.title + '</b>（类型 ' + (typeof yl_obj) + '）。';
+		};
+
+		// ===== 四、fetch 读取 JSON =====
+		var yl_statusEl = document.getElementById('yl_status');
+		var yl_songListEl = document.getElementById('yl_song_list');
+
+		function yl_formatPlays(yl_n) {
+			if (yl_n >= 10000) {
+				return (yl_n / 10000).toFixed(1) + ' 万';
+			}
+			return String(yl_n);
+		}
+
+		function yl_renderSongs(yl_data) {
+			var yl_songs = yl_data.songs;
+			yl_songListEl.innerHTML = '';
+			for (var yl_i = 0; yl_i < yl_songs.length; yl_i++) {
+				var yl_s = yl_songs[yl_i];
+
+				var yl_row = document.createElement('div');
+				yl_row.className = 'yl_song';
+
+				var yl_play = document.createElement('div');
+				yl_play.className = 'yl_song_play';
+				yl_play.innerHTML = '<i class="iconfont icon-bofang"></i>';
+
+				var yl_body = document.createElement('div');
+				yl_body.className = 'yl_song_body';
+				var yl_name = document.createElement('div');
+				yl_name.className = 'yl_song_name';
+				yl_name.textContent = yl_s.id + '. ' + yl_s.name;
+				var yl_meta = document.createElement('div');
+				yl_meta.className = 'yl_song_meta';
+				yl_meta.textContent = yl_s.singer + ' · ' + yl_s.album + ' · ' + yl_s.duration + ' · 播放 ' + yl_formatPlays(yl_s.plays);
+				yl_body.appendChild(yl_name);
+				yl_body.appendChild(yl_meta);
+
+				var yl_like = document.createElement('div');
+				yl_like.className = 'yl_song_like' + (yl_s.liked ? ' yl_liked' : '');
+				yl_like.innerHTML = '<i class="iconfont icon-aixin"></i>';
+
+				yl_row.appendChild(yl_play);
+				yl_row.appendChild(yl_body);
+				yl_row.appendChild(yl_like);
+				yl_songListEl.appendChild(yl_row);
+			}
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '成功读取 17-1-data.json，榜单「' + yl_data.title + '」共 ' + yl_songs.length + ' 首歌曲（更新时间 ' + yl_data.updateTime + '）。';
+		}
+
+		function yl_loadData() {
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '正在加载数据…';
+			fetch('17-1-data.json')
+				.then(function (yl_res) {
+					if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+					return yl_res.json();
+				})
+				.then(function (yl_data) {
+					yl_renderSongs(yl_data);
+				})
+				.catch(function (yl_err) {
+					yl_statusEl.className = 'yl_status yl_status_err';
+					yl_statusEl.textContent = '读取失败：' + yl_err.message + '。请通过 http:// 访问本页（如 VS Code Live Server），直接以 file:// 打开会因 CORS 限制而无法 fetch 本地 JSON。';
+					yl_songListEl.innerHTML = '';
+				});
+		}
+
+		document.getElementById('yl_btn_fetch').onclick = yl_loadData;
+		yl_loadData();
+	</script>
+</body>
+</html>

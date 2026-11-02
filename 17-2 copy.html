@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-02
+	功能名称：跨域接口数据获取与展示（fetch + Dog CEO）
+	-->
+	<title>17-2 copy 跨域接口图片展示</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 接口信息 ===== */
+		.yl_api {
+			display: flex;
+			align-items: center;
+			gap: .8rem;
+			flex-wrap: wrap;
+			padding: .8rem 1rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, monospace;
+			font-size: .85rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_api .yl_tag {
+			flex: 0 0 auto;
+			padding: .15rem .55rem;
+			background: #3976a3;
+			color: #fff;
+			border-radius: .4rem;
+			font-size: .75rem;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_api .yl_url {
+			flex: 1;
+			min-width: 200px;
+			word-break: break-all;
+		}
+
+		/* ===== 交互面板 ===== */
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_btns {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_btn {
+			display: inline-block;
+			padding: .5rem .95rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .85rem;
+			cursor: pointer;
+			transition: background .15s ease, transform .1s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn:active {
+			transform: translateY(1px);
+		}
+
+		.yl_status {
+			margin-bottom: 1rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_status_ok {
+			background: #eaf3ea;
+			color: #3c7a3c;
+		}
+
+		.yl_status_err {
+			background: #fbeaea;
+			color: #a33b3b;
+		}
+
+		/* ===== 图片网格 ===== */
+		.yl_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: .9rem;
+		}
+
+		.yl_card {
+			background: #faf9f4;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			overflow: hidden;
+		}
+
+		.yl_card_img {
+			width: 100%;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;
+			display: block;
+			background: #eae7dd;
+		}
+
+		.yl_card_foot {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: .6rem .8rem;
+			font-size: .8rem;
+			color: #667579;
+		}
+
+		.yl_card_foot a {
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .8rem;
+		}
+
+		.yl_card_foot a:hover {
+			text-decoration: underline;
+		}
+
+		/* ===== 原始 JSON ===== */
+		.yl_code {
+			margin: 1rem 0 0;
+			padding: .9rem 1rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, monospace;
+			font-size: .78rem;
+			line-height: 1.6;
+			overflow-x: auto;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.yl_code_title {
+			margin-top: 1rem;
+			font-size: .82rem;
+			color: #667579;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>跨域接口图片展示</h1>
+				<p class="yl_subtitle">用 fetch 请求 Dog CEO 公开接口，随机获取 3 张猎犬（hound）图片并展示</p>
+			</div>
+			<div class="yl_author">姚琳 · 17-2 copy</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、接口说明 -->
+		<section class="yl_block">
+			<h2>一、接口与跨域说明</h2>
+			<p class="yl_block_desc">本次使用 <code>Dog CEO</code> 公开接口，响应头带有 <code>Access-Control-Allow-Origin: *</code>，允许跨域访问。接口返回一个对象，其中 <code>message</code> 数组存放 3 张图片地址。</p>
+			<div class="yl_api">
+				<span class="yl_tag">接口地址</span>
+				<span class="yl_url">https://dog.ceo/api/breed/hound/images/random/3</span>
+			</div>
+		</section>
+
+		<!-- 二、数据展示 -->
+		<section class="yl_block">
+			<h2>二、请求并展示图片</h2>
+			<p class="yl_block_desc">点击按钮通过 <code>fetch()</code> 获取数据，把返回的图片地址渲染成图片网格。</p>
+			<div class="yl_board">
+				<div class="yl_btns">
+					<button class="yl_btn" id="yl_btn_load">加载图片</button>
+					<button class="yl_btn" id="yl_btn_json">显示原始 JSON</button>
+				</div>
+				<div class="yl_status" id="yl_status">正在加载数据…</div>
+				<div class="yl_grid" id="yl_grid"></div>
+				<div class="yl_code_title" id="yl_code_title" style="display:none;">接口返回的原始 JSON：</div>
+				<pre class="yl_code" id="yl_code" style="display:none;"></pre>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		var yl_url = 'https://dog.ceo/api/breed/hound/images/random/3';
+		var yl_statusEl = document.getElementById('yl_status');
+		var yl_gridEl = document.getElementById('yl_grid');
+		var yl_codeEl = document.getElementById('yl_code');
+		var yl_codeTitleEl = document.getElementById('yl_code_title');
+		var yl_lastData = null;
+
+		function yl_render(yl_data) {
+			yl_gridEl.innerHTML = '';
+			var yl_urls = yl_data.message;
+			for (var yl_i = 0; yl_i < yl_urls.length; yl_i++) {
+				var yl_card = document.createElement('div');
+				yl_card.className = 'yl_card';
+
+				var yl_img = document.createElement('img');
+				yl_img.className = 'yl_card_img';
+				yl_img.src = yl_urls[yl_i];
+				yl_img.alt = '猎犬图片 ' + (yl_i + 1);
+
+				var yl_foot = document.createElement('div');
+				yl_foot.className = 'yl_card_foot';
+				var yl_idx = document.createElement('span');
+				yl_idx.textContent = '图片 ' + (yl_i + 1) + ' / ' + yl_urls.length;
+				var yl_a = document.createElement('a');
+				yl_a.href = yl_urls[yl_i];
+				yl_a.target = '_blank';
+				yl_a.rel = 'noopener';
+				yl_a.textContent = '查看原图';
+				yl_foot.appendChild(yl_idx);
+				yl_foot.appendChild(yl_a);
+
+				yl_card.appendChild(yl_img);
+				yl_card.appendChild(yl_foot);
+				yl_gridEl.appendChild(yl_card);
+			}
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '请求成功，共返回 ' + yl_urls.length + ' 张图片（status: ' + yl_data.status + '）。';
+		}
+
+		function yl_showJson() {
+			if (!yl_lastData) { return; }
+			yl_codeEl.textContent = JSON.stringify(yl_lastData, null, 2);
+			yl_codeEl.style.display = 'block';
+			yl_codeTitleEl.style.display = 'block';
+		}
+
+		function yl_load() {
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '正在请求 ' + yl_url + ' …';
+			yl_gridEl.innerHTML = '';
+			yl_codeEl.style.display = 'none';
+			yl_codeTitleEl.style.display = 'none';
+
+			fetch(yl_url)
+				.then(function (yl_res) {
+					if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+					return yl_res.json();
+				})
+				.then(function (yl_data) {
+					yl_lastData = yl_data;
+					yl_render(yl_data);
+				})
+				.catch(function (yl_err) {
+					yl_statusEl.className = 'yl_status yl_status_err';
+					yl_statusEl.textContent = '请求失败：' + yl_err.message + '。请检查网络连接后重试。';
+					yl_gridEl.innerHTML = '';
+				});
+		}
+
+		document.getElementById('yl_btn_load').onclick = yl_load;
+		document.getElementById('yl_btn_json').onclick = yl_showJson;
+
+		yl_load();
+	</script>
+</body>
+</html>

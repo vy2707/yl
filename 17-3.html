@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-02
+	功能名称：商品列表展示（fetch + DummyJSON）
+	-->
+	<title>17-3 商品列表</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1100px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		.yl_api {
+			display: flex;
+			align-items: center;
+			gap: .8rem;
+			flex-wrap: wrap;
+			padding: .8rem 1rem;
+			background: #26343a;
+			border-radius: .5rem;
+			color: #e8eef2;
+			font-family: Consolas, monospace;
+			font-size: .85rem;
+			margin-bottom: 1rem;
+		}
+
+		.yl_api .yl_tag {
+			flex: 0 0 auto;
+			padding: .15rem .55rem;
+			background: #3976a3;
+			color: #fff;
+			border-radius: .4rem;
+			font-size: .75rem;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_api .yl_url {
+			flex: 1;
+			min-width: 200px;
+			word-break: break-all;
+		}
+
+		.yl_board {
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		.yl_status {
+			margin-bottom: 1rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+		}
+
+		.yl_status_ok {
+			background: #eaf3ea;
+			color: #3c7a3c;
+		}
+
+		.yl_status_err {
+			background: #fbeaea;
+			color: #a33b3b;
+		}
+
+		/* ===== 商品网格 ===== */
+		.yl_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+			gap: .9rem;
+		}
+
+		.yl_card {
+			position: relative;
+			background: #faf9f4;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			overflow: hidden;
+			cursor: pointer;
+			transition: box-shadow .15s ease, transform .15s ease;
+		}
+
+		.yl_card:hover {
+			box-shadow: 0 .6rem 1.2rem rgba(38, 52, 58, .14);
+			transform: translateY(-2px);
+		}
+
+		.yl_card_imgwrap {
+			position: relative;
+			background: #fff;
+		}
+
+		.yl_card_img {
+			width: 100%;
+			aspect-ratio: 1 / 1;
+			object-fit: contain;
+			display: block;
+			padding: 1rem;
+		}
+
+		.yl_discount {
+			position: absolute;
+			top: .6rem;
+			left: .6rem;
+			padding: .15rem .5rem;
+			background: #d92b2b;
+			color: #fff;
+			border-radius: .4rem;
+			font-size: .75rem;
+			font-weight: 600;
+		}
+
+		.yl_card_body {
+			padding: .7rem .9rem .9rem;
+		}
+
+		.yl_card_title {
+			font-size: .95rem;
+			font-weight: 600;
+			color: #26343a;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.yl_card_cat {
+			font-size: .76rem;
+			color: #8a9499;
+			margin-top: .2rem;
+		}
+
+		.yl_card_meta {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-top: .6rem;
+		}
+
+		.yl_price {
+			color: #d92b2b;
+			font-weight: 700;
+			font-size: 1.05rem;
+		}
+
+		.yl_rating {
+			display: flex;
+			align-items: center;
+			gap: .25rem;
+			color: #e0a53c;
+			font-size: .8rem;
+		}
+
+		.yl_rating span {
+			color: #667579;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>商品列表</h1>
+				<p class="yl_subtitle">用 fetch 请求 DummyJSON 接口，展示默认商品列表，点击卡片查看详情</p>
+			</div>
+			<div class="yl_author">姚琳 · 17-3</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、接口说明</h2>
+			<p class="yl_block_desc">本次使用 <code>DummyJSON</code> 公开接口，响应头带有 <code>Access-Control-Allow-Origin: *</code>，允许跨域访问。</p>
+			<div class="yl_api">
+				<span class="yl_tag">列表接口</span>
+				<span class="yl_url">https://dummyjson.com/products?limit=8</span>
+			</div>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、商品列表</h2>
+			<p class="yl_block_desc">点击任意商品卡片，将跳转到 <code>17-3-detail.html?id=商品ID</code> 查看详情。</p>
+			<div class="yl_board">
+				<div class="yl_status" id="yl_status">正在加载数据…</div>
+				<div class="yl_grid" id="yl_grid"></div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		var yl_url = 'https://dummyjson.com/products?limit=8';
+		var yl_statusEl = document.getElementById('yl_status');
+		var yl_gridEl = document.getElementById('yl_grid');
+
+		function yl_render(yl_products) {
+			yl_gridEl.innerHTML = '';
+			for (var yl_i = 0; yl_i < yl_products.length; yl_i++) {
+				var yl_p = yl_products[yl_i];
+
+				var yl_card = document.createElement('div');
+				yl_card.className = 'yl_card';
+				yl_card.onclick = function () {
+					window.location.href = '17-3-detail.html?id=' + yl_p.id;
+				};
+
+				var yl_imgwrap = document.createElement('div');
+				yl_imgwrap.className = 'yl_card_imgwrap';
+				var yl_img = document.createElement('img');
+				yl_img.className = 'yl_card_img';
+				yl_img.src = yl_p.thumbnail;
+				yl_img.alt = yl_p.title;
+				yl_img.loading = 'lazy';
+				yl_imgwrap.appendChild(yl_img);
+
+				if (yl_p.discountPercentage > 0) {
+					var yl_discount = document.createElement('span');
+					yl_discount.className = 'yl_discount';
+					yl_discount.textContent = '-' + Math.round(yl_p.discountPercentage) + '%';
+					yl_imgwrap.appendChild(yl_discount);
+				}
+
+				var yl_body = document.createElement('div');
+				yl_body.className = 'yl_card_body';
+
+				var yl_title = document.createElement('div');
+				yl_title.className = 'yl_card_title';
+				yl_title.textContent = yl_p.title;
+
+				var yl_cat = document.createElement('div');
+				yl_cat.className = 'yl_card_cat';
+				yl_cat.textContent = (yl_p.brand ? yl_p.brand + ' · ' : '') + yl_p.category;
+
+				var yl_meta = document.createElement('div');
+				yl_meta.className = 'yl_card_meta';
+
+				var yl_price = document.createElement('div');
+				yl_price.className = 'yl_price';
+				yl_price.textContent = '$' + yl_p.price;
+
+				var yl_rating = document.createElement('div');
+				yl_rating.className = 'yl_rating';
+				yl_rating.innerHTML = '<i class="iconfont icon-aixin"></i><span>' + yl_p.rating.toFixed(1) + '</span>';
+
+				yl_meta.appendChild(yl_price);
+				yl_meta.appendChild(yl_rating);
+				yl_body.appendChild(yl_title);
+				yl_body.appendChild(yl_cat);
+				yl_body.appendChild(yl_meta);
+
+				yl_card.appendChild(yl_imgwrap);
+				yl_card.appendChild(yl_body);
+				yl_gridEl.appendChild(yl_card);
+			}
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '请求成功，共返回 ' + yl_products.length + ' 件商品。';
+		}
+
+		function yl_load() {
+			yl_statusEl.className = 'yl_status yl_status_ok';
+			yl_statusEl.textContent = '正在请求 ' + yl_url + ' …';
+			yl_gridEl.innerHTML = '';
+
+			fetch(yl_url)
+				.then(function (yl_res) {
+					if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+					return yl_res.json();
+				})
+				.then(function (yl_data) {
+					yl_render(yl_data.products);
+				})
+				.catch(function (yl_err) {
+					yl_statusEl.className = 'yl_status yl_status_err';
+					yl_statusEl.textContent = '请求失败：' + yl_err.message + '。请检查网络连接后重试。';
+					yl_gridEl.innerHTML = '';
+				});
+		}
+
+		yl_load();
+	</script>
+</body>
+</html>
