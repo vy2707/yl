@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：ECharts 图表（极坐标双数值轴 + GraphGL 大规模互联网图谱）
+	-->
+	<title>18-4 ECharts 图表</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 图表容器 ===== */
+		.yl_chart {
+			width: 100%;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			background: #fff;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+			overflow: hidden;
+		}
+
+		#yl_polar {
+			width: 100%;
+			height: 460px;
+		}
+
+		#yl_graphgl {
+			width: 100%;
+			height: 560px;
+			background: #111;
+		}
+
+		.yl_status {
+			margin-top: .8rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+			background: #26343a;
+			color: #e8eef2;
+			display: flex;
+			align-items: center;
+			gap: .6rem;
+			flex-wrap: wrap;
+		}
+
+		.yl_status .yl_badge {
+			flex: 0 0 auto;
+			padding: .12rem .55rem;
+			background: #3976a3;
+			color: #fff;
+			border-radius: .4rem;
+			font-size: .75rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>ECharts 图表</h1>
+				<p class="yl_subtitle">使用本地 ECharts 与 ECharts GL 绘制极坐标双数值轴图与大规模互联网图谱</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-4</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、极坐标双数值轴 -->
+		<section class="yl_block">
+			<h2>一、极坐标双数值轴</h2>
+			<p class="yl_block_desc">使用 <code>polar</code> 坐标系，把 <code>angleAxis</code> 与 <code>radiusAxis</code> 都设为数值轴（<code>type: 'value'</code>），绘制一条花瓣形曲线。示例来源：<code>line-polar</code>。</p>
+			<div class="yl_chart" id="yl_polar"></div>
+		</section>
+
+		<!-- 二、GraphGL 大规模互联网图谱 -->
+		<section class="yl_block">
+			<h2>二、GraphGL · 大规模互联网图谱</h2>
+			<p class="yl_block_desc">使用 <code>echarts-gl</code> 的 <code>linesGL</code> 系列，配合 <code>geo</code> 地图，在 WebGL 上渲染数十万条「互联网连接」线路。数据从本地 <code>cdn/data/asset/data/links-ny/</code> 目录分 32 个 <code>.bin</code> 分片渐进加载。示例来源：<code>linesGL-ny</code>。</p>
+			<div class="yl_chart" id="yl_graphgl"></div>
+			<div class="yl_status">
+				<span class="yl_badge">加载状态</span>
+				<span id="yl_gl_status">正在加载世界地图…</span>
+			</div>
+		</section>
+
+		<!-- 三、实现要点 -->
+		<section class="yl_block">
+			<h2>三、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 引入本地 <code>cdn/echarts/echarts.min.js</code> 与 <code>cdn/echarts/echarts-gl.min.js</code>，不依赖 CDN；<br>
+				2. 极坐标图直接由 <code>echarts.init()</code> 生成 option 渲染；<br>
+				3. GraphGL 通过 <code>echarts.registerMap('world', …)</code> 注册本地 <code>world.json</code> 地图；<br>
+				4. 用 <code>XMLHttpRequest</code> 以 <code>arraybuffer</code> 方式逐个请求 <code>.bin</code> 分片，解析成 <code>Float64Array</code> 后调用 <code>appendData()</code> 渐进追加，实现海量数据的高性能渲染。
+			</p>
+		</section>
+	</main>
+
+	<script src="cdn/echarts/echarts.min.js"></script>
+	<script src="cdn/echarts/echarts-gl.min.js"></script>
+	<script>
+		// ===== 一、极坐标双数值轴 =====
+		var yl_polarData = [];
+		for (var yl_i = 0; yl_i <= 100; yl_i++) {
+			var yl_theta = (yl_i / 100) * 360;
+			var yl_r = 5 * (1 + Math.sin((yl_theta / 180) * Math.PI));
+			yl_polarData.push([yl_r, yl_theta]);
+		}
+
+		var yl_polarChart = echarts.init(document.getElementById('yl_polar'));
+		yl_polarChart.setOption({
+			title: {
+				text: '极坐标双数值轴',
+				subtext: 'Two Value-Axes in Polar',
+				left: 'center',
+				textStyle: { color: '#26343a' }
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: { type: 'cross' }
+			},
+			legend: {
+				data: ['line'],
+				bottom: 0
+			},
+			polar: {},
+			angleAxis: {
+				type: 'value',
+				startAngle: 0
+			},
+			radiusAxis: {},
+			series: [
+				{
+					coordinateSystem: 'polar',
+					name: 'line',
+					type: 'line',
+					data: yl_polarData,
+					showSymbol: false,
+					lineStyle: { color: '#3976a3', width: 2 },
+					areaStyle: { opacity: 0.15 }
+				}
+			]
+		});
+
+		// ===== 二、GraphGL 大规模互联网图谱 =====
+		var yl_glChart = echarts.init(document.getElementById('yl_graphgl'));
+		var yl_glStatus = document.getElementById('yl_gl_status');
+
+		var yl_rootPath = 'cdn';
+		var yl_chunkCount = 32;
+		var yl_dataCount = 0;
+
+		function yl_fetchData(yl_idx) {
+			if (yl_idx >= yl_chunkCount) {
+				yl_glStatus.textContent = '加载完成：共 ' + yl_dataCount + ' 条连接线。';
+				return;
+			}
+			var yl_dataURL = yl_rootPath + '/data/asset/data/links-ny/links_ny_' + yl_idx + '.bin';
+			var yl_xhr = new XMLHttpRequest();
+			yl_xhr.open('GET', yl_dataURL, true);
+			yl_xhr.responseType = 'arraybuffer';
+			yl_xhr.onload = function () {
+				var yl_rawData = new Float32Array(this.response);
+				var yl_data = new Float64Array(yl_rawData.length - 2);
+				var yl_offsetX = yl_rawData[0];
+				var yl_offsetY = yl_rawData[1];
+				var yl_off = 0;
+				var yl_addedCount = 0;
+				for (var yl_i = 2; yl_i < yl_rawData.length;) {
+					var yl_count = yl_rawData[yl_i++];
+					yl_data[yl_off++] = yl_count;
+					for (var yl_k = 0; yl_k < yl_count; yl_k++) {
+						var yl_x = yl_rawData[yl_i++] + yl_offsetX;
+						var yl_y = yl_rawData[yl_i++] + yl_offsetY;
+						yl_data[yl_off++] = yl_x;
+						yl_data[yl_off++] = yl_y;
+						yl_addedCount++;
+					}
+				}
+				yl_glChart.appendData({
+					seriesIndex: 0,
+					data: yl_data
+				});
+				yl_dataCount += yl_addedCount;
+				yl_glStatus.textContent = '已加载分片 ' + (yl_idx + 1) + ' / ' + yl_chunkCount + '，累计 ' + yl_dataCount + ' 条连接线…';
+				yl_fetchData(yl_idx + 1);
+			};
+			yl_xhr.onerror = function () {
+				yl_glStatus.textContent = '加载分片 ' + yl_idx + ' 失败，请确认通过 http:// 访问本页。';
+			};
+			yl_xhr.send();
+		}
+
+		var yl_glOption = {
+			progressive: 20000,
+			backgroundColor: '#111',
+			geo: {
+				center: [-74.04327099998152, 40.86737600240287],
+				zoom: 360,
+				map: 'world',
+				roam: true,
+				silent: true,
+				itemStyle: {
+					normal: {
+						color: 'transparent',
+						borderColor: 'rgba(255,255,255,0.1)',
+						borderWidth: 1
+					}
+				}
+			},
+			series: [
+				{
+					type: 'linesGL',
+					coordinateSystem: 'geo',
+					blendMode: 'lighter',
+					dimensions: ['value'],
+					data: new Float64Array(),
+					polyline: true,
+					large: true,
+					lineStyle: {
+						color: 'orange',
+						opacity: 0.3
+					}
+				}
+			]
+		};
+
+		// 先注册本地世界地图，再渲染并开始渐进加载
+		fetch(yl_rootPath + '/data/asset/geo/world.json')
+			.then(function (yl_res) {
+				if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+				return yl_res.json();
+			})
+			.then(function (yl_mapData) {
+				echarts.registerMap('world', yl_mapData);
+				yl_glChart.setOption(yl_glOption);
+				yl_fetchData(0);
+			})
+			.catch(function (yl_err) {
+				yl_glStatus.textContent = '世界地图加载失败：' + yl_err.message + '。';
+			});
+
+		// 窗口尺寸变化时自适应
+		window.addEventListener('resize', function () {
+			yl_polarChart.resize();
+			yl_glChart.resize();
+		});
+	</script>
+</body>
+</html>

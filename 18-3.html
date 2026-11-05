@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：基于图像识别的系统架构图（SVG · 科研方向）
+	-->
+	<title>18-3 图像识别系统架构图（SVG）</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 图形 ===== */
+		.yl_stage {
+			background: #fbfaf6;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			overflow: hidden;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+			padding: .5rem;
+		}
+
+		.yl_stage svg {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+
+		#yl_svg text {
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_node {
+			cursor: pointer;
+		}
+
+		.yl_node .yl_box {
+			stroke-width: 1.6;
+			transition: stroke-width .12s ease, filter .12s ease;
+		}
+
+		.yl_node:hover .yl_box {
+			stroke-width: 3;
+			filter: drop-shadow(0 3px 6px rgba(38, 52, 58, .28));
+		}
+
+		.yl_box_a {
+			fill: #eef5fb;
+			stroke: #3976a3;
+		}
+
+		.yl_box_b {
+			fill: #fdfdfb;
+			stroke: #4a5860;
+		}
+
+		.yl_box_c {
+			fill: #eff6f3;
+			stroke: #3c7a5f;
+		}
+
+		/* ===== 信息面板 ===== */
+		.yl_info {
+			margin-top: 1rem;
+			background: #26343a;
+			color: #e8eef2;
+			border-radius: .6rem;
+			padding: 1rem 1.2rem;
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.yl_info_dot {
+			flex: 0 0 auto;
+			width: .85rem;
+			height: .85rem;
+			border-radius: 50%;
+			background: #8a9499;
+		}
+
+		.yl_info_name {
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_info_desc {
+			font-size: .85rem;
+			color: #b8c2c8;
+		}
+
+		/* ===== 图例 ===== */
+		.yl_legend {
+			margin-top: 1rem;
+			display: flex;
+			flex-wrap: wrap;
+			gap: .6rem 1.6rem;
+			font-size: .85rem;
+			color: #667579;
+		}
+
+		.yl_legend_item {
+			display: flex;
+			align-items: center;
+			gap: .5rem;
+		}
+
+		.yl_legend_line {
+			width: 2rem;
+			height: 0;
+			border-top: 2px solid;
+		}
+
+		.yl_legend_line_dash {
+			border-top-style: dashed;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>图像识别系统架构图（SVG）</h1>
+				<p class="yl_subtitle">用 SVG 绘制面向科研的图像识别系统架构：训练与推理两条链路 + 评价指标体系</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-3</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、系统架构图</h2>
+			<p class="yl_block_desc">下图采用 <code>SVG</code> 矢量绘制，适合科研论文插图。自上而下分为三层：<code>训练阶段</code>（蓝色虚线）、<code>推理阶段</code>（灰色实线五级流水线）与<code>评价体系</code>（绿色）。把鼠标移到任意模块上可查看说明。</p>
+			<div class="yl_stage">
+				<svg id="yl_svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+					<defs>
+						<marker id="yl_arr_solid" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#4a5860"></path>
+						</marker>
+						<marker id="yl_arr_dash" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#3976a3"></path>
+						</marker>
+						<marker id="yl_arr_eval" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#3c7a5f"></path>
+						</marker>
+					</defs>
+
+					<!-- ===== 训练阶段 ===== -->
+					<g class="yl_node" data-name="数据集" data-color="#3976a3"
+						data-desc="包含训练集、验证集与测试集，并经过人工标注，是模型训练的数据基础。">
+						<rect class="yl_box yl_box_a" x="25" y="24" width="180" height="88" rx="10"></rect>
+						<text x="115" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">数据集</text>
+						<circle cx="39" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="50" y="78" font-size="12" fill="#4a5860">训练集 / 验证集 / 测试集</text>
+						<circle cx="39" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="50" y="100" font-size="12" fill="#4a5860">人工标注类别标签</text>
+					</g>
+
+					<g class="yl_node" data-name="模型训练" data-color="#3976a3"
+						data-desc="通过交叉熵损失函数、反向传播与优化器（SGD / Adam）迭代更新网络权重。">
+						<rect class="yl_box yl_box_a" x="405" y="24" width="210" height="88" rx="10"></rect>
+						<text x="510" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">模型训练</text>
+						<circle cx="419" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="430" y="78" font-size="12" fill="#4a5860">交叉熵损失函数</text>
+						<circle cx="419" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="430" y="100" font-size="12" fill="#4a5860">反向传播 + 优化器</text>
+					</g>
+
+					<!-- 训练样本箭头 -->
+					<line x1="205" y1="68" x2="396" y2="68" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></line>
+					<text x="300" y="58" text-anchor="middle" font-size="12" fill="#3976a3">训练样本</text>
+
+					<!-- 权重更新（虚线向下） -->
+					<line x1="510" y1="112" x2="505" y2="172" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></line>
+					<text x="532" y="146" font-size="12" fill="#3976a3">权重更新</text>
+
+					<!-- ===== 推理阶段（五级流水线） ===== -->
+					<g class="yl_node" data-name="输入图像" data-color="#4a5860"
+						data-desc="从摄像头或图像库采集原始图像，作为识别系统的输入。">
+						<rect class="yl_box yl_box_b" x="25" y="180" width="150" height="120" rx="10"></rect>
+						<circle cx="41" cy="196" r="12" fill="#4a5860"></circle>
+						<text x="41" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">1</text>
+						<text x="100" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">输入图像</text>
+						<circle cx="39" cy="236" r="2.5" fill="#667579"></circle>
+						<text x="50" y="240" font-size="12" fill="#4a5860">原始图像采集</text>
+						<circle cx="39" cy="258" r="2.5" fill="#667579"></circle>
+						<text x="50" y="262" font-size="12" fill="#4a5860">RGB 三通道</text>
+					</g>
+
+					<g class="yl_node" data-name="数据预处理" data-color="#4a5860"
+						data-desc="对图像进行缩放裁剪、像素归一化与数据增强，提升模型泛化能力。">
+						<rect class="yl_box yl_box_b" x="210" y="180" width="160" height="120" rx="10"></rect>
+						<circle cx="226" cy="196" r="12" fill="#4a5860"></circle>
+						<text x="226" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">2</text>
+						<text x="290" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">数据预处理</text>
+						<circle cx="224" cy="236" r="2.5" fill="#667579"></circle>
+						<text x="235" y="240" font-size="12" fill="#4a5860">尺寸缩放 / 裁剪</text>
+						<circle cx="224" cy="258" r="2.5" fill="#667579"></circle>
+						<text x="235" y="262" font-size="12" fill="#4a5860">像素归一化</text>
+						<circle cx="224" cy="280" r="2.5" fill="#667579"></circle>
+						<text x="235" y="284" font-size="12" fill="#4a5860">数据增强（翻转 / 旋转）</text>
+					</g>
+
+					<g class="yl_node" data-name="特征提取（骨干网络）" data-color="#4a5860"
+						data-desc="骨干网络（如 ResNet）通过卷积与池化自动提取图像的高层语义特征。">
+						<rect class="yl_box yl_box_b" x="405" y="180" width="200" height="120" rx="10"></rect>
+						<circle cx="421" cy="196" r="12" fill="#4a5860"></circle>
+						<text x="421" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">3</text>
+						<text x="505" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">特征提取</text>
+						<circle cx="419" cy="236" r="2.5" fill="#667579"></circle>
+						<text x="430" y="240" font-size="12" fill="#4a5860">卷积层 Conv</text>
+						<circle cx="419" cy="258" r="2.5" fill="#667579"></circle>
+						<text x="430" y="262" font-size="12" fill="#4a5860">池化层 Pooling</text>
+						<circle cx="419" cy="280" r="2.5" fill="#667579"></circle>
+						<text x="430" y="284" font-size="12" fill="#4a5860">残差块 ResNet</text>
+					</g>
+
+					<g class="yl_node" data-name="分类预测" data-color="#4a5860"
+						data-desc="全连接层与 Softmax 将提取到的特征映射为各类别的概率分布。">
+						<rect class="yl_box yl_box_b" x="640" y="180" width="160" height="120" rx="10"></rect>
+						<circle cx="656" cy="196" r="12" fill="#4a5860"></circle>
+						<text x="656" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">4</text>
+						<text x="720" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">分类预测</text>
+						<circle cx="654" cy="236" r="2.5" fill="#667579"></circle>
+						<text x="665" y="240" font-size="12" fill="#4a5860">全连接层 FC</text>
+						<circle cx="654" cy="258" r="2.5" fill="#667579"></circle>
+						<text x="665" y="262" font-size="12" fill="#4a5860">Softmax 归一化</text>
+						<circle cx="654" cy="280" r="2.5" fill="#667579"></circle>
+						<text x="665" y="284" font-size="12" fill="#4a5860">类别概率得分</text>
+					</g>
+
+					<g class="yl_node" data-name="输出结果" data-color="#4a5860"
+						data-desc="输出概率最高的类别标签及其置信度得分。">
+						<rect class="yl_box yl_box_b" x="835" y="180" width="150" height="120" rx="10"></rect>
+						<circle cx="851" cy="196" r="12" fill="#4a5860"></circle>
+						<text x="851" y="200" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">5</text>
+						<text x="910" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">输出结果</text>
+						<circle cx="849" cy="236" r="2.5" fill="#667579"></circle>
+						<text x="860" y="240" font-size="12" fill="#4a5860">类别标签</text>
+						<circle cx="849" cy="258" r="2.5" fill="#667579"></circle>
+						<text x="860" y="262" font-size="12" fill="#4a5860">置信度得分</text>
+					</g>
+
+					<!-- 推理数据流箭头 -->
+					<line x1="175" y1="240" x2="202" y2="240" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="370" y1="240" x2="397" y2="240" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="605" y1="240" x2="632" y2="240" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="800" y1="240" x2="827" y2="240" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+
+					<!-- ===== 评价体系 ===== -->
+					<g class="yl_node" data-name="评价指标" data-color="#3c7a5f"
+						data-desc="用准确率、精确率、召回率、mAP 与 F1 分数等指标衡量识别系统的性能。">
+						<rect class="yl_box yl_box_c" x="700" y="410" width="260" height="86" rx="10"></rect>
+						<text x="830" y="442" text-anchor="middle" font-size="15" font-weight="bold" fill="#2f6a4f">评价指标</text>
+						<circle cx="714" cy="464" r="2.5" fill="#3c7a5f"></circle>
+						<text x="725" y="468" font-size="12" fill="#4a5860">准确率 / 精确率 / 召回率</text>
+						<circle cx="714" cy="486" r="2.5" fill="#3c7a5f"></circle>
+						<text x="725" y="490" font-size="12" fill="#4a5860">mAP / F1 分数</text>
+					</g>
+
+					<!-- 评测箭头 -->
+					<line x1="910" y1="300" x2="910" y2="402" stroke="#3c7a5f" stroke-width="1.8" marker-end="url(#yl_arr_eval)"></line>
+					<text x="928" y="360" font-size="12" fill="#3c7a5f">评测</text>
+				</svg>
+			</div>
+
+			<div class="yl_info">
+				<span class="yl_info_dot" id="yl_info_dot"></span>
+				<span class="yl_info_name" id="yl_info_name">鼠标移到模块上查看说明</span>
+				<span class="yl_info_desc" id="yl_info_desc">蓝色虚线表示训练链路，灰色实线表示推理数据流，绿色表示评价体系。</span>
+			</div>
+
+			<div class="yl_legend">
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#3976a3; border-top-style:dashed;"></span>
+					训练链路（虚线）
+				</span>
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#4a5860;"></span>
+					推理数据流（实线）
+				</span>
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#3c7a5f;"></span>
+					评价体系
+				</span>
+			</div>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 使用内联 <code>&lt;svg&gt;</code> 矢量图形绘制，缩放不失真，适合科研论文插图；<br>
+				2. 用 <code>&lt;rect&gt;</code> 绘制模块、<code>&lt;line&gt;</code> 绘制连接线、<code>&lt;marker&gt;</code> 定义箭头；<br>
+				3. 通过 <code>stroke-dasharray</code> 区分训练链路（虚线）与推理数据流（实线）；<br>
+				4. 监听鼠标事件更新下方说明面板，实现模块的交互高亮。
+			</p>
+		</section>
+	</main>
+
+	<script>
+		var yl_infoDot = document.getElementById('yl_info_dot');
+		var yl_infoName = document.getElementById('yl_info_name');
+		var yl_infoDesc = document.getElementById('yl_info_desc');
+
+		var yl_nodes = document.querySelectorAll('.yl_node');
+		for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+			yl_nodes[yl_i].addEventListener('mouseenter', function () {
+				yl_infoDot.style.background = this.getAttribute('data-color');
+				yl_infoName.textContent = this.getAttribute('data-name');
+				yl_infoDesc.textContent = this.getAttribute('data-desc');
+			});
+			yl_nodes[yl_i].addEventListener('mouseleave', function () {
+				yl_infoDot.style.background = '#8a9499';
+				yl_infoName.textContent = '鼠标移到模块上查看说明';
+				yl_infoDesc.textContent = '蓝色虚线表示训练链路，灰色实线表示推理数据流，绿色表示评价体系。';
+			});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：Canvas 动画（文字「姚琳」弹跳与粒子效果）
+	-->
+	<title>18-1 Canvas 动画</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1000px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 画布 ===== */
+		.yl_stage {
+			background: #10151c;
+			border-radius: .6rem;
+			overflow: hidden;
+			box-shadow: 0 .6rem 1.6rem rgba(20, 30, 40, .25);
+		}
+
+		#yl_canvas {
+			display: block;
+			width: 100%;
+			height: 460px;
+			cursor: pointer;
+		}
+
+		/* ===== 控制面板 ===== */
+		.yl_board {
+			margin-top: 1rem;
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			padding: 1.1rem 1.2rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.yl_btn {
+			display: inline-flex;
+			align-items: center;
+			gap: .45rem;
+			padding: .55rem 1rem;
+			background: #3976a3;
+			color: #fff;
+			border: none;
+			border-radius: .4rem;
+			font-size: .88rem;
+			cursor: pointer;
+			transition: background .15s ease;
+		}
+
+		.yl_btn:hover {
+			background: #2d6085;
+		}
+
+		.yl_btn_ghost {
+			background: #e8eef2;
+			color: #3976a3;
+		}
+
+		.yl_btn_ghost:hover {
+			background: #dce6ec;
+		}
+
+		.yl_field {
+			display: flex;
+			align-items: center;
+			gap: .6rem;
+			font-size: .85rem;
+			color: #667579;
+		}
+
+		.yl_field input[type="range"] {
+			width: 130px;
+			accent-color: #3976a3;
+		}
+
+		.yl_stat {
+			margin-left: auto;
+			font-size: .8rem;
+			color: #8a9499;
+			font-family: Consolas, monospace;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>Canvas 动画</h1>
+				<p class="yl_subtitle">用原生 Canvas 绘制会弹跳、变色的文字「姚琳」，配合漂浮粒子与光点形成动态画面</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-1</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、动画演示</h2>
+			<p class="yl_block_desc">下方画布通过 <code>requestAnimationFrame</code> 循环重绘：文字「姚琳」在画布内来回弹跳，碰到边缘改变颜色与速度方向，四周有漂浮粒子与旋转光点。点击画布可重新投掷文字。</p>
+			<div class="yl_stage">
+				<canvas id="yl_canvas" width="970" height="460"></canvas>
+			</div>
+			<div class="yl_board">
+				<button class="yl_btn" id="yl_btn_toggle"><i class="iconfont icon-zanting"></i><span id="yl_btn_txt">暂停</span></button>
+				<button class="yl_btn yl_btn_ghost" id="yl_btn_reset"><i class="iconfont icon-gl-repeat2"></i>重置</button>
+				<label class="yl_field">速度
+					<input type="range" id="yl_speed" min="0.2" max="3" step="0.1" value="1">
+					<span id="yl_speed_txt">1.0x</span>
+				</label>
+				<span class="yl_stat" id="yl_stat">FPS 60</span>
+			</div>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 通过 <code>canvas.getContext('2d')</code> 获取绘图上下文；<br>
+				2. 用 <code>fillText()</code> 绘制文字，<code>createLinearGradient()</code> 生成渐变颜色；<br>
+				3. 每帧调用 <code>requestAnimationFrame()</code> 重绘，文字位置、颜色、粒子随时间更新；<br>
+				4. 使用 <code>clearRect()</code> 清空画布，再依次绘制背景、粒子与文字，形成动画。
+			</p>
+		</section>
+	</main>
+
+	<script>
+		var yl_canvas = document.getElementById('yl_canvas');
+		var yl_ctx = yl_canvas.getContext('2d');
+
+		var yl_w = yl_canvas.width;
+		var yl_h = yl_canvas.height;
+
+		// ===== 状态 =====
+		var yl_running = true;
+		var yl_speed = 1;
+
+		// ===== 文字对象 =====
+		var yl_text = {
+			x: yl_w / 2,
+			y: yl_h / 2,
+			vx: 2.6,
+			vy: 1.8,
+			size: 96,
+			hue: 0
+		};
+
+		// ===== 粒子 =====
+		var yl_particles = [];
+		function yl_makeParticle(yl_random) {
+			return {
+				x: yl_random ? Math.random() * yl_w : Math.random() * yl_w,
+				y: yl_random ? Math.random() * yl_h : Math.random() * yl_h,
+				r: 1 + Math.random() * 2.6,
+				vx: (Math.random() - 0.5) * 0.5,
+				vy: (Math.random() - 0.5) * 0.5,
+				alpha: 0.15 + Math.random() * 0.5,
+				tw: Math.random() * Math.PI * 2
+			};
+		}
+		for (var yl_i = 0; yl_i < 90; yl_i++) {
+			yl_particles.push(yl_makeParticle(true));
+		}
+
+		// ===== 工具：颜色 =====
+		function yl_hsl(yl_h, yl_s, yl_l) {
+			return 'hsl(' + yl_h + ',' + yl_s + '%,' + yl_l + '%)';
+		}
+
+		// ===== 绘制文字 =====
+		function yl_drawText(yl_t) {
+			var yl_grad = yl_ctx.createLinearGradient(yl_t.x - 90, yl_t.y - 60, yl_t.x + 90, yl_t.y + 60);
+			yl_grad.addColorStop(0, yl_hsl(yl_t.hue, 90, 62));
+			yl_grad.addColorStop(0.5, yl_hsl((yl_t.hue + 70) % 360, 85, 70));
+			yl_grad.addColorStop(1, yl_hsl((yl_t.hue + 140) % 360, 90, 58));
+
+			yl_ctx.save();
+			yl_ctx.font = 'bold ' + yl_t.size + 'px "Microsoft YaHei", sans-serif';
+			yl_ctx.textAlign = 'center';
+			yl_ctx.textBaseline = 'middle';
+			yl_ctx.shadowColor = yl_hsl(yl_t.hue, 90, 60);
+			yl_ctx.shadowBlur = 30;
+			yl_ctx.fillStyle = yl_grad;
+			yl_ctx.fillText('姚琳', yl_t.x, yl_t.y);
+			yl_ctx.restore();
+		}
+
+		// ===== 绘制粒子 =====
+		function yl_drawParticles(yl_t) {
+			for (var yl_i = 0; yl_i < yl_particles.length; yl_i++) {
+				var yl_p = yl_particles[yl_i];
+				yl_p.x += yl_p.vx * yl_speed;
+				yl_p.y += yl_p.vy * yl_speed;
+				if (yl_p.x < 0) { yl_p.x = yl_w; }
+				if (yl_p.x > yl_w) { yl_p.x = 0; }
+				if (yl_p.y < 0) { yl_p.y = yl_h; }
+				if (yl_p.y > yl_h) { yl_p.y = 0; }
+
+				yl_ctx.beginPath();
+				yl_ctx.arc(yl_p.x, yl_p.y, yl_p.r, 0, Math.PI * 2);
+				yl_ctx.fillStyle = 'rgba(255,255,255,' + yl_p.alpha.toFixed(3) + ')';
+				yl_ctx.fill();
+			}
+		}
+
+		// ===== 每帧更新 =====
+		function yl_frame() {
+			yl_ctx.clearRect(0, 0, yl_w, yl_h);
+
+			// 背景渐变
+			var yl_bg = yl_ctx.createLinearGradient(0, 0, 0, yl_h);
+			yl_bg.addColorStop(0, '#0d1117');
+			yl_bg.addColorStop(1, '#16222d');
+			yl_ctx.fillStyle = yl_bg;
+			yl_ctx.fillRect(0, 0, yl_w, yl_h);
+
+			yl_drawParticles(yl_text);
+			yl_drawText(yl_text);
+
+			// 文字更新
+			if (yl_running) {
+				yl_text.x += yl_text.vx * yl_speed;
+				yl_text.y += yl_text.vy * yl_speed;
+				yl_text.hue = (yl_text.hue + 0.6 * yl_speed) % 360;
+
+				if (yl_text.x - 90 < 0 || yl_text.x + 90 > yl_w) {
+					yl_text.vx = -yl_text.vx;
+					yl_text.hue = (yl_text.hue + 40) % 360;
+				}
+				if (yl_text.y - 60 < 0 || yl_text.y + 60 > yl_h) {
+					yl_text.vy = -yl_text.vy;
+					yl_text.hue = (yl_text.hue + 40) % 360;
+				}
+			}
+
+			yl_frames++;
+			var yl_now = performance.now();
+			if (yl_now - yl_last >= 1000) {
+				yl_statEl.textContent = 'FPS ' + yl_frames;
+				yl_frames = 0;
+				yl_last = yl_now;
+			}
+
+			yl_raf = requestAnimationFrame(yl_frame);
+		}
+
+		var yl_raf = null;
+		var yl_last = performance.now();
+		var yl_frames = 0;
+		var yl_statEl = document.getElementById('yl_stat');
+
+		// ===== 控制 =====
+		var yl_btnToggle = document.getElementById('yl_btn_toggle');
+		var yl_btnTxt = document.getElementById('yl_btn_txt');
+
+		yl_btnToggle.onclick = function () {
+			yl_running = !yl_running;
+			yl_btnTxt.textContent = yl_running ? '暂停' : '播放';
+			yl_btnToggle.querySelector('i').className = 'iconfont ' + (yl_running ? 'icon-zanting' : 'icon-bofang');
+		};
+
+		document.getElementById('yl_btn_reset').onclick = function () {
+			yl_text.x = yl_w / 2;
+			yl_text.y = yl_h / 2;
+			yl_text.vx = 2.6;
+			yl_text.vy = 1.8;
+			yl_text.hue = 0;
+			yl_running = true;
+			yl_btnTxt.textContent = '暂停';
+			yl_btnToggle.querySelector('i').className = 'iconfont icon-zanting';
+		};
+
+		var yl_speedEl = document.getElementById('yl_speed');
+		var yl_speedTxt = document.getElementById('yl_speed_txt');
+		yl_speedEl.oninput = function () {
+			yl_speed = parseFloat(yl_speedEl.value);
+			yl_speedTxt.textContent = yl_speed.toFixed(1) + 'x';
+		};
+
+		// 点击画布重新投掷
+		yl_canvas.onclick = function (yl_e) {
+			var yl_rect = yl_canvas.getBoundingClientRect();
+			var yl_scaleX = yl_w / yl_rect.width;
+			var yl_scaleY = yl_h / yl_rect.height;
+			yl_text.x = (yl_e.clientX - yl_rect.left) * yl_scaleX;
+			yl_text.y = (yl_e.clientY - yl_rect.top) * yl_scaleY;
+			yl_text.vx = (Math.random() - 0.5) * 8;
+			yl_text.vy = (Math.random() - 0.5) * 8;
+		};
+
+		// 启动
+		yl_frame();
+	</script>
+</body>
+</html>

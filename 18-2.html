@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：Canvas 电商系统全站架构图
+	-->
+	<title>18-2 电商系统架构图</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 画布 ===== */
+		.yl_stage {
+			background: #fbfaf6;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			overflow: hidden;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+		}
+
+		#yl_canvas {
+			display: block;
+			width: 100%;
+		}
+
+		/* ===== 信息面板 ===== */
+		.yl_info {
+			margin-top: 1rem;
+			background: #26343a;
+			color: #e8eef2;
+			border-radius: .6rem;
+			padding: 1rem 1.2rem;
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.yl_info_dot {
+			flex: 0 0 auto;
+			width: .85rem;
+			height: .85rem;
+			border-radius: 50%;
+			background: #8a9499;
+		}
+
+		.yl_info_name {
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_info_desc {
+			font-size: .85rem;
+			color: #b8c2c8;
+		}
+
+		/* ===== 图例 ===== */
+		.yl_legend {
+			margin-top: 1rem;
+			display: flex;
+			flex-wrap: wrap;
+			gap: .5rem 1.2rem;
+		}
+
+		.yl_legend_item {
+			display: flex;
+			align-items: center;
+			gap: .45rem;
+			font-size: .85rem;
+			color: #667579;
+		}
+
+		.yl_legend_swatch {
+			width: .8rem;
+			height: .8rem;
+			border-radius: .25rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>电商系统全站架构图</h1>
+				<p class="yl_subtitle">用 Canvas 绘制一套电商系统的分层架构：从用户接入到数据存储的完整链路</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-2</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、架构总览</h2>
+			<p class="yl_block_desc">下方架构图完全由 Canvas 绘制：五层结构自顶向下依次为<code>用户层</code>、<code>接入层</code>、<code>应用服务层</code>、<code>支撑组件层</code>与<code>数据层</code>。把鼠标移到任意节点上可查看该模块的说明。</p>
+			<div class="yl_stage">
+				<canvas id="yl_canvas" width="1040" height="720"></canvas>
+			</div>
+			<div class="yl_info">
+				<span class="yl_info_dot" id="yl_info_dot"></span>
+				<span class="yl_info_name" id="yl_info_name">鼠标移到节点上查看说明</span>
+				<span class="yl_info_desc" id="yl_info_desc">图中每条连线表示数据 / 请求在相邻两层之间的流动方向。</span>
+			</div>
+			<div class="yl_legend" id="yl_legend"></div>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 使用 <code>fillRect()</code> / <code>roundRect()</code> 绘制分层色带与模块节点；<br>
+				2. 用 <code>moveTo()</code>、<code>lineTo()</code> 绘制层与层之间的连接线，并叠加箭头表示方向；<br>
+				3. 监听 <code>mousemove</code> 事件，通过坐标换算判断鼠标命中的节点并高亮、显示说明；<br>
+				4. 全部模块、位置与颜色都来自 JS 中的数据结构，便于扩展。
+			</p>
+		</section>
+	</main>
+
+	<script>
+		var yl_canvas = document.getElementById('yl_canvas');
+		var yl_ctx = yl_canvas.getContext('2d');
+		var yl_w = yl_canvas.width;
+		var yl_h = yl_canvas.height;
+
+		// ===== 数据：层与节点 =====
+		var yl_layers = [
+			{ name: '用户层', hue: 205 },
+			{ name: '接入层', hue: 165 },
+			{ name: '应用服务层', hue: 25 },
+			{ name: '支撑组件层', hue: 275 },
+			{ name: '数据层', hue: 358 }
+		];
+
+		var yl_nodes = [
+			// 用户层
+			{ layer: 0, title: '浏览器 Web', sub: 'PC 网站', desc: '用户通过 PC 浏览器访问商城网站。' },
+			{ layer: 0, title: '移动端 App', sub: '手机应用', desc: '手机 App 提供浏览、购物与下单体验。' },
+			{ layer: 0, title: '小程序', sub: '微信入口', desc: '微信小程序，即用即走的购物入口。' },
+
+			// 接入层
+			{ layer: 1, title: 'CDN 静态加速', sub: '内容分发', desc: '缓存图片、CSS、JS 等静态资源，加速访问。' },
+			{ layer: 1, title: 'Nginx 负载均衡', sub: '流量分发', desc: '把请求分发到多台应用服务器，避免单点压力。' },
+			{ layer: 1, title: 'API 网关', sub: '统一入口', desc: '统一入口，负责鉴权、限流与路由转发。' },
+
+			// 应用服务层
+			{ layer: 2, title: '商品服务', sub: '商品管理', desc: '商品的查询、分类与上下架。' },
+			{ layer: 2, title: '订单服务', sub: '订单流转', desc: '订单的创建、状态流转与售后。' },
+			{ layer: 2, title: '用户服务', sub: '账号体系', desc: '注册登录与会员信息管理。' },
+			{ layer: 2, title: '购物车服务', sub: '购物车', desc: '购物车的增删改查与结算。' },
+			{ layer: 2, title: '支付服务', sub: '支付结算', desc: '对接第三方支付，处理支付回调。' },
+			{ layer: 2, title: '库存服务', sub: '库存扣减', desc: '库存扣减、回补与预警。' },
+
+			// 支撑组件层
+			{ layer: 3, title: '注册中心', sub: '服务发现', desc: '服务的注册与发现，维护服务地址列表。' },
+			{ layer: 3, title: '消息队列', sub: '异步解耦', desc: '削峰填谷，异步处理订单、通知等消息。' },
+			{ layer: 3, title: '配置中心', sub: '配置管理', desc: '统一管理各服务的配置项，支持热更新。' },
+			{ layer: 3, title: '日志监控', sub: '可观测', desc: '收集日志与指标，实时告警。' },
+
+			// 数据层
+			{ layer: 4, title: 'MySQL', sub: '关系数据库', desc: '关系型数据库，存储订单、商品等核心数据。' },
+			{ layer: 4, title: 'Redis 缓存', sub: '缓存', desc: '缓存热点数据，减轻数据库压力。' },
+			{ layer: 4, title: 'Elasticsearch', sub: '全文搜索', desc: '全文搜索引擎，支撑商品搜索。' },
+			{ layer: 4, title: 'OSS 对象存储', sub: '文件存储', desc: '存储商品图片、视频等大文件。' }
+		];
+
+		// ===== 布局参数 =====
+		var yl_left = 132;
+		var yl_right = 20;
+		var yl_top = 26;
+		var yl_bandH = 88;
+		var yl_gap = 46;
+		var yl_nodePad = 12;
+
+		// 计算每层节点的矩形
+		function yl_layout() {
+			for (var yl_i = 0; yl_i < yl_layers.length; yl_i++) {
+				yl_layers[yl_i].y = yl_top + yl_i * (yl_bandH + yl_gap);
+			}
+
+			var yl_usable = yl_w - yl_left - yl_right;
+			var yl_byLayer = [[], [], [], [], []];
+			for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+				yl_byLayer[yl_nodes[yl_i].layer].push(yl_nodes[yl_i]);
+			}
+
+			for (var yl_l = 0; yl_l < yl_byLayer.length; yl_l++) {
+				var yl_count = yl_byLayer[yl_l].length;
+				var yl_nw = Math.floor((yl_usable - (yl_count - 1) * yl_nodePad) / yl_count);
+				yl_nw = Math.min(170, Math.max(96, yl_nw));
+				var yl_total = yl_count * yl_nw + (yl_count - 1) * yl_nodePad;
+				var yl_startX = yl_left + (yl_usable - yl_total) / 2;
+				var yl_bandY = yl_layers[yl_l].y;
+
+				for (var yl_n = 0; yl_n < yl_count; yl_n++) {
+					var yl_node = yl_byLayer[yl_l][yl_n];
+					yl_node.x = yl_startX + yl_n * (yl_nw + yl_nodePad);
+					yl_node.y = yl_bandY + 22;
+					yl_node.w = yl_nw;
+					yl_node.h = yl_bandH - 32;
+				}
+			}
+		}
+		yl_layout();
+
+		// ===== 工具：取色 =====
+		function yl_hsl(yl_h, yl_s, yl_l) {
+			return 'hsl(' + yl_h + ',' + yl_s + '%,' + yl_l + '%)';
+		}
+
+		function yl_roundRect(yl_x, yl_y, yl_w, yl_h, yl_r) {
+			yl_ctx.beginPath();
+			yl_ctx.moveTo(yl_x + yl_r, yl_y);
+			yl_ctx.arcTo(yl_x + yl_w, yl_y, yl_x + yl_w, yl_y + yl_h, yl_r);
+			yl_ctx.arcTo(yl_x + yl_w, yl_y + yl_h, yl_x, yl_y + yl_h, yl_r);
+			yl_ctx.arcTo(yl_x, yl_y + yl_h, yl_x, yl_y, yl_r);
+			yl_ctx.arcTo(yl_x, yl_y, yl_x + yl_w, yl_y, yl_r);
+			yl_ctx.closePath();
+		}
+
+		// ===== 画箭头 =====
+		function yl_arrow(yl_x1, yl_y1, yl_x2, yl_y2, yl_color) {
+			yl_ctx.strokeStyle = yl_color;
+			yl_ctx.fillStyle = yl_color;
+			yl_ctx.lineWidth = 1.4;
+			yl_ctx.beginPath();
+			yl_ctx.moveTo(yl_x1, yl_y1);
+			yl_ctx.lineTo(yl_x2, yl_y2);
+			yl_ctx.stroke();
+
+			var yl_ang = Math.atan2(yl_y2 - yl_y1, yl_x2 - yl_x1);
+			var yl_l = 7;
+			yl_ctx.beginPath();
+			yl_ctx.moveTo(yl_x2, yl_y2);
+			yl_ctx.lineTo(yl_x2 - yl_l * Math.cos(yl_ang - 0.42), yl_y2 - yl_l * Math.sin(yl_ang - 0.42));
+			yl_ctx.lineTo(yl_x2 - yl_l * Math.cos(yl_ang + 0.42), yl_y2 - yl_l * Math.sin(yl_ang + 0.42));
+			yl_ctx.closePath();
+			yl_ctx.fill();
+		}
+
+		// ===== 绘制 =====
+		var yl_hover = -1;
+
+		function yl_draw() {
+			yl_ctx.clearRect(0, 0, yl_w, yl_h);
+			yl_ctx.fillStyle = '#fbfaf6';
+			yl_ctx.fillRect(0, 0, yl_w, yl_h);
+
+			// 连接线（先画，置于底层）
+			for (var yl_l = 0; yl_l < yl_layers.length - 1; yl_l++) {
+				var yl_busY = yl_layers[yl_l].y + yl_bandH + yl_gap / 2;
+				var yl_topNodes = [];
+				var yl_botNodes = [];
+				for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+					if (yl_nodes[yl_i].layer === yl_l) { yl_topNodes.push(yl_nodes[yl_i]); }
+					if (yl_nodes[yl_i].layer === yl_l + 1) { yl_botNodes.push(yl_nodes[yl_i]); }
+				}
+
+				var yl_minX = yl_w;
+				var yl_maxX = 0;
+				for (var yl_i = 0; yl_i < yl_topNodes.length; yl_i++) {
+					var yl_cx = yl_topNodes[yl_i].x + yl_topNodes[yl_i].w / 2;
+					yl_minX = Math.min(yl_minX, yl_cx);
+					yl_maxX = Math.max(yl_maxX, yl_cx);
+				}
+				for (var yl_i = 0; yl_i < yl_botNodes.length; yl_i++) {
+					var yl_cx2 = yl_botNodes[yl_i].x + yl_botNodes[yl_i].w / 2;
+					yl_minX = Math.min(yl_minX, yl_cx2);
+					yl_maxX = Math.max(yl_maxX, yl_cx2);
+				}
+
+				// 横向总线
+				yl_ctx.strokeStyle = '#d3d8dc';
+				yl_ctx.lineWidth = 1.4;
+				yl_ctx.beginPath();
+				yl_ctx.moveTo(yl_minX, yl_busY);
+				yl_ctx.lineTo(yl_maxX, yl_busY);
+				yl_ctx.stroke();
+
+				// 上层节点向下接入总线
+				for (var yl_i = 0; yl_i < yl_topNodes.length; yl_i++) {
+					var yl_cx = yl_topNodes[yl_i].x + yl_topNodes[yl_i].w / 2;
+					var yl_bottom = yl_topNodes[yl_i].y + yl_topNodes[yl_i].h;
+					yl_ctx.strokeStyle = '#d3d8dc';
+					yl_ctx.beginPath();
+					yl_ctx.moveTo(yl_cx, yl_bottom);
+					yl_ctx.lineTo(yl_cx, yl_busY);
+					yl_ctx.stroke();
+				}
+
+				// 总线向下接入下层节点（带箭头）
+				for (var yl_i = 0; yl_i < yl_botNodes.length; yl_i++) {
+					var yl_cx = yl_botNodes[yl_i].x + yl_botNodes[yl_i].w / 2;
+					yl_arrow(yl_cx, yl_busY, yl_cx, yl_botNodes[yl_i].y, '#9aa6ad');
+				}
+			}
+
+			// 分层色带与标签
+			for (var yl_l = 0; yl_l < yl_layers.length; yl_l++) {
+				var yl_layer = yl_layers[yl_l];
+				var yl_bandX = yl_left - 8;
+				var yl_bandW = yl_w - yl_bandX - yl_right + 8;
+				yl_ctx.fillStyle = yl_hsl(yl_layer.hue, 60, 95);
+				yl_roundRect(yl_bandX, yl_layer.y, yl_bandW, yl_bandH, 10);
+				yl_ctx.fill();
+
+				yl_ctx.fillStyle = yl_hsl(yl_layer.hue, 55, 40);
+				yl_ctx.font = 'bold 15px "Microsoft YaHei", sans-serif';
+				yl_ctx.textAlign = 'right';
+				yl_ctx.textBaseline = 'middle';
+				yl_ctx.fillText(yl_layer.name, yl_left - 18, yl_layer.y + yl_bandH / 2);
+			}
+
+			// 节点
+			for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+				var yl_n = yl_nodes[yl_i];
+				var yl_hue = yl_layers[yl_n.layer].hue;
+				var yl_isHover = (yl_i === yl_hover);
+
+				yl_ctx.fillStyle = '#ffffff';
+				yl_roundRect(yl_n.x, yl_n.y, yl_n.w, yl_n.h, 8);
+				yl_ctx.fill();
+				yl_ctx.lineWidth = yl_isHover ? 3.2 : 2;
+				yl_ctx.strokeStyle = yl_hsl(yl_hue, 65, 48);
+				yl_ctx.stroke();
+				if (yl_isHover) {
+					yl_ctx.shadowColor = yl_hsl(yl_hue, 70, 60);
+					yl_ctx.shadowBlur = 14;
+					yl_roundRect(yl_n.x, yl_n.y, yl_n.w, yl_n.h, 8);
+					yl_ctx.stroke();
+					yl_ctx.shadowBlur = 0;
+				}
+
+				// 标题
+				yl_ctx.fillStyle = '#26343a';
+				yl_ctx.font = 'bold 15px "Microsoft YaHei", sans-serif';
+				yl_ctx.textAlign = 'center';
+				yl_ctx.textBaseline = 'middle';
+				yl_ctx.fillText(yl_n.title, yl_n.x + yl_n.w / 2, yl_n.y + yl_n.h / 2 - 9);
+
+				// 副标题
+				yl_ctx.fillStyle = yl_hsl(yl_hue, 55, 42);
+				yl_ctx.font = '12px "Microsoft YaHei", sans-serif';
+				yl_ctx.fillText(yl_n.sub, yl_n.x + yl_n.w / 2, yl_n.y + yl_n.h / 2 + 14);
+			}
+		}
+
+		// ===== 鼠标命中检测 =====
+		function yl_hit(yl_mx, yl_my) {
+			for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+				var yl_n = yl_nodes[yl_i];
+				if (yl_mx >= yl_n.x && yl_mx <= yl_n.x + yl_n.w &&
+					yl_my >= yl_n.y && yl_my <= yl_n.y + yl_n.h) {
+					return yl_i;
+				}
+			}
+			return -1;
+		}
+
+		var yl_infoDot = document.getElementById('yl_info_dot');
+		var yl_infoName = document.getElementById('yl_info_name');
+		var yl_infoDesc = document.getElementById('yl_info_desc');
+
+		yl_canvas.addEventListener('mousemove', function (yl_e) {
+			var yl_rect = yl_canvas.getBoundingClientRect();
+			var yl_mx = (yl_e.clientX - yl_rect.left) * (yl_w / yl_rect.width);
+			var yl_my = (yl_e.clientY - yl_rect.top) * (yl_h / yl_rect.height);
+			var yl_hitIdx = yl_hit(yl_mx, yl_my);
+			if (yl_hitIdx !== yl_hover) {
+				yl_hover = yl_hitIdx;
+				if (yl_hover >= 0) {
+					var yl_n = yl_nodes[yl_hover];
+					var yl_hue = yl_layers[yl_n.layer].hue;
+					yl_infoDot.style.background = yl_hsl(yl_hue, 65, 48);
+					yl_infoName.textContent = yl_layers[yl_n.layer].name + ' · ' + yl_n.title;
+					yl_infoDesc.textContent = yl_n.desc;
+					yl_canvas.style.cursor = 'pointer';
+				} else {
+					yl_infoDot.style.background = '#8a9499';
+					yl_infoName.textContent = '鼠标移到节点上查看说明';
+					yl_infoDesc.textContent = '图中每条连线表示数据 / 请求在相邻两层之间的流动方向。';
+					yl_canvas.style.cursor = 'default';
+				}
+				yl_draw();
+			}
+		});
+
+		// ===== 图例 =====
+		var yl_legendEl = document.getElementById('yl_legend');
+		for (var yl_i = 0; yl_i < yl_layers.length; yl_i++) {
+			var yl_item = document.createElement('div');
+			yl_item.className = 'yl_legend_item';
+			var yl_sw = document.createElement('span');
+			yl_sw.className = 'yl_legend_swatch';
+			yl_sw.style.background = yl_hsl(yl_layers[yl_i].hue, 65, 48);
+			var yl_tx = document.createElement('span');
+			yl_tx.textContent = yl_layers[yl_i].name;
+			yl_item.appendChild(yl_sw);
+			yl_item.appendChild(yl_tx);
+			yl_legendEl.appendChild(yl_item);
+		}
+
+		// ===== 启动 =====
+		yl_draw();
+	</script>
+</body>
+</html>

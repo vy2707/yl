@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：基于知识库智能客服系统的系统架构图（SVG · 科研方向）
+	-->
+	<title>18-3 copy 知识库智能客服系统架构图（SVG）</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 图形 ===== */
+		.yl_stage {
+			background: #fbfaf6;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			overflow: hidden;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+			padding: .5rem;
+		}
+
+		.yl_stage svg {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+
+		#yl_svg text {
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_node {
+			cursor: pointer;
+		}
+
+		.yl_node .yl_box {
+			stroke-width: 1.6;
+			transition: stroke-width .12s ease, filter .12s ease;
+		}
+
+		.yl_node:hover .yl_box {
+			stroke-width: 3;
+			filter: drop-shadow(0 3px 6px rgba(38, 52, 58, .28));
+		}
+
+		.yl_box_a {
+			fill: #eef5fb;
+			stroke: #3976a3;
+		}
+
+		.yl_box_b {
+			fill: #fdfdfb;
+			stroke: #4a5860;
+		}
+
+		.yl_box_c {
+			fill: #eff6f3;
+			stroke: #3c7a5f;
+		}
+
+		/* ===== 信息面板 ===== */
+		.yl_info {
+			margin-top: 1rem;
+			background: #26343a;
+			color: #e8eef2;
+			border-radius: .6rem;
+			padding: 1rem 1.2rem;
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.yl_info_dot {
+			flex: 0 0 auto;
+			width: .85rem;
+			height: .85rem;
+			border-radius: 50%;
+			background: #8a9499;
+		}
+
+		.yl_info_name {
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_info_desc {
+			font-size: .85rem;
+			color: #b8c2c8;
+		}
+
+		/* ===== 图例 ===== */
+		.yl_legend {
+			margin-top: 1rem;
+			display: flex;
+			flex-wrap: wrap;
+			gap: .6rem 1.6rem;
+			font-size: .85rem;
+			color: #667579;
+		}
+
+		.yl_legend_item {
+			display: flex;
+			align-items: center;
+			gap: .5rem;
+		}
+
+		.yl_legend_line {
+			width: 2rem;
+			height: 0;
+			border-top: 2px solid;
+		}
+
+		.yl_legend_line_dash {
+			border-top-style: dashed;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>知识库智能客服系统架构图（SVG）</h1>
+				<p class="yl_subtitle">用 SVG 绘制基于知识库的智能客服系统架构：知识库构建 + 智能问答 + 效果评价</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-3 copy</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<section class="yl_block">
+			<h2>一、系统架构图</h2>
+			<p class="yl_block_desc">下图采用 <code>SVG</code> 矢量绘制，适合科研论文插图。自上而下分为三层：<code>知识库构建</code>（蓝色虚线）、<code>智能问答</code>（灰色实线六级流水线）与<code>效果评价</code>（绿色）。把鼠标移到任意模块上可查看说明。</p>
+			<div class="yl_stage">
+				<svg id="yl_svg" viewBox="0 0 1040 540" xmlns="http://www.w3.org/2000/svg">
+					<defs>
+						<marker id="yl_arr_solid" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#4a5860"></path>
+						</marker>
+						<marker id="yl_arr_dash" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#3976a3"></path>
+						</marker>
+						<marker id="yl_arr_eval" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+							<path d="M0,0 L8,3 L0,6 Z" fill="#3c7a5f"></path>
+						</marker>
+					</defs>
+
+					<!-- ===== 知识库构建（离线） ===== -->
+					<g class="yl_node" data-name="知识文档" data-color="#3976a3"
+						data-desc="汇集产品手册、FAQ、工单与政策文档，作为知识库的原始语料。">
+						<rect class="yl_box yl_box_a" x="27" y="24" width="228" height="96" rx="10"></rect>
+						<text x="141" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">知识文档</text>
+						<circle cx="41" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="52" y="78" font-size="12" fill="#4a5860">产品手册 / FAQ</text>
+						<circle cx="41" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="52" y="100" font-size="12" fill="#4a5860">工单与政策文档</text>
+					</g>
+
+					<g class="yl_node" data-name="文本分块" data-color="#3976a3"
+						data-desc="将长文档切分为语义完整的片段，是检索增强生成（RAG）的关键预处理步骤。">
+						<rect class="yl_box yl_box_a" x="279" y="24" width="228" height="96" rx="10"></rect>
+						<text x="393" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">文本分块</text>
+						<circle cx="293" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="304" y="78" font-size="12" fill="#4a5860">句子 / 段落切分</text>
+						<circle cx="293" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="304" y="100" font-size="12" fill="#4a5860">重叠滑动窗口</text>
+					</g>
+
+					<g class="yl_node" data-name="向量化 Embedding" data-color="#3976a3"
+						data-desc="用文本向量模型把文本片段编码成语义向量，便于相似度计算。">
+						<rect class="yl_box yl_box_a" x="531" y="24" width="228" height="96" rx="10"></rect>
+						<text x="645" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">向量化 Embedding</text>
+						<circle cx="545" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="556" y="78" font-size="12" fill="#4a5860">文本向量模型</text>
+						<circle cx="545" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="556" y="100" font-size="12" fill="#4a5860">语义特征编码</text>
+					</g>
+
+					<g class="yl_node" data-name="向量索引" data-color="#3976a3"
+						data-desc="把向量写入向量数据库并建立索引，支撑在线阶段的高效语义检索。">
+						<rect class="yl_box yl_box_a" x="783" y="24" width="228" height="96" rx="10"></rect>
+						<text x="897" y="54" text-anchor="middle" font-size="15" font-weight="bold" fill="#2d6085">向量索引</text>
+						<circle cx="797" cy="74" r="2.5" fill="#3976a3"></circle>
+						<text x="808" y="78" font-size="12" fill="#4a5860">向量数据库</text>
+						<circle cx="797" cy="96" r="2.5" fill="#3976a3"></circle>
+						<text x="808" y="100" font-size="12" fill="#4a5860">倒排索引 / 知识图谱</text>
+					</g>
+
+					<!-- 知识库构建箭头（虚线） -->
+					<line x1="255" y1="72" x2="271" y2="72" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></line>
+					<line x1="507" y1="72" x2="523" y2="72" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></line>
+					<line x1="759" y1="72" x2="775" y2="72" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></line>
+
+					<!-- 向量索引 → 语义检索（虚线折线） -->
+					<path d="M 897 120 L 897 155 L 436.5 155 L 436.5 182" fill="none" stroke="#3976a3" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#yl_arr_dash)"></path>
+					<text x="662" y="148" text-anchor="middle" font-size="12" fill="#3976a3">知识检索</text>
+
+					<!-- ===== 智能问答（在线） ===== -->
+					<g class="yl_node" data-name="用户提问" data-color="#4a5860"
+						data-desc="用户通过网页、App、小程序或电话发起咨询，是系统的输入入口。">
+						<rect class="yl_box yl_box_b" x="27" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="43" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="43" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">1</text>
+						<text x="102.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">用户提问</text>
+						<circle cx="41" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="52" y="244" font-size="12" fill="#4a5860">网页 / App</text>
+						<circle cx="41" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="52" y="266" font-size="12" fill="#4a5860">小程序 / 电话</text>
+					</g>
+
+					<g class="yl_node" data-name="意图识别" data-color="#4a5860"
+						data-desc="识别用户问题的意图与实体，为检索和回答提供结构化信息。">
+						<rect class="yl_box yl_box_b" x="194" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="210" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="210" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">2</text>
+						<text x="269.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">意图识别</text>
+						<circle cx="208" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="219" y="244" font-size="12" fill="#4a5860">意图分类</text>
+						<circle cx="208" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="219" y="266" font-size="12" fill="#4a5860">实体抽取 / 槽位填充</text>
+					</g>
+
+					<g class="yl_node" data-name="语义检索" data-color="#4a5860"
+						data-desc="在向量索引中召回与问题语义最相近的知识片段，采用向量 + 关键字混合检索。">
+						<rect class="yl_box yl_box_b" x="361" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="377" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="377" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">3</text>
+						<text x="436.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">语义检索</text>
+						<circle cx="375" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="386" y="244" font-size="12" fill="#4a5860">向量召回</text>
+						<circle cx="375" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="386" y="266" font-size="12" fill="#4a5860">混合检索</text>
+					</g>
+
+					<g class="yl_node" data-name="重排序" data-color="#4a5860"
+						data-desc="对召回的候选片段做相关性打分与排序，筛选最相关的 Top-K 结果。">
+						<rect class="yl_box yl_box_b" x="528" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="544" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="544" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">4</text>
+						<text x="603.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">重排序</text>
+						<circle cx="542" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="553" y="244" font-size="12" fill="#4a5860">相关性打分</text>
+						<circle cx="542" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="553" y="266" font-size="12" fill="#4a5860">Top-K 筛选</text>
+					</g>
+
+					<g class="yl_node" data-name="答案生成" data-color="#4a5860"
+						data-desc="大语言模型结合检索到的知识片段，通过检索增强生成（RAG）合成答案。">
+						<rect class="yl_box yl_box_b" x="695" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="711" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="711" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">5</text>
+						<text x="770.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">答案生成</text>
+						<circle cx="709" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="720" y="244" font-size="12" fill="#4a5860">大语言模型 LLM</text>
+						<circle cx="709" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="720" y="266" font-size="12" fill="#4a5860">检索增强生成 RAG</text>
+					</g>
+
+					<g class="yl_node" data-name="回复用户" data-color="#4a5860"
+						data-desc="把生成的答案返回给用户，并支持多轮对话的上下文理解。">
+						<rect class="yl_box yl_box_b" x="862" y="190" width="151" height="120" rx="10"></rect>
+						<circle cx="878" cy="206" r="12" fill="#4a5860"></circle>
+						<text x="878" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">6</text>
+						<text x="937.5" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#26343a">回复用户</text>
+						<circle cx="876" cy="240" r="2.5" fill="#667579"></circle>
+						<text x="887" y="244" font-size="12" fill="#4a5860">答案输出</text>
+						<circle cx="876" cy="262" r="2.5" fill="#667579"></circle>
+						<text x="887" y="266" font-size="12" fill="#4a5860">多轮对话</text>
+					</g>
+
+					<!-- 智能问答数据流箭头（实线） -->
+					<line x1="178" y1="250" x2="186" y2="250" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="345" y1="250" x2="353" y2="250" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="512" y1="250" x2="520" y2="250" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="679" y1="250" x2="687" y2="250" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+					<line x1="846" y1="250" x2="854" y2="250" stroke="#4a5860" stroke-width="1.8" marker-end="url(#yl_arr_solid)"></line>
+
+					<!-- ===== 效果评价 ===== -->
+					<g class="yl_node" data-name="效果评价" data-color="#3c7a5f"
+						data-desc="用准确率、召回率、F1 与用户满意度等指标衡量客服系统效果，并将反馈回流优化知识库。">
+						<rect class="yl_box yl_box_c" x="700" y="420" width="280" height="86" rx="10"></rect>
+						<text x="840" y="452" text-anchor="middle" font-size="15" font-weight="bold" fill="#2f6a4f">效果评价</text>
+						<circle cx="714" cy="478" r="2.5" fill="#3c7a5f"></circle>
+						<text x="725" y="482" font-size="12" fill="#4a5860">准确率 / 召回率 / F1</text>
+						<circle cx="714" cy="500" r="2.5" fill="#3c7a5f"></circle>
+						<text x="725" y="504" font-size="12" fill="#4a5860">用户满意度 / 反馈回流</text>
+					</g>
+
+					<!-- 评测箭头 -->
+					<line x1="937.5" y1="310" x2="937.5" y2="412" stroke="#3c7a5f" stroke-width="1.8" marker-end="url(#yl_arr_eval)"></line>
+					<text x="956" y="366" font-size="12" fill="#3c7a5f">评测</text>
+				</svg>
+			</div>
+
+			<div class="yl_info">
+				<span class="yl_info_dot" id="yl_info_dot"></span>
+				<span class="yl_info_name" id="yl_info_name">鼠标移到模块上查看说明</span>
+				<span class="yl_info_desc" id="yl_info_desc">蓝色虚线表示知识库离线构建链路，灰色实线表示在线智能问答数据流，绿色表示评价体系。</span>
+			</div>
+
+			<div class="yl_legend">
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#3976a3; border-top-style:dashed;"></span>
+					知识库构建（虚线）
+				</span>
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#4a5860;"></span>
+					智能问答数据流（实线）
+				</span>
+				<span class="yl_legend_item">
+					<span class="yl_legend_line" style="border-color:#3c7a5f;"></span>
+					效果评价
+				</span>
+			</div>
+		</section>
+
+		<section class="yl_block">
+			<h2>二、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 使用内联 <code>&lt;svg&gt;</code> 矢量图形绘制，缩放不失真，适合科研论文插图；<br>
+				2. 用 <code>&lt;rect&gt;</code> 绘制模块、<code>&lt;line&gt;</code> / <code>&lt;path&gt;</code> 绘制连接线与折线、<code>&lt;marker&gt;</code> 定义箭头；<br>
+				3. 通过 <code>stroke-dasharray</code> 区分知识库构建链路（虚线）与智能问答数据流（实线）；<br>
+				4. 监听鼠标事件更新下方说明面板，实现模块的交互高亮。
+			</p>
+		</section>
+	</main>
+
+	<script>
+		var yl_infoDot = document.getElementById('yl_info_dot');
+		var yl_infoName = document.getElementById('yl_info_name');
+		var yl_infoDesc = document.getElementById('yl_info_desc');
+
+		var yl_nodes = document.querySelectorAll('.yl_node');
+		for (var yl_i = 0; yl_i < yl_nodes.length; yl_i++) {
+			yl_nodes[yl_i].addEventListener('mouseenter', function () {
+				yl_infoDot.style.background = this.getAttribute('data-color');
+				yl_infoName.textContent = this.getAttribute('data-name');
+				yl_infoDesc.textContent = this.getAttribute('data-desc');
+			});
+			yl_nodes[yl_i].addEventListener('mouseleave', function () {
+				yl_infoDot.style.background = '#8a9499';
+				yl_infoName.textContent = '鼠标移到模块上查看说明';
+				yl_infoDesc.textContent = '蓝色虚线表示知识库离线构建链路，灰色实线表示在线智能问答数据流，绿色表示评价体系。';
+			});
+		}
+	</script>
+</body>
+</html>
