@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：基于 Mermaid 的智能客服系统流程图与 E-R 图
+	-->
+	<title>18-6 Mermaid 流程图与 E-R 图</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 图表容器 ===== */
+		.yl_diagram {
+			width: 100%;
+			background: #fff;
+			border: 1px solid #e2e0d6;
+			border-radius: .6rem;
+			box-shadow: 0 .4rem 1rem rgba(38, 52, 58, .06);
+			padding: 1.4rem 1.2rem;
+			overflow: auto;
+		}
+
+		.yl_diagram .mermaid {
+			display: flex;
+			justify-content: center;
+		}
+
+		.yl_diagram .mermaid svg {
+			max-width: 100%;
+			height: auto;
+		}
+
+		.yl_status {
+			margin-top: .8rem;
+			padding: .7rem 1rem;
+			border-radius: .4rem;
+			font-size: .85rem;
+			background: #26343a;
+			color: #e8eef2;
+		}
+
+		.yl_status_err {
+			background: #fbeaea;
+			color: #a33b3b;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>智能客服系统 · Mermaid 图</h1>
+				<p class="yl_subtitle">使用本地 Mermaid 绘制智能客服系统的业务流程图与数据库 E-R 图</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-6</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、流程图 -->
+		<section class="yl_block">
+			<h2>一、智能客服系统流程图</h2>
+			<p class="yl_block_desc">用 Mermaid 的 <code>flowchart</code> 语法描述智能客服的完整业务流：从用户提问、意图识别、知识库检索，到命中答案回复或转人工，以及满意度评价后的知识沉淀反馈。</p>
+			<div class="yl_diagram">
+				<pre class="mermaid">
+flowchart TD
+    A([用户进入智能客服]) --> B[输入咨询问题]
+    B --> C[意图识别与实体抽取]
+    C --> D[语义检索知识库]
+    D --> E{是否命中答案}
+    E -- 是 --> F[大模型生成答案]
+    E -- 否 --> G[转接人工客服]
+    F --> H[回复用户]
+    G --> H
+    H --> I[满意度评价]
+    I -. 反馈沉淀 .-> D
+				</pre>
+			</div>
+		</section>
+
+		<!-- 二、E-R 图 -->
+		<section class="yl_block">
+			<h2>二、智能客服系统 E-R 图</h2>
+			<p class="yl_block_desc">用 Mermaid 的 <code>erDiagram</code> 语法描述智能客服系统的实体关系：<code>用户</code>、<code>会话</code>、<code>客服人员</code>、<code>评价</code>、<code>知识条目</code>与<code>知识分类</code>六类实体及其主键、属性和关联关系。</p>
+			<div class="yl_diagram">
+				<pre class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : 发起
+    AGENT ||--o{ SESSION : 处理
+    SESSION ||--o| RATING : 获得
+    SESSION }o--o{ KNOWLEDGE : 引用
+    CATEGORY ||--o{ KNOWLEDGE : 属于
+
+    USER {
+        int 用户ID PK
+        string 用户名
+        string 手机号
+        string 会员等级
+    }
+    SESSION {
+        int 会话ID PK
+        string 问题内容
+        datetime 开始时间
+        string 接入渠道
+    }
+    AGENT {
+        int 客服ID PK
+        string 姓名
+        string 技能组
+    }
+    RATING {
+        int 评价ID PK
+        int 评分
+        string 反馈内容
+    }
+    KNOWLEDGE {
+        int 条目ID PK
+        string 标题
+        string 内容
+        string 语义向量
+    }
+    CATEGORY {
+        int 分类ID PK
+        string 分类名称
+    }
+				</pre>
+			</div>
+		</section>
+
+		<!-- 三、实现要点 -->
+		<section class="yl_block">
+			<h2>三、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 引入本地 <code>cdn/mermaid/mermaid.min.js</code>，不依赖 CDN 在线加载；<br>
+				2. 用 <code>mermaid.initialize()</code> 配置主题，再调用 <code>mermaid.run()</code> 渲染页面中所有 <code>.mermaid</code> 元素；<br>
+				3. 流程图采用 <code>flowchart TD</code> 自上而下布局，用 <code>{菱形}</code> 表示判断、<code>([圆角])</code> 表示起止；<br>
+				4. E-R 图采用 <code>erDiagram</code> 语法，<code>||--o{</code> 表示一对多、<code>}o--o{</code> 表示多对多，并声明主键 <code>PK</code>。
+			</p>
+		</section>
+	</main>
+
+	<script src="cdn/mermaid/mermaid.min.js"></script>
+	<script>
+		mermaid.initialize({
+			startOnLoad: false,
+			theme: 'default',
+			securityLevel: 'loose',
+			flowchart: {
+				useMaxWidth: true,
+				htmlLabels: true,
+				curve: 'basis'
+			},
+			er: {
+				useMaxWidth: true
+			}
+		});
+
+		mermaid.run({
+			querySelector: '.mermaid'
+		}).catch(function (yl_err) {
+			var yl_boxes = document.querySelectorAll('.yl_diagram');
+			for (var yl_i = 0; yl_i < yl_boxes.length; yl_i++) {
+				yl_boxes[yl_i].innerHTML = '<p style="color:#a33b3b;text-align:center;">图表渲染失败：' + yl_err.message + '</p>';
+			}
+		});
+	</script>
+</body>
+</html>

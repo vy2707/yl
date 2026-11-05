@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：基于 Three.js 与 ECharts 的数据大屏（三列布局 · 中部地理信息图）
+	-->
+	<title>18-8 数据大屏</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background:
+				radial-gradient(1200px 600px at 50% -10%, rgba(30, 144, 255, .15), transparent 60%),
+				#071120;
+			color: #d7e7ff;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		/* ===== 顶部标题栏 ===== */
+		.yl_topbar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			padding: 14px 22px;
+			border-bottom: 1px solid rgba(0, 200, 255, .18);
+		}
+
+		.yl_topbar .yl_home_link {
+			color: #57c8ff;
+			text-decoration: none;
+			font-size: .82rem;
+		}
+
+		.yl_topbar .yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_title {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 1.5rem;
+			font-weight: 700;
+			letter-spacing: .2em;
+			background: linear-gradient(90deg, #57c8ff, #e0f4ff, #57c8ff);
+			-webkit-background-clip: text;
+			background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+
+		.yl_clock {
+			font-family: Consolas, monospace;
+			font-size: 1rem;
+			color: #57c8ff;
+		}
+
+		/* ===== 大屏三列布局 ===== */
+		.yl_screen {
+			display: grid;
+			grid-template-columns: 330px 1fr 330px;
+			gap: 14px;
+			padding: 14px 22px 22px;
+			align-items: start;
+		}
+
+		.yl_col {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			min-width: 0;
+		}
+
+		/* ===== 面板 ===== */
+		.yl_panel {
+			background: rgba(16, 42, 74, .45);
+			border: 1px solid rgba(0, 200, 255, .16);
+			border-radius: 8px;
+			box-shadow: inset 0 0 24px rgba(0, 200, 255, .04);
+			overflow: hidden;
+		}
+
+		.yl_panel-head {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 14px;
+			font-size: .92rem;
+			font-weight: 600;
+			border-bottom: 1px solid rgba(0, 200, 255, .14);
+			background: linear-gradient(90deg, rgba(0, 200, 255, .12), transparent);
+		}
+
+		.yl_panel-head::before {
+			content: "";
+			width: 4px;
+			height: 14px;
+			background: #00d4ff;
+			border-radius: 2px;
+			box-shadow: 0 0 8px #00d4ff;
+		}
+
+		.yl_panel-body {
+			width: 100%;
+			position: relative;
+		}
+
+		.yl_chart {
+			width: 100%;
+		}
+
+		.yl_map_hint {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			color: #7fa9cf;
+			font-size: .85rem;
+		}
+	</style>
+</head>
+<body>
+	<header class="yl_topbar">
+		<a class="yl_home_link" href="index.html">← 返回首页</a>
+		<span class="yl_title">智能电商数据大屏</span>
+		<span class="yl_clock" id="yl_clock">--:--:--</span>
+	</header>
+
+	<main class="yl_screen">
+		<!-- ===== 左列 ===== -->
+		<section class="yl_col">
+			<div class="yl_panel">
+				<div class="yl_panel-head">月度销售额</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_bar" style="height:250px;"></div>
+				</div>
+			</div>
+			<div class="yl_panel">
+				<div class="yl_panel-head">商品分类占比</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_pie" style="height:250px;"></div>
+				</div>
+			</div>
+			<div class="yl_panel">
+				<div class="yl_panel-head">访问与订单趋势</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_line" style="height:250px;"></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ===== 中列 ===== -->
+		<section class="yl_col">
+			<div class="yl_panel">
+				<div class="yl_panel-head">全国销售分布（地理信息）</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_map" style="height:440px;"></div>
+					<div class="yl_map_hint" id="yl_map_hint">正在加载地图…</div>
+				</div>
+			</div>
+			<div class="yl_panel">
+				<div class="yl_panel-head">Three.js 三维地球</div>
+				<div class="yl_panel-body">
+					<div id="yl_globe" style="height:340px;"></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ===== 右列 ===== -->
+		<section class="yl_col">
+			<div class="yl_panel">
+				<div class="yl_panel-head">年度目标完成率</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_gauge" style="height:250px;"></div>
+				</div>
+			</div>
+			<div class="yl_panel">
+				<div class="yl_panel-head">综合能力雷达</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_radar" style="height:250px;"></div>
+				</div>
+			</div>
+			<div class="yl_panel">
+				<div class="yl_panel-head">城市销量排行</div>
+				<div class="yl_panel-body">
+					<div class="yl_chart" id="yl_chart_rank" style="height:250px;"></div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script src="cdn/echarts/echarts.min.js"></script>
+	<script src="cdn/three/three.min.js"></script>
+	<script>
+		// ===== 通用配色 =====
+		var yl_c = {
+			cyan: '#00d4ff',
+			blue: '#1e90ff',
+			gold: '#ffc53d',
+			green: '#00c896',
+			red: '#ff5f6d',
+			text: '#cfe6ff',
+			axis: 'rgba(120,180,220,.35)',
+			split: 'rgba(120,180,220,.12)'
+		};
+
+		var yl_charts = [];
+
+		function yl_initChart(yl_id) {
+			var yl_chart = echarts.init(document.getElementById(yl_id));
+			yl_charts.push(yl_chart);
+			return yl_chart;
+		}
+
+		// ===== 时钟 =====
+		function yl_tick() {
+			var yl_d = new Date();
+			var yl_p = function (n) { return (n < 10 ? '0' : '') + n; };
+			document.getElementById('yl_clock').textContent =
+				yl_p(yl_d.getHours()) + ':' + yl_p(yl_d.getMinutes()) + ':' + yl_p(yl_d.getSeconds());
+		}
+		yl_tick();
+		setInterval(yl_tick, 1000);
+
+		// ===== 左1：月度销售额柱状图 =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_bar');
+			var yl_months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+			var yl_online = [320, 280, 360, 420, 380, 460, 520, 500, 540, 620, 700, 860];
+			var yl_offline = [210, 190, 240, 260, 250, 300, 320, 310, 340, 380, 420, 460];
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				tooltip: { trigger: 'axis' },
+				legend: { data: ['线上', '线下'], textStyle: { color: yl_c.text }, top: 0 },
+				grid: { left: 40, right: 16, top: 34, bottom: 26 },
+				xAxis: {
+					type: 'category', data: yl_months,
+					axisLine: { lineStyle: { color: yl_c.axis } },
+					axisLabel: { color: yl_c.text, fontSize: 10 }
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: { color: yl_c.text, fontSize: 10 },
+					splitLine: { lineStyle: { color: yl_c.split } }
+				},
+				series: [
+					{ name: '线上', type: 'bar', data: yl_online, itemStyle: { color: yl_c.cyan, borderRadius: [3, 3, 0, 0] }, barMaxWidth: 12 },
+					{ name: '线下', type: 'bar', data: yl_offline, itemStyle: { color: yl_c.gold, borderRadius: [3, 3, 0, 0] }, barMaxWidth: 12 }
+				]
+			});
+		})();
+
+		// ===== 左2：商品分类占比环形图 =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_pie');
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				tooltip: { trigger: 'item' },
+				legend: { orient: 'vertical', right: 8, top: 'center', textStyle: { color: yl_c.text, fontSize: 11 }, itemWidth: 10, itemHeight: 10 },
+				series: [{
+					type: 'pie', radius: ['48%', '70%'], center: ['38%', '50%'],
+					label: { color: yl_c.text, fontSize: 11 },
+					itemStyle: { borderColor: '#071120', borderWidth: 2 },
+					data: [
+						{ name: '电子产品', value: 34 },
+						{ name: '服装鞋包', value: 22 },
+						{ name: '家居生活', value: 16 },
+						{ name: '食品生鲜', value: 13 },
+						{ name: '美妆个护', value: 9 },
+						{ name: '其他', value: 6 }
+					]
+				}],
+				color: [yl_c.cyan, yl_c.blue, yl_c.gold, yl_c.green, '#a06bff', yl_c.red]
+			});
+		})();
+
+		// ===== 左3：访问与订单趋势折线图 =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_line');
+			var yl_x = ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18', '20', '22'];
+			var yl_visit = [1200, 900, 600, 800, 3200, 6800, 5200, 6100, 7400, 8200, 5600, 2800];
+			var yl_order = [240, 180, 120, 160, 720, 1900, 1500, 1750, 2100, 2400, 1600, 700];
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				tooltip: { trigger: 'axis' },
+				legend: { data: ['访问量', '订单量'], textStyle: { color: yl_c.text }, top: 0 },
+				grid: { left: 46, right: 16, top: 34, bottom: 26 },
+				xAxis: {
+					type: 'category', data: yl_x, boundaryGap: false,
+					axisLine: { lineStyle: { color: yl_c.axis } },
+					axisLabel: { color: yl_c.text, fontSize: 10 }
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel: { color: yl_c.text, fontSize: 10 },
+					splitLine: { lineStyle: { color: yl_c.split } }
+				},
+				series: [
+					{ name: '访问量', type: 'line', smooth: true, data: yl_visit, lineStyle: { color: yl_c.cyan, width: 2 }, itemStyle: { color: yl_c.cyan }, areaStyle: { color: 'rgba(0,212,255,.12)' } },
+					{ name: '订单量', type: 'line', smooth: true, data: yl_order, lineStyle: { color: yl_c.gold, width: 2 }, itemStyle: { color: yl_c.gold } }
+				]
+			});
+		})();
+
+		// ===== 右1：年度目标完成率仪表盘 =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_gauge');
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				series: [{
+					type: 'gauge',
+					startAngle: 210,
+					endAngle: -30,
+					min: 0,
+					max: 100,
+					radius: '90%',
+					center: ['50%', '58%'],
+					axisLine: { lineStyle: { width: 14, color: [[0.786, yl_c.cyan], [1, 'rgba(120,180,220,.15)']] } },
+					pointer: { itemStyle: { color: yl_c.cyan } },
+					axisTick: { distance: -18, length: 4, lineStyle: { color: '#fff', width: 1 } },
+					splitLine: { distance: -20, length: 10, lineStyle: { color: '#fff', width: 2 } },
+					axisLabel: { distance: -30, color: yl_c.text, fontSize: 10 },
+					detail: { valueAnimation: true, formatter: '{value}%', color: '#fff', fontSize: 24, offsetCenter: [0, '62%'] },
+					data: [{ value: 78.6, name: '年度目标' }],
+					title: { color: yl_c.text, fontSize: 12, offsetCenter: [0, '90%'] }
+				}]
+			});
+		})();
+
+		// ===== 右2：综合能力雷达图 =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_radar');
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				radar: {
+					indicator: [
+						{ name: '商品力', max: 100 },
+						{ name: '物流力', max: 100 },
+						{ name: '服务力', max: 100 },
+						{ name: '营销力', max: 100 },
+						{ name: '技术力', max: 100 },
+						{ name: '数据力', max: 100 }
+					],
+					radius: '62%',
+					axisName: { color: yl_c.text, fontSize: 11 },
+					splitArea: { areaStyle: { color: ['rgba(0,200,255,.03)', 'rgba(0,200,255,.06)'] } },
+					splitLine: { lineStyle: { color: yl_c.split } },
+					axisLine: { lineStyle: { color: yl_c.axis } }
+				},
+				series: [{
+					type: 'radar',
+					data: [{ value: [82, 76, 88, 71, 90, 84], name: '综合能力' }],
+					areaStyle: { color: 'rgba(0,212,255,.25)' },
+					lineStyle: { color: yl_c.cyan, width: 2 },
+					itemStyle: { color: yl_c.cyan }
+				}]
+			});
+		})();
+
+		// ===== 右3：城市销量排行榜（横向柱状） =====
+		(function () {
+			var yl_chart = yl_initChart('yl_chart_rank');
+			var yl_cities = ['上海', '北京', '深圳', '广州', '杭州', '成都', '武汉'];
+			var yl_values = [980, 860, 720, 660, 590, 520, 470];
+			yl_chart.setOption({
+				backgroundColor: 'transparent',
+				tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+				grid: { left: 64, right: 40, top: 10, bottom: 22 },
+				xAxis: {
+					type: 'value',
+					axisLabel: { color: yl_c.text, fontSize: 10 },
+					splitLine: { lineStyle: { color: yl_c.split } }
+				},
+				yAxis: {
+					type: 'category', data: yl_cities.reverse(), inverse: true,
+					axisLine: { lineStyle: { color: yl_c.axis } },
+					axisLabel: { color: yl_c.text, fontSize: 11 }
+				},
+				series: [{
+					type: 'bar',
+					data: yl_values.reverse(),
+					barMaxWidth: 14,
+					label: { show: true, position: 'right', color: yl_c.text, fontSize: 10 },
+					itemStyle: {
+						color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+							{ offset: 0, color: '#1e90ff' },
+							{ offset: 1, color: '#00d4ff' }
+						]),
+						borderRadius: [0, 4, 4, 0]
+					}
+				}]
+			});
+		})();
+
+		// ===== 中上：全国销售分布地图（地理信息） =====
+		var yl_mapChart = yl_initChart('yl_map_chart');
+		var yl_mapHint = document.getElementById('yl_map_hint');
+
+		fetch('cdn/data/asset/geo/china.json')
+			.then(function (yl_res) {
+				if (!yl_res.ok) { throw new Error('HTTP ' + yl_res.status); }
+				return yl_res.json();
+			})
+			.then(function (yl_mapData) {
+				echarts.registerMap('china', yl_mapData);
+				yl_mapHint.style.display = 'none';
+
+				var yl_provinceData = [
+					{ name: '北京市', value: 320 }, { name: '上海市', value: 410 },
+					{ name: '广东省', value: 560 }, { name: '浙江省', value: 380 },
+					{ name: '江苏省', value: 350 }, { name: '四川省', value: 260 },
+					{ name: '湖北省', value: 200 }, { name: '山东省', value: 300 },
+					{ name: '河南省', value: 220 }, { name: '湖南省', value: 180 },
+					{ name: '福建省', value: 210 }, { name: '陕西省', value: 150 },
+					{ name: '重庆市', value: 160 }, { name: '辽宁省', value: 130 },
+					{ name: '河北省', value: 140 }, { name: '安徽省', value: 170 }
+				];
+
+				var yl_cityData = [
+					{ name: '北京', value: [116.40, 39.90, 90] },
+					{ name: '上海', value: [121.47, 31.23, 100] },
+					{ name: '广州', value: [113.26, 23.13, 70] },
+					{ name: '深圳', value: [114.06, 22.55, 85] },
+					{ name: '成都', value: [104.07, 30.57, 60] },
+					{ name: '武汉', value: [114.30, 30.60, 55] },
+					{ name: '西安', value: [108.94, 34.34, 45] },
+					{ name: '杭州', value: [120.15, 30.28, 65] }
+				];
+
+				yl_mapChart.setOption({
+					backgroundColor: 'transparent',
+					tooltip: { trigger: 'item' },
+					visualMap: {
+						min: 0, max: 600, left: 10, bottom: 10, text: ['高', '低'],
+						textStyle: { color: yl_c.text }, calculable: false,
+						inRange: { color: ['#0e2a47', '#1e6f9f', '#00c8c8', '#3fe0a0'] },
+						seriesIndex: 0
+					},
+					geo: {
+						map: 'china',
+						roam: true,
+						label: { show: false },
+						itemStyle: { areaColor: '#0e2a47', borderColor: 'rgba(0,212,255,.5)' },
+						emphasis: { itemStyle: { areaColor: '#1e90ff' }, label: { show: true, color: '#fff' } }
+					},
+					series: [
+						{
+							name: '销售额',
+							type: 'map',
+							map: 'china',
+							geoIndex: 0,
+							data: yl_provinceData
+						},
+						{
+							name: '重点城市',
+							type: 'effectScatter',
+							coordinateSystem: 'geo',
+							data: yl_cityData,
+							symbolSize: function (yl_val) { return yl_val[2] / 6; },
+							showEffectOn: 'render',
+							rippleEffect: { brushType: 'stroke', scale: 3 },
+							label: { show: true, position: 'right', formatter: '{b}', color: '#e0f4ff', fontSize: 11 },
+							itemStyle: { color: '#00d4ff', shadowBlur: 10, shadowColor: '#00d4ff' }
+						}
+					]
+				});
+			})
+			.catch(function (yl_err) {
+				yl_mapHint.textContent = '地图加载失败：' + yl_err.message + '（请通过 http:// 访问本页）';
+			});
+
+		// ===== 中下：Three.js 三维地球 =====
+		(function () {
+			var yl_container = document.getElementById('yl_globe');
+			var yl_w = yl_container.clientWidth;
+			var yl_h = yl_container.clientHeight;
+
+			var yl_scene = new THREE.Scene();
+			var yl_camera = new THREE.PerspectiveCamera(50, yl_w / yl_h, 0.1, 1000);
+			yl_camera.position.z = 4.6;
+
+			var yl_renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			yl_renderer.setSize(yl_w, yl_h);
+			yl_renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			yl_container.appendChild(yl_renderer.domElement);
+
+			// 球体（海洋）
+			var yl_geo = new THREE.SphereGeometry(1.7, 48, 48);
+			var yl_mat = new THREE.MeshPhongMaterial({
+				color: 0x1e5aa8,
+				emissive: 0x0a2244,
+				shininess: 30,
+				specular: 0x224466,
+				transparent: true,
+				opacity: 0.92
+			});
+			var yl_globe = new THREE.Mesh(yl_geo, yl_mat);
+			yl_scene.add(yl_globe);
+
+			// 经纬网格
+			var yl_wire = new THREE.LineSegments(
+				new THREE.EdgesGeometry(new THREE.SphereGeometry(1.71, 24, 18)),
+				new THREE.LineBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.28 })
+			);
+			yl_globe.add(yl_wire);
+
+			// 地表节点（城市光点）
+			var yl_pointGeo = new THREE.BufferGeometry();
+			var yl_positions = [];
+			for (var yl_i = 0; yl_i < 120; yl_i++) {
+				var yl_lat = (Math.random() * 180 - 90) * Math.PI / 180;
+				var yl_lng = Math.random() * 360 * Math.PI / 180;
+				var yl_r = 1.72;
+				yl_positions.push(
+					yl_r * Math.cos(yl_lat) * Math.cos(yl_lng),
+					yl_r * Math.sin(yl_lat),
+					yl_r * Math.cos(yl_lat) * Math.sin(yl_lng)
+				);
+			}
+			yl_pointGeo.setAttribute('position', new THREE.Float32BufferAttribute(yl_positions, 3));
+			var yl_points = new THREE.Points(yl_pointGeo, new THREE.PointsMaterial({
+				color: 0x00d4ff, size: 0.035, transparent: true, opacity: 0.9
+			}));
+			yl_globe.add(yl_points);
+
+			// 灯光
+			yl_scene.add(new THREE.AmbientLight(0x4488cc, 0.7));
+			var yl_light = new THREE.DirectionalLight(0xffffff, 0.9);
+			yl_light.position.set(3, 2, 5);
+			yl_scene.add(yl_light);
+
+			// 旋转 + 拖拽
+			var yl_dragging = false;
+			var yl_px = 0;
+			var yl_vx = 0;
+			var yl_canvas = yl_renderer.domElement;
+			yl_canvas.addEventListener('mousedown', function (yl_e) { yl_dragging = true; yl_px = yl_e.clientX; });
+			window.addEventListener('mousemove', function (yl_e) {
+				if (!yl_dragging) { return; }
+				yl_vx = (yl_e.clientX - yl_px) * 0.005;
+				yl_px = yl_e.clientX;
+			});
+			window.addEventListener('mouseup', function () { yl_dragging = false; });
+
+			function yl_loop() {
+				requestAnimationFrame(yl_loop);
+				if (!yl_dragging) { yl_vx *= 0.94; }
+				yl_globe.rotation.y += 0.004 + yl_vx;
+				yl_globe.rotation.x = Math.max(-0.4, Math.min(0.4, yl_globe.rotation.x));
+				yl_renderer.render(yl_scene, yl_camera);
+			}
+			yl_loop();
+
+			// 响应式
+			window.addEventListener('resize', function () {
+				var yl_nw = yl_container.clientWidth;
+				var yl_nh = yl_container.clientHeight;
+				yl_camera.aspect = yl_nw / yl_nh;
+				yl_camera.updateProjectionMatrix();
+				yl_renderer.setSize(yl_nw, yl_nh);
+			});
+		})();
+
+		// ===== 全局响应式 =====
+		window.addEventListener('resize', function () {
+			for (var yl_i = 0; yl_i < yl_charts.length; yl_i++) {
+				yl_charts[yl_i].resize();
+			}
+		});
+	</script>
+</body>
+</html>

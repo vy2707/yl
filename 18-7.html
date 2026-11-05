@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--
+	姓名：姚琳
+	日期：2026-11-05
+	功能名称：基于 Three.js 的三维演示（旋转立方体与环面纽结）
+	-->
+	<title>18-7 Three.js 三维演示</title>
+	<link rel="stylesheet" href="font/iconfont.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			background: #f3f0e8;
+			color: #26343a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.yl_main {
+			width: min(1080px, 100%);
+			margin: 0 auto;
+			padding: 3rem 1.5rem 4rem;
+		}
+
+		.yl_header {
+			display: flex;
+			align-items: end;
+			justify-content: space-between;
+			gap: 1rem;
+			margin-bottom: 1.5rem;
+			padding-bottom: 1.25rem;
+			border-bottom: 1px solid #d5d5cc;
+		}
+
+		.yl_header h1 {
+			margin: 0;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.yl_subtitle {
+			margin: .5rem 0 0;
+			color: #667579;
+			font-size: .95rem;
+		}
+
+		.yl_author {
+			flex: 0 0 auto;
+			color: #a34e3c;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.yl_home_link {
+			display: inline-block;
+			margin-bottom: 2rem;
+			color: #3976a3;
+			text-decoration: none;
+			font-size: .9rem;
+		}
+
+		.yl_home_link:hover {
+			text-decoration: underline;
+		}
+
+		.yl_block {
+			margin-bottom: 2.5rem;
+		}
+
+		.yl_block h2 {
+			margin: 0 0 .5rem;
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #3976a3;
+		}
+
+		.yl_block_desc {
+			margin: 0 0 1rem;
+			color: #667579;
+			font-size: .9rem;
+			line-height: 1.7;
+		}
+
+		.yl_block_desc code {
+			color: #a34e3c;
+			font-family: Consolas, monospace;
+			background: #fff;
+			padding: .1rem .35rem;
+			border-radius: .3rem;
+		}
+
+		/* ===== 三维画布 ===== */
+		.yl_canvas_wrap {
+			width: 100%;
+			height: 420px;
+			border-radius: .6rem;
+			overflow: hidden;
+			box-shadow: 0 .6rem 1.6rem rgba(20, 30, 40, .25);
+			cursor: grab;
+		}
+
+		.yl_canvas_wrap:active {
+			cursor: grabbing;
+		}
+
+		.yl_canvas_wrap canvas {
+			display: block;
+		}
+
+		.yl_tip {
+			margin-top: .7rem;
+			font-size: .82rem;
+			color: #8a9499;
+		}
+	</style>
+</head>
+<body>
+	<main class="yl_main">
+		<header class="yl_header">
+			<div>
+				<h1>Three.js 三维演示</h1>
+				<p class="yl_subtitle">使用本地 Three.js 渲染两个三维场景：旋转的彩色立方体与环面纽结</p>
+			</div>
+			<div class="yl_author">姚琳 · 18-7</div>
+		</header>
+
+		<a class="yl_home_link" href="index.html">← 返回首页 index.html</a>
+
+		<!-- 一、旋转立方体 -->
+		<section class="yl_block">
+			<h2>一、旋转彩色立方体</h2>
+			<p class="yl_block_desc">使用 <code>BoxGeometry</code> 与六个不同颜色的 <code>MeshStandardMaterial</code> 构建立方体，叠加 <code>EdgesGeometry</code> 描边，在平行光 + 环境光下自动旋转。</p>
+			<div class="yl_canvas_wrap" id="yl_canvas1"></div>
+			<p class="yl_tip">拖动可手动旋转，松开后带惯性继续旋转。</p>
+		</section>
+
+		<!-- 二、环面纽结 -->
+		<section class="yl_block">
+			<h2>二、旋转环面纽结</h2>
+			<p class="yl_block_desc">使用 <code>TorusKnotGeometry</code> 与 <code>MeshNormalMaterial</code> 构建环面纽结，法线材质随面朝向呈现彩虹渐变色，无需灯光即可看清立体结构。</p>
+			<div class="yl_canvas_wrap" id="yl_canvas2"></div>
+			<p class="yl_tip">拖动可手动旋转，松开后带惯性继续旋转。</p>
+		</section>
+
+		<!-- 三、实现要点 -->
+		<section class="yl_block">
+			<h2>三、实现要点</h2>
+			<p class="yl_block_desc">
+				1. 引入本地 <code>cdn/three/three.min.js</code>，不依赖 CDN 在线加载；<br>
+				2. 用 <code>Scene</code> + <code>PerspectiveCamera</code> + <code>WebGLRenderer</code> 搭建三维场景；<br>
+				3. 用 <code>BoxGeometry</code>、<code>TorusKnotGeometry</code> 等几何体与材质创建 <code>Mesh</code>；<br>
+				4. 通过 <code>requestAnimationFrame</code> 循环更新旋转并调用 <code>renderer.render()</code> 实现动画，监听鼠标事件实现拖拽旋转。
+			</p>
+		</section>
+	</main>
+
+	<script src="cdn/three/three.min.js"></script>
+	<script>
+		// ===== 工具：创建场景 =====
+		function yl_makeScene(yl_id, yl_bg) {
+			var yl_container = document.getElementById(yl_id);
+			var yl_w = yl_container.clientWidth;
+			var yl_h = yl_container.clientHeight;
+
+			var yl_scene = new THREE.Scene();
+			yl_scene.background = new THREE.Color(yl_bg);
+
+			var yl_camera = new THREE.PerspectiveCamera(60, yl_w / yl_h, 0.1, 1000);
+			yl_camera.position.z = 5;
+
+			var yl_renderer = new THREE.WebGLRenderer({ antialias: true });
+			yl_renderer.setSize(yl_w, yl_h);
+			yl_renderer.setPixelRatio(window.devicePixelRatio);
+			yl_container.appendChild(yl_renderer.domElement);
+
+			return {
+				container: yl_container,
+				scene: yl_scene,
+				camera: yl_camera,
+				renderer: yl_renderer
+			};
+		}
+
+		// ===== 工具：动画 + 拖拽旋转 =====
+		function yl_animate(yl_d, yl_obj, yl_speed) {
+			var yl_ax = yl_speed.x;
+			var yl_ay = yl_speed.y;
+			var yl_dragging = false;
+			var yl_px = 0;
+			var yl_py = 0;
+			var yl_vx = 0;
+			var yl_vy = 0;
+
+			var yl_canvas = yl_d.renderer.domElement;
+
+			yl_canvas.addEventListener('mousedown', function (yl_e) {
+				yl_dragging = true;
+				yl_px = yl_e.clientX;
+				yl_py = yl_e.clientY;
+			});
+
+			window.addEventListener('mousemove', function (yl_e) {
+				if (!yl_dragging) { return; }
+				yl_vx = (yl_e.clientX - yl_px) * 0.005;
+				yl_vy = (yl_e.clientY - yl_py) * 0.005;
+				yl_px = yl_e.clientX;
+				yl_py = yl_e.clientY;
+			});
+
+			window.addEventListener('mouseup', function () {
+				yl_dragging = false;
+			});
+
+			function yl_loop() {
+				requestAnimationFrame(yl_loop);
+				if (!yl_dragging) {
+					yl_vx *= 0.92;
+					yl_vy *= 0.92;
+				}
+				yl_obj.rotation.y += yl_ay + yl_vx;
+				yl_obj.rotation.x += yl_ax + yl_vy;
+				yl_d.renderer.render(yl_d.scene, yl_d.camera);
+			}
+			yl_loop();
+		}
+
+		var yl_scenes = [];
+
+		// ===== 一、旋转彩色立方体 =====
+		var yl_d1 = yl_makeScene('yl_canvas1', '#0d1117');
+		yl_scenes.push(yl_d1);
+
+		var yl_cubeGeo = new THREE.BoxGeometry(2.3, 2.3, 2.3);
+		var yl_cubeMats = [0x3976a3, 0xa34e3c, 0x3c7a5f, 0xd9a441, 0x7a6bb0, 0x4a5860].map(function (yl_c) {
+			return new THREE.MeshStandardMaterial({ color: yl_c, roughness: 0.45, metalness: 0.1 });
+		});
+		var yl_cube = new THREE.Mesh(yl_cubeGeo, yl_cubeMats);
+		var yl_cubeEdges = new THREE.LineSegments(
+			new THREE.EdgesGeometry(yl_cubeGeo),
+			new THREE.LineBasicMaterial({ color: 0xffffff })
+		);
+		yl_cube.add(yl_cubeEdges);
+		yl_d1.scene.add(yl_cube);
+
+		var yl_amb1 = new THREE.AmbientLight(0xffffff, 0.6);
+		yl_d1.scene.add(yl_amb1);
+		var yl_dir1 = new THREE.DirectionalLight(0xffffff, 0.9);
+		yl_dir1.position.set(3, 4, 5);
+		yl_d1.scene.add(yl_dir1);
+
+		yl_animate(yl_d1, yl_cube, { x: 0.006, y: 0.011 });
+
+		// ===== 二、旋转环面纽结 =====
+		var yl_d2 = yl_makeScene('yl_canvas2', '#16222d');
+		yl_scenes.push(yl_d2);
+
+		var yl_knotGeo = new THREE.TorusKnotGeometry(1.25, 0.38, 160, 20);
+		var yl_knotMat = new THREE.MeshNormalMaterial({ flatShading: false });
+		var yl_knot = new THREE.Mesh(yl_knotGeo, yl_knotMat);
+		yl_d2.scene.add(yl_knot);
+
+		yl_animate(yl_d2, yl_knot, { x: 0.004, y: 0.008 });
+
+		// ===== 响应式 =====
+		window.addEventListener('resize', function () {
+			for (var yl_i = 0; yl_i < yl_scenes.length; yl_i++) {
+				var yl_s = yl_scenes[yl_i];
+				var yl_w = yl_s.container.clientWidth;
+				var yl_h = yl_s.container.clientHeight;
+				yl_s.camera.aspect = yl_w / yl_h;
+				yl_s.camera.updateProjectionMatrix();
+				yl_s.renderer.setSize(yl_w, yl_h);
+			}
+		});
+	</script>
+</body>
+</html>
